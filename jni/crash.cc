@@ -18,7 +18,8 @@
     defined(TARGET_OS_FREEBSD) || \
     defined(TARGET_OS_NETBSD) || \
     defined(TARGET_OS_OPENBSD) || \
-    defined(TARGET_COMPILER_CYGWIN)
+    defined(TARGET_COMPILER_CYGWIN) || \
+    defined(ANDROID) //Backtrace not supported in ANDROID
         #undef BACKTRACE_SUPPORTED
 #endif
 #endif

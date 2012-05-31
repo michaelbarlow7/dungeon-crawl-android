@@ -21,7 +21,7 @@ void alarm(unsigned int seconds);
 #endif
 
 // This check is way underinclusive.
-#if !defined(TARGET_OS_LINUX) && !defined(TARGET_OS_WINDOWS) && !defined(TARGET_OS_NETBSD) && !defined(TARGET_OS_SOLARIS)
+#if (!defined(TARGET_OS_LINUX) && !defined(TARGET_OS_WINDOWS) && !defined(TARGET_OS_NETBSD) && !defined(TARGET_OS_SOLARIS)) || defined(ANDROID) //ANDROID needs fakefdatasync
 # define NEED_FAKE_FDATASYNC
 int fdatasync(int fd);
 #endif

@@ -1,0 +1,15 @@
+*.js
+*.html
+*.cc
+*.d
+*.png
+tiledef-dngn.h
+tiledef-feat.h
+tiledef-floor.h
+tiledef-gui.h
+tiledef-icons.h
+tiledef-main.h
+tiledef-player.h
+tiledef-wall.h
+.cflags
+dc-unrand.txt
