@@ -1,0 +1,506 @@
+###############################################################################
+# ziggurat.des - Ziggurat entry vaults and ziggurat layouts.
+###############################################################################
+
+# Most ziggurat code is in ziggurat.lua.
+# XXX: Ziggurat code is incomplete.
+
+: require("dlua/ziggurat.lua")
+
+### Entry vaults to ziggurats##########################################
+#
+# Chances for Ziggurat portals are as follows:
+# among D:3-20   -- 1%
+# among D:21-27  -- 5%
+# in a Pan level -- 8%
+
+
+# Dummy for the trowel card
+NAME:   enter_the_ziggurat
+TAGS:   trowel_portal
+: ziggurat_portal(_G)
+MAP
+O
+ENDMAP
+
+### Deep entry vaults to ziggurats ############################################
+default-depth: D:21-27
+
+NAME:   enter_ziggurat_a
+CHANCE: 5%
+TAGS:   chance_zig extra allow_dup luniq_zig
+COLOUR: ; : cyan / lightblue
+COLOUR: ' = blue
+FTILE:  ; = floor_hall
+SUBST:  ' = .
+SUBST:  ; = .
+: ziggurat_portal(_G)
+MAP
+.......
+.;;;;;.
+.;''';.
+.;'O';.
+.;''';.
+.;;;;;.
+.......
+ENDMAP
+
+NAME:    enter_ziggurat_b
+CHANCE:  5%
+TAGS:    chance_zig extra allow_dup luniq_zig no_pool_fixup
+SHUFFLE: wW' / l;_
+COLOUR:  ; = red
+COLOUR:  _ : blue / lightred
+COLOUR:  ' = cyan
+FTILE:   ' = floor_hall, _ = floor_hall, ; = floor_hall, O = floor_hall
+SUBST:   '=. , ;=. , _=.
+: ziggurat_portal(_G)
+MAP
+   ..'..
+  ..'W'..
+ ..'WwW'..
+..'WwwwW'..
+.'WwwOwwW'.
+..'WwwwW'..
+ ..'WwW'..
+  ..'W'..
+   ..'..
+ENDMAP
+
+NAME:    enter_ziggurat_c
+CHANCE:  5%
+TAGS:    chance_zig extra allow_dup luniq_zig
+MONS:    lich / ancient lich
+MONS:    angel / daeva
+MONS:    eye of draining / eye of devastation / giant eyeball / \
+         great orb of eyes / shining eye
+KPROP:   1Om = no_rtele_into
+SHUFFLE: 123x
+SUBST:   1=1..., 2=2., x=.
+KFEAT:   m = iron_grate
+: ziggurat_portal(_G)
+MAP
+    ...
+   ..m..
+  ..mmm..
+ ..mm1mm..
+..mm1O1mm..
+ ..mm1mm..
+  ..mmm..
+   ..m..
+    ...
+ENDMAP
+
+# XXX: Undiggable glass has been converted to grates.
+NAME:    enter_ziggurat_d
+CHANCE:  5%
+TAGS:    chance_zig extra allow_dup luniq_zig
+MONS:    lich / ancient lich
+MONS:    angel / daeva
+MONS:    eye of draining / eye of devastation / giant eyeball / \
+         great orb of eyes / shining eye
+KPROP:   1On; = no_rtele_into
+SHUFFLE: 123x
+SUBST:   1=1..., 2=2., x=.
+SUBST:   ;=.
+KFEAT:   n = iron_grate
+: ziggurat_portal(_G)
+MAP
+    ...
+   ..n..
+  .nnnnn.
+ ..n;1;n..
+..nn1O1nn..
+ ..n;1;n..
+  .nnnnn.
+   ..n..
+    ...
+ENDMAP
+
+### Shallow entry vaults to ziggurats #########################################
+default-depth: D:3-20
+
+NAME:   enter_shallow_ziggurat_a
+CHANCE: 1%
+TAGS:   chance_shallow_zig extra luniq_zig
+COLOUR: ; : cyan / lightblue
+COLOUR: ' = blue
+FTILE:  ; = floor_hall
+SUBST:  ' = .
+SUBST:  ; = .
+: ziggurat_portal(_G)
+MAP
+.......
+.;;;;;.
+.;''';.
+.;'O';.
+.;''';.
+.;;;;;.
+.......
+ENDMAP
+
+NAME:    enter_shallow_ziggurat_c
+CHANCE:  1%
+TAGS:    chance_shallow_zig extra luniq_zig no_trap_gen
+MONS:    angel / nothing w:20
+KPROP:   1Om; = no_rtele_into
+SUBST:   ;=.
+: ziggurat_portal(_G)
+MAP
+    ...
+   ..m..
+  ..mmm..
+ ..mm1mm..
+..mm;O;mm..
+ ..mm1mm..
+  ..mmm..
+   ..m..
+    ...
+ENDMAP
+
+NAME:    enter_shallow_ziggurat_d
+CHANCE:  1%
+TAGS:    chance_shallow_zig extra luniq_zig no_trap_gen
+MONS:    angel / nothing w:20
+KPROP:   1On; = no_rtele_into
+SUBST:   ;=.
+: ziggurat_portal(_G)
+MAP
+    ...
+   ..n..
+  .nnnnn.
+ ..n;1;n..
+..nn;O;nn..
+ ..n;1;n..
+  .nnnnn.
+   ..n..
+    ...
+ENDMAP
+
+### Pan entry vaults to ziggurats #############################################
+#
+# These can occur more than once, so no luniq_zig here.
+
+default-depth: Pan
+
+NAME:   enter_ziggurat_pan_a
+CHANCE: 8%
+TAGS:   chance_pan_zig extra allow_dup
+COLOUR: ; : cyan / lightblue
+COLOUR: ' = blue
+FTILE:  ; = floor_hall
+SUBST:  ' = .
+SUBST:  ; = .
+: ziggurat_portal(_G)
+MAP
+.......
+.;;;;;.
+.;''';.
+.;'O';.
+.;''';.
+.;;;;;.
+.......
+ENDMAP
+
+NAME:    enter_ziggurat_pan_b
+CHANCE:  8%
+TAGS:    chance_pan_zig extra allow_dup no_pool_fixup
+SHUFFLE: wW' / l;_
+COLOUR:  ; = red
+COLOUR:  _ : blue / lightred
+COLOUR:  ' = cyan
+FTILE:   ' = floor_hall, _ = floor_hall, ; = floor_hall, O = floor_hall
+SUBST:   '=. , ;=. , _=.
+: ziggurat_portal(_G)
+MAP
+   ..'..
+  ..'W'..
+ ..'WwW'..
+..'WwwwW'..
+.'WwwOwwW'.
+..'WwwwW'..
+ ..'WwW'..
+  ..'W'..
+   ..'..
+ENDMAP
+
+NAME:    enter_ziggurat_pan_c
+CHANCE:  8%
+TAGS:    chance_pan_zig extra allow_dup
+MONS:    lich / ancient lich
+MONS:    angel / daeva
+MONS:    eye of draining / eye of devastation / giant eyeball / \
+         great orb of eyes / shining eye
+SHUFFLE: 123
+SUBST:   1=1, 2=22.
+KFEAT:   m = iron_grate
+: ziggurat_portal(_G)
+MAP
+    ...
+   ..m..
+  ..mmm..
+ ..mm1mm..
+..mm1O1mm..
+ ..mm1mm..
+  ..mmm..
+   ..m..
+    ...
+ENDMAP
+
+# XXX: Undiggable glass has been converted to grates.
+NAME:    enter_ziggurat_pan_d
+CHANCE:  8%
+TAGS:    chance_pan_zig extra allow_dup
+MONS:    lich / ancient lich
+MONS:    angel / daeva
+MONS:    eye of draining / eye of devastation / giant eyeball / \
+         great orb of eyes / shining eye
+SHUFFLE: 123
+SUBST:   1=1.., 2=2., 3=33.
+KFEAT:   n = iron_grate
+: ziggurat_portal(_G)
+MAP
+    ...
+   ..n..
+  .nnnnn.
+ ..n111n..
+..nn1O1nn..
+ ..n111n..
+  .nnnnn.
+   ..n..
+    ...
+ENDMAP
+
+
+# Empty default-depth as vaults below may not occur randomly in the dungeon.
+default-depth:
+
+#######################################################################
+# Pillars for ziggurats.
+# Ziggurat pillars are handled specially in ziggurat.lua. In particular:
+# - ziggurat pillars do not need allow_dup. The pillar map is never
+#   registered as used.
+# - ziggurat pillars cannot use map markers.
+#######################################################################
+NAME: ziggurat_pillar_a
+TAGS: ziggurat_pillar
+SUBST: c : cxvb
+MAP
+c
+ENDMAP
+
+NAME: ziggurat_pillar_b
+TAGS: ziggurat_pillar
+SUBST: c : cxvb
+MAP
+c
+cc
+ENDMAP
+
+NAME: ziggurat_pillar_c
+TAGS: ziggurat_pillar
+SUBST: c : cxvb
+MAP
+cc
+cc
+ENDMAP
+
+NAME: ziggurat_pillar_centre_a
+TAGS: ziggurat_pillar centered
+MAP
+lll
+lGl
+lll
+ENDMAP
+
+NAME: ziggurat_pillar_centre_b
+TAGS: ziggurat_pillar centered
+SHUFFLE: wb / lb / nb / cb / bx
+MAP
+ www
+wwwww
+wwbww
+wwwww
+ www
+ENDMAP
+
+NAME: ziggurat_pillar_centre_c
+TAGS: ziggurat_pillar centered
+# This is evil. Monster sets are: summoners (1), evil eyes (2), harmless (3).
+# This pillar has tactical implications: you will have to stay away from it,
+# and teleports are more risky.
+MONS: ancient lich / boggart / curse skull
+MONS: eye of draining / eye of devastation / giant eyeball
+MONS: plant col:lightred
+: if zig().depth > 21 then
+SUBST: 3 = 12222
+: elseif zig().depth > 15 then
+SUBST: 3 = 12
+: elseif zig().depth > 8 and crawl.coinflip() then
+SUBST: 3 = 12
+: end
+KFEAT: n = iron_grate
+MAP
+nnn
+n3n
+nnn
+ENDMAP
+
+NAME: ziggurat_pillar_centre_monster
+TAGS: ziggurat_pillar centered
+MONS: curse skull / ice statue / orange crystal statue / silver statue
+MAP
+1
+ENDMAP
+
+NAME:  ziggurat_pillar_centre_d
+TAGS:  ziggurat_pillar centered
+SUBST: x : bcmvxG
+MAP
+x.x
+...
+x.x
+ENDMAP
+
+NAME:  ziggurat_pillar_centre_e
+TAGS:  ziggurat_pillar centered
+SUBST: x : bcmvxG
+MAP
+x.x.x
+.....
+x.x.x
+.....
+x.x.x
+ENDMAP
+
+NAME:  ziggurat_pillar_centre_f
+TAGS:  ziggurat_pillar centered
+SUBST: x : bcmvxG
+MAP
+x.x
+.x.
+x.x
+ENDMAP
+
+NAME:  ziggurat_pillar_centre_g
+TAGS:  ziggurat_pillar
+SUBST: x : bcvx
+MAP
+ xxx
+xxxxx
+xxxxx
+xxxxx
+ xxx
+ENDMAP
+
+NAME: ziggurat_pillar_centre_h
+TAGS: ziggurat_pillar centered
+MAP
+ccncc
+c...c
+n...n
+c...c
+ccncc
+ENDMAP
+
+NAME: ziggurat_pillar_centre_i
+TAGS: ziggurat_pillar centered
+MAP
+vlv
+lvl
+vlv
+ENDMAP
+
+NAME:  ziggurat_pillar_centre_j
+TAGS:  ziggurat_pillar centered
+SUBST: x : abcmvxG
+MAP
+ x
+xxx
+ x
+ENDMAP
+
+NAME: ziggurat_pillar_centre_k
+TAGS: ziggurat_pillar centered
+MONS: boring beetle, boulder beetle
+MAP
+xxxxx
+xx2xx
+x212x
+xx2xx
+xxxxx
+ENDMAP
+
+NAME: ziggurat_pillar_centre_oklobs
+TAGS: ziggurat_pillar centered
+MONS: plant / oklob plant / nothing w:20
+MAP
+ 111
+11111
+11111
+11111
+ 111
+ENDMAP
+
+
+########################################################################
+# Ziggurat loot chamber (needs work).
+#
+# A reasonably large space to drop loot. Items will be stacked once all
+# free space is occupied by items.
+#
+# TODO:
+# Add marker to set a center point for loot.
+# Maybe programmatically generate loot chamber shapes?
+#
+NAME: ziggurat_loot_1
+TAGS: ziggurat_loot_chamber allow_dup no_rotate
+ORIENT: float
+: ziggurat_loot_spot(_G, "X")
+MAP
+ cccccc
+cc....cc
+@.....Xc
+cc....cc
+ cccccc
+ENDMAP
+
+NAME: ziggurat_loot_2
+TAGS: ziggurat_loot_chamber allow_dup no_rotate
+ORIENT: float
+: ziggurat_loot_spot(_G, "X")
+MAP
+ ccc ccc
+cc.ccc.cc
+@......Xc
+cc.ccc.cc
+ ccc ccc
+ENDMAP
+
+
+# not finished!
+NAME: ziggurat_arena
+# Just to keep the map compiler happy:
+TAGS: ziggurat_arena
+MAP
+nnnnnnnnnnnnnn
+n...........An
+n<..........>n
+n...........An
+nnnnnnnnnnnnnn
+ENDMAP
+
+
+#######################################################################
+
+NAME: ziggurat1
+: ziggurat_level(_G)
+epilogue {{
+  local depth = zig().depth
+  if depth > 1 then
+    crawl.mark_milestone("zig",
+                         "reached level " .. depth .. " of a Ziggurat.")
+  end
+}}
+MAP
+ENDMAP

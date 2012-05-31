@@ -1,0 +1,396 @@
+###############################################################################
+# snake.des: All maps and branch endings relating to the Snake Pit.
+###############################################################################
+
+##############################################################################
+# Snake Pit entry vaults
+##############################################################################
+
+NAME:   dummy_snake_entry
+TAGS:   snake_entry
+KFEAT:  O = enter_snake_pit
+MAP
+O
+ENDMAP
+
+NAME:   minmay_snake_entry_guardpost_small
+TAGS:   snake_entry
+ORIENT: float
+MONS:   naga, naga / nothing w:3
+KFEAT:  O = enter_snake_pit
+MAP
+ccc.@.ccc
+c.......c
+c.2...2.c
+.........
+@...O...@
+.........
+c.1...2.c
+c.......c
+ccc.@.ccc
+ENDMAP
+
+NAME:   minmay_snake_entry_guardpost_medium
+TAGS:   snake_entry
+WEIGHT: 5
+ORIENT: float
+MONS:   naga, naga / nothing
+KFEAT:  O = enter_snake_pit
+MAP
+   ccccccc
+ ccc.....ccc
+cc2.......2cc
+c...c2.1c...c
+@...c.O.c...@
+c...c1.2c...c
+cc2.......2cc
+ ccc.....ccc
+   ccccccc
+ENDMAP
+
+NAME:   minmay_snake_entry_guardpost_large
+TAGS:   snake_entry
+WEIGHT: 2
+ORIENT: float
+MONS:   naga warrior, naga / nothing
+KFEAT:  O = enter_snake_pit
+MAP
+c@ccccccc
+c.......cc
+c..c.c..2cc
+c.........cc
+c..c.c.c..2cc
+c......2....cc
+cc2..c1O2c..2cc
+ cc....2......c
+  cc2..c.c.c..c
+   cc.........c
+    cc2..c.c..c
+     cc.......c
+      ccccccc@c
+ENDMAP
+
+NAME:   minmay_snake_entry_six_corridors
+TAGS:   snake_entry ruin_lair
+ORIENT: float
+MONS:   ball python, adder, water moccasin, black mamba
+KMONS:  P = plant / fungus w:1 / nothing
+SUBST:  1 = 1., 2 = 2., 3 = 3.
+SUBST:  1 = 122223333, 2 = 122333344, 3 = 33444
+KFEAT:  O = enter_snake_pit
+MAP
+xxxx.@1xxxxxxP@xxxxx
+xxxx1.PxxxxxP..xxxxx
+xxxxx..xxxxx1.xxxxxx
+xxxxxP..xxxx..xxxxxx
+xxxxxP.1xxxx2..xxxxx
+xxxxxx..Pxxxx1Pxxxxx
+xxxxxxx2.xxxP.xxxxxx
+xxxxxxxP1xx1..xxxxxx
+xxxxxxxx...3.xxxxxxx
+xxxxxxxP1..P1.xxxxxx
+xx21xxP..PO.P..2xx1P
+P.....1.3.1.xx.....@
+@.1PxxxP..xxxx.Px1P.
+xxxxxxxx.1xxxx2xxxxx
+xxxxxxxx..Pxx..xxxxx
+xxxxxxxx..PxxP.1xxxx
+xxxxxxx1.2xxxx..xxxx
+xxxxxxxP.xxxxxx1..Px
+xxxxxxx.1xxxxxxxP...
+xxxxxx.@.Pxxxxxxxx.@
+ENDMAP
+
+NAME:   minmay_snake_entry_spellcaster
+TAGS:   snake_entry
+ORIENT: float
+WEIGHT: 2
+MONS:   naga mage / guardian serpent
+KFEAT:  O = enter_snake_pit
+MAP
+...
+.O1
+...
+ENDMAP
+
+##############################################################################
+# Snake Pit specific non-ending non-entry vaults
+##############################################################################
+
+NAME:   minmay_snake_pond
+DEPTH:  Snake
+MONS:   ball python w:3 / adder / water moccasin
+SUBST:  w = wwWW.1
+MAP
+  wwww
+ wwwwww
+wwwwwwww
+wwwwwwww
+wwwwwwww
+wwwwwwww
+ wwwwww
+  wwww
+ENDMAP
+
+NAME:   minmay_snake_river
+TAGS:   no_monster_gen generate_awake
+DEPTH:  Snake
+ORIENT: south
+# Black mambas can't swim, so none of those
+MONS:   ball python w:3 / adder / water moccasin / nothing w:5
+MONS:   anaconda / nothing w:5
+SUBST:  w = wwW
+KPROP:  12 = no_rtele_into
+MAP
+xxxxxxxxxxxxxxxxxxxxxx..@..xxxxxxxxxxxxxxxxxxxx..@.xxxxxxxxxxxxxxxxxxx
+xx211xxxxxxxxxxxxxxwwwWWWWWwwwwxxxxxxxxxxxxxwwwWWWWwwxxxxxxxxxxx112xxx
+xx211wwwwxxxxxwwwwwwwwwxxxxxwwwwwwwwxxxxwwwwwwxxxxwwwwwwxxxxxxww112xxx
+xx211xwwwwwwwwwwwwxxxxxxxxxxxxxwwwwwwwwwwwwxxxxxxxxxxxwwwwwwwwwx112xxx
+xxxxxxxxxxwwwwwxxxxxxxxxxxxxxxxxxxwwwwwwwxxxxxxxxxxxxxxxxwwwwxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+
+################################################################################
+# Snake endings
+################################################################################
+
+################################################################################
+# Snake Pit: the hunt
+#
+NAME:    snake_hunt
+PLACE:   Snake:5
+TAGS:    no_rotate
+ORIENT:  northwest
+KFEAT:   Z = weight:2 teleport trap / .
+KFEAT:   z = teleport trap / Zot trap / weight:20 .
+MONS:    naga / nothing
+MONS:    greater naga / nothing
+MONS:    guardian serpent / nothing
+MONS:    naga warrior / nothing
+MONS:    naga mage / nothing
+MONS:    greater naga / guardian serpent
+SHUFFLE: 'X / "Y
+SHUFFLE: 'X / 'X / AB, "Y / CD
+SUBST:   A=x, B=x, C=x, D=x
+SUBST:   ' = .:250 1 2 3 4:15 5:5
+SUBST:   " = .:250 1 2 3 4:5  5:15
+SUBST:   X=xc..++, Y=xc++
+SUBST:   T : T U V .:30 b
+SUBST:   _:.!, !:!.x, !=x .:2
+SHUFFLE: 123, 45, ([<
+KITEM:   O = serpentine rune of Zot
+#
+validate {{ return glyphs_connected('{', 'O') }}
+#
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxcccccxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx''''''c4O4c""""""xxxxxxxxxxx
+xxxxxxxxxxx''''''xxxx664z466xxxx""""""xxxxxx
+xxxxxxxx''''xxxxxxxx.5665665.xxxxxxxx""""xxx
+xxxxxxx''xxxx''''xxx..45554..xxx""""xxxx""xx
+xxxxxx''xxx''''''''xxx.666.xxx""""""""xxx""x
+xxxxxx'xxx''''''''''xxxcXcxxx""""""""""xxx"x
+xxxxxx''x''''''''''''xx.3.xx""""""""""""x""x
+xxxxxxx'Y'''''''''''''45354"""""""""""""Y"xx
+xxxxxxxxxx''''''''''xx.....xx""""""""""xxxxx
+xxxxxxxxxxx''''''''xxxxx.xxxxx""""""""xxxxxx
+xxxxxxxxxxxxx''''xxxxxxx.xxxxxxx""""xxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx+xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx!.!xxxxxx.....xxxxxx!.!xxxxxxxx
+xxxxxxxxxx!....._xx...43335...xx_...!!!xxxxx
+xxxxxxxx!......_x.11.4..3..5.22.x_......!xxx
+xxxxxxx!...2...x..11.........22..x...1...!xx
+xxxxxxx!..2..._x......T...T......x_...1..!xx
+xxxxxx!...2...x..2.............1..x...1...!x
+xxxxxx!..2....x.........{.........x....1...!
+xxxxxx!.......x....T...(.[...T.............@
+xxxxxx!..2....x.......ZZZZZ.......x....1...!
+xxxxxxx!..2..._x.................x_...1..!xx
+xxxxxxx!...2..._xx....T.}.T....xx_...1...!xx
+xxxxxxx!........._xx.........xx_.........!xx
+xxxxxxxx!.........._xxx...xxx_..........!xxx
+xxxxxxxxx!.............x.x.............!xxxx
+xxxxxxxxxx!!.........................!!xxxxx
+xxxxxxxxxxxx!!!.....3.......3.....!!!xxxxxxx
+xxxxxxxxxxxxxxx!!!!!..3...3..!!!!!xxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx!!!...!!!xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxx!@!xxxxxxxxxxxxxxxxxx
+ENDMAP
+
+################################################################################
+# Snake Pit: old level
+#
+NAME:   snake_pit
+PLACE:  Snake:5
+ORIENT: southwest
+TAGS:   no_rotate
+MONS:   greater naga / nothing
+MONS:   naga
+MONS:   naga mage / nothing
+MONS:   naga warrior / nothing
+SUBST:  c = c .:1
+SUBST:  v = v .:1
+SUBST:  v = x
+KITEM:  O = serpentine rune of Zot
+MAP
+xxxxxxxxxxxxxxxxxxxxxxx..@.xxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx.............xxxxxxxx
+xxxxxxxxxxxxxx....v.............v..xxxxx
+xxxxxxxxxxxx....2.v.............v.2..xxx
+xxxxxxxxxxx.....2.v....v.....v..v.33.xxx
+xxxxxxxxxxx.....22v.............vv.2..xx
+xxxxxxxxxxx.......vv..v........vv.33..xx
+xxxxxxxxxx.....x233vv....T...vvv4444..xx
+xxxxxxxxxx......4444v.........v.333....x
+xxxxxxxxxx......33v4...v.......4x4.....x
+xxxxxxxxxx.......334.....v.....4333....x
+xxxxxxxxxx..c......3.3..4.4..v.......c.x
+xxxxxxxxx...cc.....1...1.1.1...133..cc.x
+xxxxxxxxx...cc....3.....4.4.........cc.x
+xxxxxxxxx...cc...3...v........2.....cc.x
+xxxxxxxxx...cc.........1...1.......cc..x
+xxxxxxxxxx..cc.....1.....1.....1..ccc.xx
+xxxxxxxxxx...ccc......3333333.....cc..xx
+xxxxxxxxxx....cccc....3333333.....cc..xx
+xxxxxxxxxx.....cccccc............cc...xx
+xxxxxxxxxx........ccccc..O....cccc....xx
+xxxxxxxxxxx........cccccccccccccc....xxx
+xxxxxxxxxxx..........ccccccccccc.....xxx
+xxxxxxxxxxxxx.......................xxxx
+xxxxxxxxxxxxxxxx..................xxxxxx
+xxxxxxxxxxxxxxxxxxxxx.......xxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+################################################################################
+# Snake Pit: Coiled (minmay)
+#
+NAME:    minmay_snake_end_coiled
+PLACE:   Snake:5
+TAGS:    no_rotate
+ORIENT:  southwest
+MONS:    naga, naga warrior, naga mage, greater naga
+SUBST:   1 = 11., 2 = 23., 4 = 444123..
+SUBST:   c : c:20 v:5
+KITEM:   O = serpentine rune of Zot
+MAP
+xxxxxxxxxxxxxxxxxc.@..cxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxc....cxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxcc....ccxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxc......cxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxc..1...cxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxc...21.cxxxccccccccxxxxxx
+xxxxxxxxxxxcccccc......ccccc......cccxxxx
+xxxxxxxccccc...2........2.....1.....ccccc
+xxxxcccc............4....................
+xxccc.....4.....2.....2.......2.1.......@
+xcc...............2.2........1...........
+xc..........ccccc......cccccc......cccccc
+cc..1....ccccxxxc......cxxxxccccccccxxxxx
+c.......ccxxxxxxc....1.cxxxxxxxxxxxxxxxxx
+c...4...cxxxxxxxc......cxxxxxxxxxxxxxxxxx
+c.......ccxxxxxxc.1.2..cxxxxxxxxxxxxxxxxx
+cc....1..ccccxxxc......cxxxxxxxxxxxxxxxxx
+xc..........ccccc......ccccccxxxxxxxxxxxx
+xcc......4..................cccccxxxxxxxx
+xxccc...........................ccccxxxxx
+xxxxcccc..1....4...........1.......cccxxx
+xxxxxxxccccc.........4...............ccxx
+xxxxxxxxxxxcccccc......ccccc.....1....cxx
+xxxxxxxxxxxxxxxxc......cxxxcccc.......ccx
+xxxxxxxxxxxxxxxxc..1...cxxxxxxcc...4...cx
+xxxxxxxxxxxxxxxxc...21.cxxxxxxxc.......cx
+xxxxxxxxxxxxxxxxc..1...cxxxxxxcc...1...cx
+xxxxxxxxxxxxxxxxc......cxxxcccc.......ccx
+xxxxxxxxxxxcccccc..4...ccccc..........cxx
+xxxxxxxccccc.........................ccxx
+xxxxcccc2.......1.......2.....4....cccxxx
+xxccc........1....4.............ccccxxxxx
+xcc.......4.................cccccxxxxxxxx
+xc.....1....ccccc......ccccccxxxxxxxxxxxx
+cc.......ccccxxxc....1.cxxxxxxxxxxxxxxxxx
+c....1..ccxxxxxxc.1....cxxxxxxxxxxxxxxxxx
+c.......cxxxxxxxc....2.cxxxxxxxxxxxxxxxxx
+c...4...ccxxxxxxc..1...cxxxxxxxxxxxxxxxxx
+cc.......ccccxxxc2...1.cxxxxxxxxxxxxxxxxx
+xc......2...ccccc......ccccccxxxxxxxxxxxx
+xcc..1............1.......4.cccccxxxxxxxx
+xxccc..........1.....4......1...ccccxxxxx
+xxxxcccc.4...2..4..........12.4....cccxxx
+xxxxxxxccccc..1.....2..1....1....4..Ocxxx
+xxxxxxxxxxxcccccccccccccccccccccccccccxxx
+ENDMAP
+
+################################################################################
+# Salamanders (by Mu.)
+# by popular request
+#
+NAME:   snake_pit_salamanders_mu
+PLACE:  Snake:5
+ORIENT: north
+TAGS:   no_rotate
+MONS:   naga
+MONS:   naga mage / nothing
+MONS:   naga warrior / nothing
+MONS:   greater naga / nothing
+MONS:   guardian serpent / nothing
+MONS:   w:7 anaconda / black mamba / nothing
+KITEM:  O = serpentine rune of Zot
+KMONS:  O = guardian serpent
+KMONS:  S = guardian serpent
+KFEAT:  7 = lava
+KMONS:  7 = salamander / w:5 lava snake / nothing
+KMASK:  l7 = no_monster_gen
+NSUBST: l = 8:7
+NSUBST: . = 6:1 / .
+MAP
+              cccccc
+            ccc2452ccc
+           cc..2232..cc
+          cc..llllll..cc
+          c..llllllll..c  ccccc
+   ccccc cc.ll7llll7ll.cccc666cc
+  cc...ccc..llllllllll..cc66666cc
+ cc.222.cc.llllllllllll.+666S666c
+ c..444..c3llllllllllll.+666O666c
+ c.42443.+5llllllllllll.+666S666c
+ c.43323.c3llllllllllll.cc66666cc
+ cc.....cc..llllllllll..ccc666cc
+ @cc...+ccc.ll7llll7ll.ccccccccccc
+c+cccccc..c..llllllll..c...+.....c
+c..lllc.3.cc..llllll..cc...cl.33.c
+c.3lllcc...cc..2232..cc...ccll...c
+cc..lllcc...ccc2452ccc...cclll..cc
+ cc..l7lcc....cccccc....ccl7l..cc
+  cc..lllcc.....44.....cclll..cc
+   cc..lllcc....54....cclll..cc
+    cc..lllccc..44..ccclll..cc
+     cc...lllcccccccclll...cc
+      cc...llllllllllll...cc
+       cc..lllll77lllll..cc
+        c....llllllll....c
+        c......llll......c
+        c.2242..ll..2452.c
+        c.3222..ll..2223.c
+        c......llll......c
+        cccc+cllllllc+cccc
+         c....ll77ll....c
+         cc.3.llllll.3.cc
+          cc..4llll4..cc
+           cc..4224..cc
+            cc......cc
+             cccccccc
+ENDMAP

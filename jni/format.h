@@ -1,0 +1,105 @@
+#ifndef __FORMAT_H__
+#define __FORMAT_H__
+
+#include <string>
+#include <vector>
+
+#include "externs.h"
+
+// Definitions for formatted_string
+
+enum fs_op_type
+{
+    FSOP_COLOUR,
+    FSOP_TEXT,
+};
+
+class formatted_string
+{
+public:
+    formatted_string(int init_colour = 0);
+    explicit formatted_string(const std::string &s, int init_colour = 0);
+
+    operator std::string() const;
+    void display(int start = 0, int end = -1) const;
+    std::string tostring(int start = 0, int end = -1) const;
+    std::string to_colour_string() const;
+
+    void cprintf(PRINTF(1, ));
+    void cprintf(const std::string &s);
+    void add_glyph(glyph g);
+    void textcolor(int color);
+    formatted_string chop(int length) const;
+    void del_char();
+    void all_caps();
+    void capitalize();
+
+    void clear();
+    bool empty();
+
+    void swap(formatted_string& other);
+
+    int width() const;
+    std::string html_dump() const;
+
+    bool operator < (const formatted_string &other) const;
+    const formatted_string &operator += (const formatted_string &other);
+    char &operator [] (size_t idx);
+
+public:
+    static formatted_string parse_string(
+            const std::string &s,
+            bool  eot_ends_format = true,
+            bool (*process_tag)(const std::string &tag) = NULL,
+            int main_colour = LIGHTGREY);
+
+    static void parse_string_to_multiple(
+            const std::string &s,
+            std::vector<formatted_string> &out);
+
+    static int get_colour(const std::string &tag);
+
+private:
+    int find_last_colour() const;
+
+    static void parse_string1(
+            const std::string &s,
+            formatted_string &fs,
+            std::vector<int> &colour_stack,
+            bool (*process_tag)(const std::string &tag));
+
+public:
+    struct fs_op
+    {
+        fs_op_type type;
+        int x, y;
+        bool relative;
+        std::string text;
+
+        fs_op(int color)
+            : type(FSOP_COLOUR), x(color), y(-1), relative(false), text()
+        {
+        }
+
+        fs_op(const std::string &s)
+            : type(FSOP_TEXT), x(-1), y(-1), relative(false), text(s)
+        {
+        }
+
+        operator fs_op_type () const
+        {
+            return type;
+        }
+        void display() const;
+    };
+
+    typedef std::vector<fs_op> oplist;
+    oplist ops;
+};
+
+int count_linebreaks(const formatted_string& fs);
+
+int tagged_string_tag_length(const std::string& s);
+void display_tagged_block(const std::string& s);
+
+#endif

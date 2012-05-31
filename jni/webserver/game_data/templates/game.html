@@ -1,0 +1,55 @@
+<script>
+  require.config({
+    paths: { "game": "/gamedata/{{ version }}" }
+  });
+  require(['jquery', 'client'], function ($, client) {
+    client.inhibit_messages();
+    require(['game/game'], function (game) {
+      $(document).trigger("game_init");
+      client.uninhibit_messages();
+    });
+  });
+</script>
+<link rel="stylesheet" type="text/css" href="/gamedata/{{ version }}/style.css">
+
+<div id="crt" style="display: none;"></div>
+
+<div id="normal" style="display: none;">
+  <canvas id="dungeon"></canvas>
+  <div id="right_column">
+    <div id="stats"></div>
+    <div id="minimap_block">
+      <canvas id="minimap"></canvas>
+      <canvas id="minimap_overlay"></canvas>
+    </div>
+    <div id="monster_list"></div>
+  </div>
+  <div id="messages"></div>
+</div>
+
+<div id="settings" style="display: none;" class="floating_dialog">
+  <div class="title">Settings</div>
+  <p>
+    Display:
+    <input type="radio" name="setting_glyph_mode"
+           data-setting="display_mode" value="tiles">Tiles</input>
+    <input type="radio" name="setting_glyph_mode"
+           data-setting="display_mode" value="glyphs">Glyphs</input>
+    <input type="radio" name="setting_glyph_mode"
+           data-setting="display_mode" value="hybrid">Glyphs+Icons</input>
+  </p>
+  <a id="close_settings" href="javascript:">(close)</a>
+</div>
+
+<div id="menu" style="display: none;" class="floating_dialog"></div>
+
+<!-- Tile images -->
+<div style="display: none;">
+  <img id="floor" src="/gamedata/{{ version }}/floor.png">
+  <img id="wall" src="/gamedata/{{ version }}/wall.png">
+  <img id="feat" src="/gamedata/{{ version }}/feat.png">
+  <img id="main" src="/gamedata/{{ version }}/main.png">
+  <img id="player" src="/gamedata/{{ version }}/player.png">
+  <img id="icons" src="/gamedata/{{ version }}/icons.png">
+  <img id="gui" src="/gamedata/{{ version }}/gui.png">
+</div>

@@ -1,0 +1,310 @@
+%{
+
+// levcomp.lpp:
+//      Level compiler lexer for Dungeon Crawl Stone Soup.
+//
+// Based loosely on NetHack's lev_comp.l
+
+#include "AppHdr.h"
+#include <algorithm>
+#include <cstring>
+#include <queue>
+#include "mapdef.h"
+#include "levcomp.tab.h"
+#include "stuff.h"
+
+static bool alloced = false;
+
+std::queue<const char *> free_queue;
+
+static void flush_free_queue(unsigned int max_allowed)
+{
+    while (free_queue.size() > max_allowed)
+    {
+        const char *s = free_queue.front();
+        free((void *) s);
+        free_queue.pop();
+    }
+}
+
+static void add_to_queue(const char *s)
+{
+    free_queue.push(s);
+    flush_free_queue(100);
+}
+
+static void clean()
+{
+    if (yylval.text && alloced)
+        add_to_queue(yylval.text);
+    yylval.text = NULL;
+    alloced = false;
+}
+
+// Enter a new state, first clearing yylval of junk.
+#define CBEGIN(x) do { BEGIN(x); clean(); } while (0)
+
+static void post_proc_text(char *text, bool trim_right,
+                           int strip_trailing, int strip_leading)
+{
+    char *s = NULL;
+    if (trim_right)
+    {
+        s = text + strlen(text) - 1;
+        while (s >= text && isspace(*s))
+            *s-- = 0;
+    }
+    if (strip_trailing)
+    {
+        if (!s)
+            s = text + strlen(text) - 1;
+        while (s >= text && --strip_trailing >= 0)
+            *s-- = 0;
+    }
+    if (strip_leading)
+    {
+        const int original_length = strlen(text);
+        if (original_length > strip_leading)
+            memmove(text, text + strip_leading,
+                    original_length - strip_leading);
+        if (original_length >= strip_leading)
+            text[original_length - strip_leading] = 0;
+    }
+}
+
+static char *copy_text(bool trim_right, int strip_trailing, int strip_leading)
+{
+    char *newstring = NULL;
+    if ((yylval.text = newstring = strdup(yytext)))
+    {
+        alloced = true;
+        post_proc_text(newstring, trim_right, strip_trailing, strip_leading);
+    }
+    return (newstring);
+}
+
+static void settext(bool trim_right = false,
+                    int strip_trailing = 0,
+                    int strip_leading = 0)
+{
+    clean();
+    char *newstring = copy_text(trim_right, strip_trailing, strip_leading);
+    yylval.text = newstring;
+}
+
+static void str_check()
+{
+    if (!yylval.text)
+    {
+        char *buf = (char *) malloc(1);
+        if (buf)
+        {
+            yylval.text = buf;
+            *buf = 0;
+            alloced = true;
+        }
+    }
+}
+
+static void cattext(bool trim_right = false, int strip_trailing = 0)
+{
+    if (!yylval.text)
+        settext(trim_right, strip_trailing);
+    else
+    {
+        bool was_alloced = alloced;
+        char *newbuf = (char*) malloc(strlen(yylval.text) + strlen(yytext) + 1);
+        if (!newbuf)
+            end(1, "Out of memory");
+        alloced = true;
+        strcpy(newbuf, yylval.text);
+        strcat(newbuf, yytext);
+        post_proc_text(newbuf, trim_right, strip_trailing, 0);
+        if (was_alloced)
+            free((void*) yylval.text);
+        yylval.text = newbuf;
+    }
+}
+
+%}
+
+%x MAPDEF
+%x LUA
+%x LUA_ONELINER
+%s ARGUMENT
+%s MNAME
+%s KEYWORDS
+%x ITEM_LIST
+
+%option yylineno
+%option never-interactive
+
+NSPACE [^\ \t\r\n]
+SPACE [\ \t\r]
+
+%%
+
+<MAPDEF>^\s*ENDMAP[ ]*  { BEGIN(INITIAL); }
+
+<MAPDEF>^[^\r\n\t]+ {
+                        settext(true);
+                        return MAP_LINE;
+                    }
+
+<MAPDEF>^[ ]*\r?\n      return CHARACTER;
+<MAPDEF>#               return CHARACTER;
+<MAPDEF>[\ ][^\ \r\n]   return CHARACTER;
+
+<MAPDEF>[ ]*\r?\n       ;
+
+<LUA>\s*\}\}[ \t\r]*$    { BEGIN(INITIAL); }
+<LUA>[^\r\n]+\}\}[ \t\r]*$ {
+                            settext(true, 2);
+                            BEGIN(INITIAL);
+                            return LUA_LINE;
+                        }
+<LUA>[^\r\n]+           {
+                            settext(true);
+                            return LUA_LINE;
+                        }
+<LUA>\r?\n              ;
+
+<LUA_ONELINER>[^\r\n]+\r?$ {
+                            settext(true);
+                            return LUA_LINE;
+                        }
+<LUA_ONELINER>\r?\n     { BEGIN(INITIAL); }
+
+<KEYWORDS>[A-Za-z_0-9\-]+   {
+                        settext();
+                        return STRING;
+                    }
+
+<KEYWORDS>{SPACE}*\\{SPACE}*\n   ;
+<KEYWORDS>[ \t]+    ;
+<KEYWORDS>[ \t]*\r?\n  { BEGIN(INITIAL); }
+
+<ITEM_LIST>[^,\ \t\r\n][^,\r\n]*\\{SPACE}*\n {
+                        cattext(true, 1);
+                    }
+
+<ITEM_LIST>{SPACE}*\\{SPACE}*\n   ;
+
+<ITEM_LIST>[^, \t\r\n][^,\r\n]*[^, \t\r\n] {
+                        cattext();
+                        return ITEM_INFO;
+                    }
+
+<ITEM_LIST>,            { clean(); return COMMA; }
+<ITEM_LIST>[ \t]+       ;
+<ITEM_LIST>[ \t]*\r?\n  { BEGIN(INITIAL); }
+
+<MNAME>[\ \t\r]*\n  { BEGIN(INITIAL); }
+
+<MNAME>[^,\ \t\r\n][^,\r\n]*\\{SPACE}*\n {
+                        cattext(true, 1);
+                    }
+
+<MNAME>{SPACE}*\\{SPACE}*\n   ;
+
+<MNAME>[^,\ \t\r\n][^,\r\n]*[^,\ \t\r\n] {
+                        cattext();
+                        return MONSTER_NAME;
+                    }
+
+<MNAME>,            { clean(); return COMMA; }
+<MNAME>[ \t\r]+     ;
+
+<ARGUMENT>{NSPACE}.*\\{SPACE}*\n {
+                        cattext(true, 1);
+                    }
+
+<ARGUMENT>{SPACE}*\\{SPACE}*\n   ;
+
+<ARGUMENT>{NSPACE}.*{NSPACE} {
+                        cattext();
+                    }
+
+<ARGUMENT>{NSPACE}  cattext();
+
+<ARGUMENT>{SPACE}*$ { BEGIN(INITIAL); str_check(); return STRING; }
+
+^[ \t]*#.*          ;
+
+^\s*MAP[ \t\r]*$    { BEGIN(MAPDEF); }
+
+^[ \t]*:                  { BEGIN(LUA_ONELINER); return MAIN; }
+
+^[ \t]*prelude[ \t]*\{\{  { BEGIN(LUA); return PRELUDE; }
+^[ \t]*lua[ \t]*\{\{      { BEGIN(LUA); return MAIN; }
+^[ \t]*\{\{         { BEGIN(LUA); return MAIN; }
+^[ \t]*validate[ \t]*\{\{ { BEGIN(LUA); return VALIDATE; }
+^[ \t]*veto[ \t]*\{\{     { BEGIN(LUA); return VETO; }
+^[ \t]*epilogue[ \t]*\{\{ { BEGIN(LUA); return EPILOGUE; }
+
+NAME:               { CBEGIN(ARGUMENT); return NAME; }
+default-depth:      { CBEGIN(ARGUMENT); return DEFAULT_DEPTH; }
+DESC:               { CBEGIN(ARGUMENT); return DESC; }
+DEPTH:              { CBEGIN(ARGUMENT); return DEPTH; }
+ORIENT:             { CBEGIN(ARGUMENT); return ORIENT; }
+PLACE:              { CBEGIN(ARGUMENT); return PLACE; }
+WELCOME:            { CBEGIN(ARGUMENT); return WELCOME; }
+CHANCE:             return CHANCE;
+WEIGHT:             return WEIGHT;
+TAGS:               { CBEGIN(KEYWORDS); return TAGS; }
+LFLAGS:             { CBEGIN(ARGUMENT); return LFLAGS; }
+BFLAGS:             { CBEGIN(ARGUMENT); return BFLAGS; }
+SUBST:              { CBEGIN(ITEM_LIST); return SUBST; }
+NSUBST:             { CBEGIN(ITEM_LIST); return NSUBST; }
+COLOUR:             { CBEGIN(ITEM_LIST); return COLOUR; }
+LFLOORCOL:          { CBEGIN(ARGUMENT); return LFLOORCOL; }
+LROCKCOL:           { CBEGIN(ARGUMENT); return LROCKCOL; }
+LFLOORTILE:         { CBEGIN(ARGUMENT); return LFLOORTILE; }
+LROCKTILE:          { CBEGIN(ARGUMENT); return LROCKTILE; }
+FTILE:              { CBEGIN(ITEM_LIST); return FTILE; }
+RTILE:              { CBEGIN(ITEM_LIST); return RTILE; }
+TILE:               { CBEGIN(ITEM_LIST); return TILE; }
+FHEIGHT:            { CBEGIN(ITEM_LIST); return FHEIGHT; }
+MONS:               { CBEGIN(MNAME); return MONS; }
+ITEM:               { CBEGIN(ITEM_LIST); return ITEM; }
+MARKER:             { CBEGIN(ARGUMENT); return MARKER; }
+SHUFFLE:            { CBEGIN(ITEM_LIST); return SHUFFLE; }
+
+KFEAT:              { CBEGIN(ARGUMENT); return KFEAT; }
+KITEM:              { CBEGIN(ARGUMENT); return KITEM; }
+KMONS:              { CBEGIN(ARGUMENT); return KMONS; }
+KMASK:              { CBEGIN(ARGUMENT); return KMASK; }
+KPROP:              { CBEGIN(ARGUMENT); return KPROP; }
+SUBVAULT:           { CBEGIN(ARGUMENT); return SUBVAULT; }
+
+,                   return COMMA;
+
+:                   return COLON;
+
+%                   return PERC;
+-                   return DASH;
+
+[+-]?[.][0-9]+|[+-]?[0-9]+[.]?[0-9]* {
+                        clean();
+                        yylval.f = strtod(yytext, NULL);
+                        return NUMBER;
+                    }
+
+\([^\r\n)]*\)       {
+                        settext(true, 1, 1);
+                        return STRING;
+                    }
+
+[\ \t]+             ;
+\r?\n               ;
+\r                  ;
+.                   return CHARACTER;
+
+%%
+
+int yywrap()
+{
+    clean();
+    flush_free_queue(0);
+    return 1;
+}

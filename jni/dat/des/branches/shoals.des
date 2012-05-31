@@ -1,0 +1,359 @@
+################################################################################
+# shoals.des: All vaults for the Shoals.
+################################################################################
+
+{{
+-- When the kraken dies, the tides will control the water, so the items will
+-- be accessible!
+function shoals_atoll_kraken_death(data, triggerable, triggerer, marker, ev)
+    crawl.mpr("The surface of the water froths suddenly, and then rushes away.",
+              "warning")
+
+    local points = dgn.find_marker_positions_by_prop("water_marker", 1)
+    for _, point in ipairs(points) do
+        dgn.fprop_changed(point.x, point.y, "no_tide")
+    end
+    -- Force tide effects to be applied immediately.
+    dgn.apply_tide()
+end
+
+function shoals_atoll_place_items(data, triggerable, triggerer, marker, ev)
+    local points = dgn.find_marker_positions_by_prop("tide_seed", 1)
+    for _, point in ipairs(points) do
+        for i = 1, 5 do
+            dgn.create_item(point.x, point.y, "star_item")
+        end
+    end
+end
+}}
+
+##############################################################################
+# Shoals entry vaults
+##############################################################################
+
+NAME:   shoals_dummy_entry
+TAGS:   shoals_entry
+KFEAT:  O = enter_shoals
+MAP
+O
+ENDMAP
+
+NAME:   minmay_shoals_entry_lonely_mermaid
+TAGS:   shoals_entry no_monster_gen
+ORIENT: float
+KMONS:  1 = mermaid
+KFEAT:  1 = w
+SUBST:  Y = W.
+SUBST:  y = Ww
+KFEAT:  O = enter_shoals
+MAP
+     xx...@...xx
+   xxxWY.....YWxxx
+ xxxyWWWY...YWWWyxxx
+xxwyWWWWxxxxxWWWWywxx
+xwwyOWyxx   xxyW1ywwx
+xwwwyyxx     xxyywwwx
+xxwwwxx       xxwwwxx
+ xxxxx         xxxxx
+ENDMAP
+
+NAME:   minmay_shoals_entry_hut
+TAGS:   shoals_entry
+MONS:   snapping turtle
+SUBST:  W = WWWw, w = wwwW
+TILE:   x = wall_vines
+KFEAT:  O = enter_shoals
+MAP
+  WWWWWWW
+ WWwwwwwWW
+WWwxxxxxwWW
+Wwxx1..xxwW
+Wwx.....xwW
+Wwx..O..+.@
+Wwx.....xwW
+Wwxx...xxwW
+WWwxxxxxwWW
+ WWwwwwwWW
+  WWWWWWW
+ENDMAP
+
+NAME:   minmay_shoals_entry_centaurs
+TAGS:   shoals_entry
+MONS:   centaur / nothing w:5, plant / nothing w:20
+KFEAT:  O = enter_shoals
+MAP
+   .......
+  .2222222.
+ .222...222.
+.222.222...2.
+.22.2222222.2
+.2.22.112222.
+.2.221O1222.2
+.2.22.12.22.2
+.22.2222.222.
+.222....2222.
+ .222222222.
+  .22.2..2.
+   ..2.22.
+ENDMAP
+
+NAME:   minmay_shoals_entry_beasts
+TAGS:   shoals_entry
+MONS:   hippogriff / manticore / griffon / nothing w:60
+KFEAT:  O = enter_shoals
+MAP
+111
+1O1
+111
+ENDMAP
+
+NAME:   minmay_shoals_entry_sharks
+TAGS:   shoals_entry
+KMONS:  w = shark / nothing w:50
+KFEAT:  w = w
+KFEAT:  O = enter_shoals
+MAP
+ WWWWW
+WWwwwWW
+WwwwWwW
+WwwOwwW
+WwwwwwW
+WWwwwWW
+ WWWWW
+ENDMAP
+
+##############################################################################
+# Non-ending non-entry vaults
+##############################################################################
+
+###########################
+# Shoal Ruins - nothing special, just some flavor (Enne)
+# Appear rarely.
+#
+NAME:   overgrown_hall
+DEPTH:  Shoals
+WEIGHT: 2
+MONS:   plant, fungus
+MONS:   cyclops / stone giant w:2
+SUBST:  x = x:20 .
+SUBST:  G = G:40 .
+SUBST:  . = .:90 1:19 x:1
+SUBST:  1 = 1 2:1
+MAP
+xxxxxxxxxxx
+x.........x
+x.G.G.G.G.x
++....3....+
+x.G.G.G.G.x
+x.........x
+xxxxxxxxxxx
+ENDMAP
+
+NAME:   overgrown_tower
+DEPTH:  Shoals
+WEIGHT: 2
+MONS:   plant, fungus
+SUBST:  + = x +
+SUBST:  x = x:60 . '
+SUBST:  ' = ' 1:5
+SUBST:  . = . 2:1
+SUBST:  ' = .
+MAP
+ '''''''''
+'''xx+xx'''
+''xx...xx''
+'xx.....xx'
+'x.......x'
+'x...<...x'
+'x.......x'
+'xx.....xx'
+''xx...xx''
+'''xxxxx'''
+ '''''''''
+ENDMAP
+
+NAME:   overgrown_statue
+DEPTH:  Shoals
+WEIGHT: 1
+MONS:   plant
+MONS:   ice statue / orange crystal statue / silver statue
+SUBST:  . = 1:1 .:30
+SUBST:  p = 1:2 .
+SUBST:  P = 1:20 .
+SUBST:  G = G 2
+MAP
+  ........
+ ..........
+....ppp.....
+...ppppp....
+..ppPPPpp...
+..ppPGPpp...
+..ppPPPpp...
+...ppppp....
+....ppp.....
+ ..........
+  ........
+ENDMAP
+
+NAME:   shoals_oasis
+DEPTH:  Shoals
+WEIGHT: 1
+MONS:   plant
+SUBST:  . = 1:1 .
+SUBST:  W = W .
+SUBST:  w = W w
+SUBST:  _ = w
+MAP
+  ...
+ ..W..
+..WwW..
+.Ww_wW.
+..WwW..
+ ..W..
+  ...
+ENDMAP
+
+NAME:   shoals_atoll
+DEPTH:  Shoals
+KMONS:  1 = patrolling kraken
+KFEAT:  1 = deep_water
+KPROP:  1Wgw. = no_tide
+FHEIGHT: gw1 = 40
+MARKER: 1 = lua:MonPropsMarker:new {ancient_kraken="ancient_kraken"}
+MARKER: 1 = lua:portal_desc { water_marker = 1, tide_seed = 1 }
+MARKER: W = lua:portal_desc { water_marker = 1 }
+MARKER: w = lua:portal_desc { water_marker = 1 }
+MARKER: . = lua:portal_desc { water_marker = 1 }
+SUBST:  g = WWw, X = ccc., x = c
+{{
+local kraken_death_marker = TriggerableFunction:new {
+  func="shoals_atoll_kraken_death",
+  repeated=false,
+  props= {water_marker="1"} }
+
+kraken_death_marker:add_triggerer(DgnTriggerer:new {
+  type="monster_dies",
+  target="ancient_kraken" })
+
+lua_marker("*", kraken_death_marker)
+
+local place_items_marker = TriggerableFunction:new {
+  func="shoals_atoll_place_items",
+  repeated=false,
+  props= {water_marker="1"} }
+
+place_items_marker:add_triggerer(DgnTriggerer:new { type="entered_level" })
+lua_marker("1", place_items_marker)
+}}
+MAP
+     XXXXXXXX
+    XxxxxxxxxX
+   Xx...WWWGxxX
+  Xx.gggggW*GxX
+ Xx.ggwwwggWWxX
+Xx.ggwwwwwggWxX
+Xx.ggww1wwgg.xX
+Xx.ggwwwwwgg.xX
+XW..ggwwwgg.xX
+ WW..ggggg.xX
+  WW......xX
+   WWWWxxxX
+      XXXX
+ENDMAP
+
+NAME:   yaktaur_hedge
+DEPTH:  Shoals
+MONS:   bush
+MONS:   yaktaur
+MAP
+.......
+.11111.
+.1...1.
+.1.1.1.
+.1.121.
+.1.111.
+.......
+ENDMAP
+
+NAME:   african_american_sheep
+DEPTH:  Shoals
+MONS:   sheep, sheep name:black n_adj n_spe col:darkgrey tile:mons_black_sheep
+MAP
+  ....
+ ..11..
+.12.1..
+......
+ENDMAP
+
+##############################################################################
+# Branch ends.
+# Note that the Shoals usually have a randomised end map; predrawn maps
+# (which need not be encompassing) are sometimes used, though.
+##############################################################################
+
+################################################################################
+# Shoal hut with rune inside.
+#
+# This hut is also used for the decoy huts, with the rune replaced with a good
+# item.
+#
+NAME:      shoalhut_rune
+TAGS:      shoal_rune_hut water_ok no_dump allow_dup
+SHUFFLE:   ABCD
+SUBST:     A:x, B:x, C:x=, D=+
+SUBST:     0 = 0.
+SUBST:     e = e.
+KMONS:     ge = merfolk impaler / merfolk javelineer / merfolk aquamancer
+LROCKTILE:  wall_vines
+KITEM:     O = barnacled rune of Zot
+MAP
+ xxCxx
+xx.0.xx
+xe0g0ex
+B0gOg0D
+xe0g0ex
+xx.0.xx
+ xxAxx
+ENDMAP
+
+################################################################################
+# Shoal decoy hut
+#
+NAME:      shoalhut
+TAGS:      shoal_hut water_ok no_dump allow_dup
+SHUFFLE:   ABCD
+SUBST:     A:x, B:x, C:x=, D=+
+SUBST:     0 = 0.
+LROCKTILE:  wall_vines
+MAP
+ xxCxx
+xx.0.xx
+x.0.0.x
+B0.|.0D
+x.0.0.x
+xx.0.xx
+ xxAxx
+ENDMAP
+
+################################################################################
+# Shoal hangout of Ilsuiw. Using PLACE: makes this quite likely to turn up.
+# The hut itself may not contain Ilsuiw if she had other engagements.
+
+NAME:    shoal_ilsuiw
+PLACE:   Shoals:$
+TAGS:    mini_float
+KMONS:   1 = Ilsuiw band, siren
+KMONS:   2 = merfolk impaler / merfolk javelineer
+SUBST:   3 = 33w
+KMONS:   3 = merfolk aquamancer / merfolk impaler / merfolk javelineer
+KFEAT:   123 = w
+LROCKTILE:  wall_vines
+MAP
+ wxwxw
+wxw2wxw
+xwwwwwx
+w3w1w3w
+xwwwwwx
+wxw2wxw
+ wxwxw
+ENDMAP

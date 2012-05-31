@@ -1,0 +1,1205 @@
+##############################################################################
+# crypt.des: Maps for the Crypt.
+# - entry vaults
+# - minivaults
+# - branch end vaults
+##############################################################################
+
+{{
+function crypt_drop_grates(data, triggerable, triggerer, marker, ev)
+    if data.trig == true then
+        return
+    else
+        data.trig = true
+    end
+
+    crawl.mpr("There is a click. Suddenly, the liches are set free!", "warning")
+    for slave in iter.slave_iterator("wall_phase", 1) do
+        dgn.terrain_changed(slave.x, slave.y, "floor", false, false, false)
+    end
+end
+}}
+
+##############################################################################
+# Crypt entry vaults
+##############################################################################
+
+##############################################################################
+NAME:   dummy_crypt_entry
+WEIGHT: 50
+TAGS:   crypt_entry
+KFEAT:  O = enter_crypt
+MAP
+O
+ENDMAP
+
+##############################################################################
+NAME:   minmay_crypt_entry_simple_round
+ORIENT: float
+TAGS:   crypt_entry
+MONS:   place:Crypt:1
+KFEAT:  O = enter_crypt
+MAP
+.........
+..ccccc..
+..c...c..
+.cc.1.cc.
+.c.....c.
+.+.1O1.c.
+.c.....c.
+.cc.1.cc.
+..c...c..
+..ccccc..
+.........
+ENDMAP
+
+##############################################################################
+NAME:   minmay_crypt_entry_simple_box
+ORIENT: float
+TAGS:   crypt_entry
+MONS:   place:Crypt:1
+KFEAT:  O = enter_crypt
+MAP
+.......
+.cc.cc.
+.c1c1c.
+..cOc..
+.c1c1c.
+.cc.cc.
+.......
+ENDMAP
+
+##############################################################################
+NAME:   minmay_crypt_entry_simple_statues
+ORIENT: float
+TAGS:   crypt_entry
+MONS:   place:Crypt:1
+KFEAT:  O = enter_crypt
+MAP
+...........
+.x.......x.
+...........
+...GxxxG...
+...xx1xx...
+....1O1x...
+...xx1xx...
+...GxxxG...
+...........
+.x.......x.
+...........
+ENDMAP
+
+##############################################################################
+NAME:   minmay_crypt_entry_simple_sparse
+ORIENT: float
+TAGS:   crypt_entry
+MONS:   place:Crypt:1
+KFEAT:  O = enter_crypt
+MAP
+...........
+.x...x...x.
+...........
+...x.1.x...
+...........
+.x.1.O.1.x.
+...........
+...x.1.x...
+...........
+.x...x...x.
+...........
+ENDMAP
+
+##############################################################################
+NAME:   minmay_crypt_entry_simple_walls
+ORIENT: float
+TAGS:   crypt_entry
+MONS:   place:Crypt:1
+KFEAT:  O = enter_crypt
+MAP
+..........
+.xxxxxxxx.
+.x........
+.x1xxxxxx.
+.x......x.
+.x.xxxx1x.
+.x.x....x.
+.x.x.O..x.
+.x.x....x.
+.x.xxxx1x.
+.x......x.
+.x1xxxxxx.
+.x........
+.xxxxxxxx.
+..........
+ENDMAP
+
+##############################################################################
+NAME:   minmay_crypt_entry_simple_corners
+ORIENT: float
+TAGS:   crypt_entry
+MONS:   place:Crypt:1
+KFEAT:  O = enter_crypt
+MAP
+...........
+.xx.....xx.
+.x1.....1x.
+....x.x....
+...xx.xx...
+.....O.....
+...xx.xx...
+....x.x....
+.x1.....1x.
+.xx.....xx.
+...........
+ENDMAP
+
+##############################################################################
+NAME:   minmay_crypt_entry_simple_plaza
+ORIENT: float
+TAGS:   crypt_entry
+MONS:   place:Crypt:1
+KFEAT:  O = enter_crypt
+MAP
+......................
+..............xxxxxxx.
+.....G...G...Gx..1..x.
+..............x.....x.
+...........1..+..O.1x.
+..............x.....x.
+.....G...G...Gx..1..x.
+..............xxxxxxx.
+......................
+ENDMAP
+
+##############################################################################
+NAME:   minmay_crypt_entry_skeletal_spiral
+ORIENT: float
+TAGS:   crypt_entry
+MONS:   small skeleton / large skeleton / skeletal warrior
+KFEAT:  O = enter_crypt
+MAP
+...........
+.xxxxxxxxx.
+.x..1..1.x.
+.x1xxxxx.x.
+.x.x111x1x.
+.x.x1O1x.x.
+.x1x111x1x.
+.x.x.xxx.x.
+.x.x1.1.1x.
+.x1xxxxxxx.
+...........
+ENDMAP
+
+##############################################################################
+NAME:    minmay_crypt_entry_necro_gods
+ORIENT:  float
+WEIGHT:  30
+TAGS:    crypt_entry
+SHUFFLE: AB
+KFEAT:   A = altar_kikubaaqudgha
+KFEAT:   B = altar_yredelemnul
+KFEAT:   O = enter_crypt
+MAP
+...........
+.G.ccccc.G.
+...c...c...
+.ccc.A.ccc.
+.c.......c.
+.+...O...c.
+.c.......c.
+.ccc.B.ccc.
+...c...c...
+.G.ccccc.G.
+...........
+ENDMAP
+
+##############################################################################
+NAME:    minmay_crypt_entry_nasty_monster
+ORIENT:  float
+TAGS:    crypt_entry
+MONS:    bone dragon w:25 / lich / shadow dragon w:5, curse skull
+SHUFFLE: 1X/2Y
+SUBST:   X=., Y=x
+KFEAT:   O = enter_crypt
+MAP
+.........
+.x.....x.
+.xx...xx.
+..x.1.x..
+..x.X.x..
+.xx...xx.
+.x.....x.
+.x..O..x.
+.x.....x.
+.xx...xx.
+..xxxxx..
+.........
+ENDMAP
+
+##############################################################################
+NAME:   minmay_crypt_entry_vampire_x
+ORIENT: float
+TAGS:   crypt_entry
+MONS:   vampire, vampire knight / vampire mage
+SUBST:  V = VVVY
+KFEAT:  O = enter_crypt
+MAP
+................
+.xxxxx....xxxxx.
+.x...xx..xx...x.
+.x.O..xxxx..1.x.
+.x..2..xx.....x.
+.xx..V....V..xx.
+..xx........xx..
+...xx..cc..xx...
+...xx..cc..xx...
+..xx........xx..
+.xx..V....V..xx.
+.x.....xx.....x.
+.x.1..xxxx..1.x.
+.x...xx..xx.....
+.xxxxx....xxx...
+................
+ENDMAP
+
+
+##############################################################################
+# Crypt minivaults
+##############################################################################
+
+##############################################################################
+# Dead fish
+NAME: lemuel_dead_fish_pool
+DEPTH: Crypt:*
+# Lemuel also had Cocytus:*
+TAGS: no_pool_fixup
+SUBST: . : .w
+SUBST: 1 = w:50 1
+KFEAT: 1 = w
+KMONS: 1 = big fish zombie / giant goldfish zombie
+MAP
+...wwwww...
+..ww111ww..
+.ww11111ww.
+ww1111111ww
+w111111111w
+w111111111w
+ww1111111ww
+.ww11111ww.
+..ww111ww..
+...wwwww...
+ENDMAP
+
+##############################################################################
+# tombs in the wall
+NAME:  tombwall_bobbens
+TAGS:  allow_dup
+DEPTH: Crypt
+MONS:  w:50 small zombie / w:100 large zombie / skeletal warrior / ghoul / \
+       large abomination / small abomination / necrophage / rotting hulk / \
+       w:50 small skeleton / w:100 large skeleton / w:30 nothing
+MAP
+ccccccccccccccccccccccc
+ccc1c1c1c1c1c1c1c1c1ccc
+ccc+c+c+c+c+c+c+c+c+ccc
+.......................
+.......................
+.......................
+ENDMAP
+
+##############################################################################
+#       small crypt building
+NAME:   minicrypt_bobbens
+TAGS:   allow_dup
+DEPTH:  Crypt
+MONS:   necromancer
+MONS:   large zombie/small zombie/large skeleton/small skeleton
+MONS:   flying skull
+MAP
+  ccccccc
+ cc2c2c2cc
+ccc+c+c+ccc
+c2+.....+2c
+ccc..1..ccc
+c2+.3.3.+2c
+ccc.....ccc
+c2+.....+2c
+ccc.....ccc
+c2+.....+2c
+cccc+c+cccc
+ENDMAP
+
+##############################################################################
+# death oozes - they're sort of like garden slugs
+NAME:   minigarden_bobbens
+TAGS:   allow_dup
+DEPTH:  Crypt
+MONS:   death ooze
+KFEAT:  f = .
+# "withered plant" instead of "plant"
+KMONS:  f = w:2 col:darkgrey plant name:withered name_adjective               \
+            tile:mons_withered_plant / w:1 col:lightgrey plant name:withered  \
+            name_adjective tile:mons_withered_plant
+SUBST:  p = f:2 .:1
+SUBST:  1 = 1:3 .:1
+MAP
+..........
+..p1pp.p..
+.pp.pp..p.
+.ppp.1.p..
+..p1pp.p..
+...pppp1..
+.p.pfffp..
+..ppfffp..
+..p.1p1p..
+.1.p..pp..
+..........
+ENDMAP
+
+##############################################################################
+# Lich vault
+NAME:  weyrava_lich_vault
+DEPTH: Crypt
+TAGS:  no_monster_gen no_item_gen
+ITEM:  gold
+KFEAT: Z = blade trap / needle trap / bolt trap / w:8 zot trap / w:25 floor
+KMONS: Y = Boris / ancient lich
+MONS:  w:3 large zombie / lich / w:3 large skeleton / w:3 bone dragon
+MONS:  small skeleton / small zombie
+KFEAT: v = w:5 ~ / .
+KITEM: v = $ / %
+SUBST: $ = $.*|
+SUBST: + = +=
+MAP
+    ccccc
+ ccccv.vcccc
+ c$.=.Y..=$c
+ c.ccv.vcc.c
+ c+ccc+ccc+c
+ c..$c.c$..c
+@n.1.c.c.1.c
+ c$.$c.c$.$c
+ ccc=c.ccccc
+ cccZcZc$c
+ c.=.cZczc
+ cZcccZc=c
+ c.=2+Z+2c
+ cccccZccc
+     c.c
+     c@c
+ENDMAP
+
+##############################################################################
+# Ghost lake
+NAME:  weyrava_ghost_lake
+DEPTH: Crypt
+TAGS:  no_monster_gen no_item_gen
+MONS:  flying skull
+MONS:  skeletal warrior ; long sword . shield . w:6 wand of lightning | nothing /\
+       skeletal warrior ; battleaxe | halberd . w:7 wand of lightning | nothing
+SUBST: y = .:8 c
+SUBST: v = z .
+SUBST: w = w z:6
+KFEAT: z = deep_water
+KMASK: z = no_pool_fixup
+KFEAT: T = .
+KITEM: T = * / w:5 |
+KMONS: T = w:25 phantasmal warrior / spectral dragon / spectral ice dragon / \
+           spectral storm dragon
+KFEAT: S = .
+KITEM: S = $ / nothing
+KMONS: S = w:25 phantasmal warrior / spectral dragon / spectral ice dragon / \
+           spectral storm dragon
+MAP
+    cccccccccccc
+  cccyy.yy..yyycccc
+  cyy..w..ww...12ycc
+  cy.wwzwwzzwwwww.ycc
+ cc.wzzzzzzzzzzzzw..@
+ccy1wzzzzzzzzzzzzzw.cc
+cy.wzzzzzzvvzzzzzzw.yc
+@.wzzzzzv1.11vzzzzw.yc
+cy.wzzzv.c++c.vzzzzw.c
+cy.wzzz.ccSScc1zzzzw2c
+cy2wzzv.+STTS+.vzzw1yc
+c.wzzzv.+STTS+.vzzw.yc
+c.wzzzz1ccSScc.zzzw.yc
+c.wzzzzv.c++c.vzzzzw.c
+c.wzzzzzv11.1vzzzzzw.@
+cy2wzzzzzzvvzzzzzzw.yc
+ccy1wzzzzzzzzzzzzw1ycc
+ ccy.wzzzzzwwwwww2ycc
+  cy.wzzwww......ycc
+  cc.www...yyyccccc
+   cy...yyccccc
+   ccc@cccc
+ENDMAP
+
+##############################################################################
+# Vampire temple
+NAME:    weyrava_vampire_temple
+DEPTH:   Crypt
+TAGS:    no_monster_gen no_item_gen no_wall_fixup
+MONS:    col:red fungus
+MONS:    col:lightred fungus
+MONS:    fungus
+MONS:    vampire / w:4 patrolling vampire knight / w:4 vampire mage
+KFEAT:   Z = altar_kikubaaqudgha / altar_yredelemnul
+KITEM:   z = book of Unlife / book of Death / nothing
+KFEAT:   z = floor
+# create between one and four blood fountains
+SUBST:   Q=qu, U=un, N=ns, S=sq
+SHUFFLE: Mmn / Xxy / Xxy / Xxy
+SUBST:   M=V , m=v , n=u , X=A , x=a , y=b
+SHUFFLE: Rrs / Xxy / Xxy / Xxy
+SUBST:   R=V , r=v , s=u , X=A , x=a , y=b
+SHUFFLE: Ppq / Xxy / Xxy / Xxy
+SUBST:   P=V , p=v , q=u , X=A , x=a , y=b
+SUBST:   V=Y, v=11111112, u=1222233...
+SUBST:   A=V, a=..3, b=.
+MAP
+     c@G@c
+   ccc.c.ccc
+  cc4..u...cc
+ cc..cuvuc..cc
+ c..QuvVvuU.4c
+cc4cqQuvuUnc.cc
+@..qpqQuUnmn..@
+GcqpPpqZzmMmncG
+@..qpqSsNnmn..@
+cc.cqSsrsNnc.cc
+ c..SsrRrsN.4c
+ cc4.csrsc..cc
+  cc...s..4cc
+   ccc.c.ccc
+     c@G@c
+ENDMAP
+
+##############################################################################
+# Shadows.
+# For Crypt and Tartarus
+#
+NAME:   minmay_shadows
+ORIENT: northwest
+DEPTH:  Crypt, Tar
+MONS:   shadow, soul eater
+ITEM:   lantern of shadows
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x1.......1xxx2.2xxx1.......1x
+x....1....xxx.d.xxx....1....x
+x.........xxx2.2xxx.........x
+x...xxx...xxx.1.xxx...xxx...x
+x.1.xxx.2.xxx...xxx.2.xxx.1.x
+x...xxx...xxx1.1xxx...xxx...x
+x...xxx....1.....1....xxx...x
+x1..xxx..1....1....1..xxx..1x
+x...xxx1....1...1....1xxx...x
+x...xxxxxxxxxxxxxxxxxxxxx...x
+x.2.xxxxxxxxxxxxxxxxxxxxx.2.x
+x...xxxxxxxxxxxxxxxxxxxxx...x
+x...xxx....1.....1....xxx...x
+x1..xxx1.............1xxx..1x
+x...xxx...............xxx...x
+x...xxx...xxx...xxx...xxx...x
+x.1.xxx...xxx.1.xxx...xxx.1.x
+x...xxx...xxx...xxx...xxx...x
+x.........xxx1.1xxx.........x
+x....1....xxx...xxx....1....x
+x.........xxx...xxx.........x
+xxxxxxxxxxxxx.@.xxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Crypt ends
+##############################################################################
+
+##############################################################################
+#       churchlike map with customizeable monster sets
+#
+NAME:   church_of_pain_bobbens
+ORIENT: float
+TAGS:   no_monster_gen no_item_gen
+PLACE:  Crypt:5
+# MONSTER LAYOUT
+# boss (1)
+# boss guard (2)
+# secondary boss (3)
+# support (4)
+# primary guard (5)
+# advanced guard (6)
+# in tombs (7)
+
+# 30% - skeletal (standard)
+# 30% - vampire (pretty hardcore, with easier bosses)
+# 30% - ghost
+# 10% - mummy (pretty evil)
+
+# skeletal monsters
+: local brnd = crawl.random2(13)
+: if brnd > 8 then
+MONS:   ancient lich
+MONS:   bone dragon
+MONS:   lich
+MONS:   necromancer
+MONS:   skeletal warrior
+MONS:   flying skull
+MONS:   w:20 skeletal warrior / w:40 large skeleton / small skeleton / nothing
+# vampire layout
+: elseif brnd > 4 then
+MONS:   vampire mage
+MONS:   phantasmal warrior
+MONS:   vampire knight
+MONS:   vampire
+MONS:   skeletal warrior/wraith
+MONS:   dancing weapon
+MONS:   vampire / skeletal warrior / large zombie / w:5 small zombie / \
+        wraith / w:5 nothing
+# ghost layout
+: elseif brnd > 0 then
+MONS:   curse skull
+MONS:   crystal golem
+MONS:   lich
+MONS:   phantasmal warrior
+MONS:   flayed ghost / wraith / freezing wraith / phantasmal warrior
+MONS:   flying skull
+MONS:   flayed ghost / wraith / freezing wraith / phantasmal warrior / \
+        hungry ghost / large zombie / w:5 small zombie / w:5 nothing
+# mummy layout - rare
+: else
+MONS:   greater mummy
+MONS:   sphinx
+MONS:   mummy priest
+MONS:   mummy priest
+MONS:   guardian mummy
+MONS:   flying skull
+MONS:   mummy / guardian mummy / w:5 nothing
+: end
+SUBST:  ; = .:6 ~:2 ^:1
+NSUBST: / = 1:| / 2:* / *:%
+MAP
+           xxxxvvvvvvvvvvvvvvvvvxxxx
+           xxxvv..WWWWWWWWWWW..vvxxx
+           xxvv..WWWWWWWWWWWWW..vvxx
+           xxv...WWWb.b.b.bWWW...vxx
+           xxv...WWb$$|*|$$bWW...vxx
+     xxxxxxxxv...WW.$/|1|/$.WW...vxxxxxxxx
+     xxccccccv...WWb$$|*|$$bWW...vccccccxx
+     xxc/;cccv...WWWb.b.b.bWWW...vccc;/cxx
+     xxc;;;ccvv..WWWWWWWWWWWWW..vvcc;;;cxx
+xxxxxxxc;;;/ccvv..WWWWWWWWWWW..vvcc/;;;cxxxxxxx
+xxccccccc=cccccv...............vccccc=cccccccxx
+xxcU......cxxxxvv....2...2....vvxxxxc......Ucxx
+xxc..3....cxxxxxvv.....6.....vvxxxxxc....3..cxx
+xxc.......cxxxxxvvv.6.....6.vvvxxxxxc.......cxx
+xxc.......cxxxxxvvvvv.....vvvvvxxxxxc.......cxx
+xxc...5.5.cxxxxxvvvvvvv+vvvvvvvxxxxxc.5.5...cxx
+xxccccc+cccxxxxxvcccccU.Ucccccvxxxxxccc+cccccxx
+xxxxxxc;cxxxxxxxvc.U.cc+cc.U.cvxxxxxxxc;cxxxxxx
+    xxc.cxxxxxccccG..F;^;F..Gccccxxxxxc.cxx
+    xxc;cccccccG....45...54....Gccccccc;cxx
+    xxc.;;;;;;+.................+;;;;;;.cxx
+    xxc;cccccccG.......C.......Gccccccc;cxx
+    xxc.c;;;+;ccc56.........65cccxxxxcc.cxx
+  xxxxc;c/;;c;ccc5...........5cccxxxxcc;cxxxx
+xxxxccc+ccc/c;=7+.............+7ccccccc+cccxxxx
+xxccc.5.5.ccccccc..c.......c..ccccccc.5.5.cccxx
+xxc7+.....+7ccc7+.............+7ccc7+.....+7cxx
+xxccc.....ccccccc..c.......c..ccccccc.....cccxx
+xxc7+.....+7ccc7+.............+7ccc7+.....+7cxx
+xxccc.....ccccccc..c.55555.c..ccccccc.....cccxx
+xxc7+.....+7ccc7+.............+7ccc7+.....+7cxx
+xxccc.....ccccccc..c6.6.6.6c..ccccccc.....cccxx
+xxc7+.....+7ccc7+.............+7ccc7+.....+7cxx
+xxccc.5.5.ccccccc..c.......c..ccccccc.5.5.cccxx
+xxxxccc+cccxxxc7+.............+7=;;cccc+cccxxxx
+   xxc...cxxxxccc..c.......c..ccc;/ccc...cxx
+   xxc.4.cxxxxc7+.............+7cccccc.4.cxx
+   xxc./.cxxxxccc..c.......c..cccxxxxc./.cxx
+   xxcccccxxxxc7+.............+7cxxxxcccccxx
+   xxxxxxxxxxxccc....c...c....cccxxxxxxxxxxx
+            xxxxc5.Vcc...ccV.5cxxxx
+              xxcccccc...ccccccxx
+              xxc..;;;...;;;..cxx
+              xxc;;vcccccccv;;cxx
+                c..;;;...;;;..c
+                cccccc@c@cccccc
+ENDMAP
+
+
+##############################################################################
+#       gigantic sort of aquatic base
+#
+NAME:   cryptofortress_bobbens
+ORIENT: encompass
+TAGS:   no_monster_gen no_item_gen no_pool_fixup no_rotate no_vmirror
+PLACE:  Crypt:5
+KFEAT:  A = w
+KMONS:  A = flying skull
+KFEAT:  B = .
+KMONS:  B = ancient lich
+KFEAT:  D = .
+KMONS:  D = bone dragon
+KFEAT:  V = .
+KMONS:  V = vampire knight
+KFEAT:  X = .
+KMONS:  X = dancing weapon
+KFEAT:  L = .
+KMONS:  L = lich
+KFEAT:  I = .
+KMONS:  I = iron golem
+KFEAT:  G = .
+KMONS:  G = crystal golem
+KFEAT:  z = .
+KMONS:  z = skeletal warrior
+KFEAT:  N = .
+KMONS:  N = necromancer
+KFEAT:  H = .
+KMONS:  H = hell knight
+KFEAT:  M = .
+KMONS:  M = large zombie / small zombie / large skeleton / small skeleton / \
+            necrophage
+KFEAT:  h = .
+KMONS:  h = titan zombie/dragon zombie/golden dragon zombie/ghoul
+# red metal walls
+COLOUR: = = red
+COLOUR: r = red
+SUBST:  r = v
+# emergency exits; most are closed
+NSUBST: ? = 3:= / *:v
+SUBST:  / = |**
+SUBST:  * = *%
+SUBST:  % = %$
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwvvvvvvvvvvvvvvvvvvvvvvvvvvvvwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwv..........................vAwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwv.........rrrrrrrr.........vAAAwwwwwwwwwwwv
+vwwwwwwwwwwwwwwv.........r//||//r.........vAAAAAAwwwwwwwwv
+vwwwwwwvvvv?vvvv......rr=rr*/**rr=rr......v?v?v?v?vwwwwwwv
+vwwwwwwv.......v......r$$*rr++rr*$$r......v.......vwwwwwwv
+vwwwwww?....H..v.....rrrr*r$$$$r*rrrr.....v.......?wwwwwwv
+vwwwwwwv....H..+........rrr$$$$rrr........+.h..H..vwwwwwwv
+vwwwwww?....H..v......L...r$$$$r...L......v....H..?wwwwwwv
+vwwwwwwv.h.vvvvv...rrr....rr++rr....rrr...v....H..vwwwwwwv
+vwwwwww?...v...vv....rr.rrrU..Urrr.rr....vvv+v....?wwwwwwv
+vwwwwwwv...v.X..vv....rrr........rrr....vv...vvvvvvwwwwwwv
+vwwwwwwv...+.....vv....r.U..BC..U.r....vvvv.....+Mvwwwwwwv
+vwwwwwwv...v..V.$vvv...rr........rr...vvvM+.....vvvwwwwwwv
+vwwwwwwv...v...$*v.vv...rrrU..Urrr...vv.vvv.....+Mvwwwwwwv
+vwwwwwwv...vvvvvvv..vv....rr..rr....vv..vM+.....vvvwwwwwwv
+vwwwwwwv...vvv...v...vv............vv...vvv.....+Mvwwwwwwv
+vwwwwwwv...vv....+....vv..........vv....+....N..vvvwwwwwwv
+vwwwwwwv...vNz...v.....vv........vv.....vvv.....+Mvwwwwwwv
+vwwwwww?...v.M...v....G.vv......vvI.....vM+.....vvvwwwwwwv
+vwwwwwwv...v....vv....vvvvvvvvvvvvvv....vvv.....+Mvwwwwwwv
+vwwwwwA?.......vv....vv.....ll.....vv....vvv+v..vvvwwwwwwv
+vwwwwwAv......vv....vv..............vv....vvMv..+Mvwwwwwwv
+vwwwwAA?.....vv....vv................vv....vvv..vvvwwwwwwv
+vwwwAAAv.....v....vv.......N..N.......vv....vv..+Mvwwwwwwv
+vwvvvvvvvvvvvvv+vvvvv+vv.Mzz..zzM.vv+vvvvv+vvvvvvvvvvvvvwv
+vwvv.........v..I.v....v..........v....v.........v..%*vvwv
+vwvv.........v....v....v..........v....v.........v...$vvwv
+vwvv.........+....v....v..........v....v.....X..V+....vvwv
+vwvv....D....v....v..z.v..........v.z..v.........v....vvwv
+vwvvv....z...v....+...Nvr........rvN...+......X..vvvvvvvwv
+vwwvv........v....v..z.vrr......rrv.z..v.............vvwwv
+vwwvvv.......+....v....vrrrr++rrrrv....v............vvvwwv
+vwwwvv.......v....v....vrrUz..zUrrv....v............vvwwwv
+vwwwvvvvvvvvvvvvvvvv+vvvrI......Irvvv+vvvvvvvvvvvvvvvvwwwv
+vwwwwvvv/**$$v.........vrrrr++rrrrv.........v$$**/vvvwwwwv
+vwwwwwvvv/*$$+.........vrrww..wwrrv.........+$$*/vvvwwwwwv
+vwwwwwwvvv*$$v...X.....vrwAw..wAwrv...X.....v$$*vvvAwwwwwv
+vwwwwwwwwvvv$v....G....vwwww..wwwwv..G......v$vvvAAwwwwwwv
+vwwwwwwwwwvvvv.........vwwww..wwwwv.........vvvvwwwwwwwwwv
+vwwwwwwwwwwwvvvv.......vwwww..wwwwv.......vvvvwwwwwwwwwwwv
+vwwwwwwwwwwwwwvvvv.....vwwww..wwwwv.....vvvvwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwvvvvv..vwwww..wwwwv..vvvvvwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwvvvvvAwww..wwwAvvvvvwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwvvAwww..wwwAvvwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwwAwwww..wwwwAwwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwwwwwww..wwwwwwwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwwwwwww..wwwwwwwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwwwwwww..wwwwwwwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwwwwwww..wwwwwwwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwwwwwww..wwwwwwwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwwwAww....wwAwwwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwwwwww....wwwwwwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwwwww....{.wwwwwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwAwww.[....wwwAwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwwwwww..(.wwwwwwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwwwwAwwwwwwAwwwwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+##############################################################################
+#       eye to eye with the evil
+#
+# XXX: Undiggable glass has been converted to grates.
+NAME:   david_glass_crypt
+ORIENT: float
+TAGS:   no_item_gen no_rotate
+PLACE:  Crypt:5
+MARKER: m = lua:portal_desc {wall_phase = 1}
+KFEAT:  m = iron_grate
+MONS:   patrolling lich / patrolling ancient lich
+MONS:   bone dragon / curse skull / curse toe
+MONS:   flying skull / skeletal warrior / w:40 nothing
+WEIGHT: 10
+KFEAT:  ^ = alarm trap
+SUBST:  F = G:99 F:1
+KMONS:  F = orange crystal statue / silver statue / ice statue
+{{
+lua_marker("|",
+           Triggerable.synchronized_markers(
+             function_at_spot("crypt_drop_grates", { trig = false },
+                              true, { only_at_slave = true,
+                                      listen_to_slaves = true })))
+}}
+MAP
+.....................
+.....................
+..vvvvnnnnnnnnnvvvv..
+..vlllllllllllllllv..
+..vlllllllllllllllv..
+..vllll..|||..llllv..
+..vll...|||||...llv..
+..vl.....|||.....lv..
+..vl.............lv..
+..vmm..F.vvv.F..mmv..
+..v1m...^^^^^...m1v..
+..vvvvvvv+++vvvvvvv..
+...vv..2.....2..vv...
+ ..vv.333333333.vv..
+ ...vvv.......vvv...
+   ...vv+++++vv...
+    .............
+ENDMAP
+
+##############################################################################
+#       Four quadrants (by mu)
+#       burial hoard (NE), chapel of kikubaaqudgha (NW), catacombs (SE), crematory (SW)
+#
+NAME:   quadcrypt_mu
+ORIENT: encompass
+TAGS:   no_monster_gen no_item_gen no_pool_fixup no_rotate no_vmirror no_hmirror
+PLACE:  Crypt:5
+####### chapel garden
+SUBST:  F = f ?
+SUBST:  f = p:1 .:1
+KFEAT:  p = .
+# "withered plant" instead of "plant"
+KMONS:  p = w:2 col:darkgrey plant name:withered name_adjective               \
+            tile:mons_withered_plant / w:1 col:lightgrey plant name:withered  \
+            name_adjective tile:mons_withered_plant
+####### hidden skeleton; sometimes good pain weapon, but draining short sword
+KFEAT:  ! = .
+KMONS:  ! = skeletal warrior ; w:2 dagger ego:pain | short sword ego:draining |\
+                               w:2 sabre ego:pain | w:1 quick blade ego:pain
+KFEAT:  A = .
+KFEAT:  b = .
+KFEAT:  D = .
+KFEAT:  E = .
+KFEAT:  G = .
+KFEAT:  H = .
+KFEAT:  I = .
+KFEAT:  J = .
+KFEAT:  P = .
+KFEAT:  Q = .
+KFEAT:  R = .
+KFEAT:  S = .
+KFEAT:  t = .
+KFEAT:  X = .
+KFEAT:  Z = .
+KFEAT:  8 = .
+KFEAT:  o = granite_statue
+KFEAT:  _ = altar_kikubaaqudgha
+KFEAT:  ~ = bolt trap / blade trap / needle trap / axe trap
+SUBST:  s = v =
+SUBST:  B = b %
+KITEM:  b = any book
+SUBST:  ? = $ % * |:1
+SUBST:  u = U Y
+SUBST:  ; = ..~
+KMONS:  8 = iron golem
+####### NW monsters (chapel).
+KMONS:  A = ancient lich / w:2 mummy priest
+KMONS:  D = lich / w:5 ancient lich
+KMONS:  E = iron golem
+KMONS:  G = flayed ghost / hungry ghost / phantom
+####### NE monsters (hoard). On a coinflip, either vampires or mummies.
+: if crawl.coinflip() then
+KMONS:  H = vampire mage
+KMONS:  I = vampire knight
+KMONS:  J = vampire
+KMONS:  P = large zombie / small zombie / large skeleton / small skeleton
+: else
+KMONS:  H = sphinx
+KMONS:  I = guardian mummy
+KMONS:  J = guardian mummy / mummy
+KMONS:  P = large skeleton / mummy
+: end
+####### SE monsters (catacombs). Either corporeal or incorporeal undead.
+: if crawl.coinflip() then
+KMONS:  Z = curse skull
+KMONS:  Q = bone dragon
+KMONS:  R = skeletal warrior
+KMONS:  S = large zombie / small zombie / large skeleton / small skeleton
+: else
+KMONS:  Z = curse skull
+KMONS:  Q = spectral iron dragon
+KMONS:  R = phantasmal warrior
+KMONS:  S = phantom / wraith / freezing wraith / flayed ghost / wight
+: end
+####### SW monsters (crematory). Either fiery undead or hellish.
+: if crawl.coinflip() then
+KMONS:  t = w:20 flaming corpse / fire giant skeleton / dragon skeleton
+KMONS:  X = w:1 curse skull / w:19 flaming corpse
+: else
+KMONS:  t = w:20 hell knight / smoke demon / red devil
+KMONS:  X = w:1 curse skull / w:19 hell knight
+: end
+####### Randomisation of secret doors; there is a chance of no door at all.
+SUBST:  K : Kvvv
+SUBST:  ' : 'vvv
+SUBST:  " : "v
+NSUBST: K = 1:= / *:v
+NSUBST: ' = 1:= / *:v
+NSUBST: " = 1:= / *:v
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vccccccccccccccccccccccccc......"<..Bvvvvvvvvvvvvvvvvvvvvvv
+vc..D..c.....c....Bc;;+;;c.ffff.vvvBDvvvvvvvvvvvvvvvvvvvvvv
+vc.c.c.+.....+....cc;;+;;c.ffFf.vvvv"vvvvvvvvvvvvvnP=.....v
+vc.._..+...D.c....Bc;;c;;m.ffFf.v????||$$$.vvvvv..nPn|????v
+vc.c.c.c.....c....cc..c..c.ffff.v$$$$$$$$$.vvvv...nPn$$$$$v
+vc.....ccc=ccc....Bc..cGGc.ffff.vnnnnnnnnn=vvv..H.nPn$$$$$v
+vc.....c.....c....cc..c..c.ffff.v;;;;;;;;;;vv.....nPn$$$$$v
+vc.....c?....c..A.Bc..c..m..fff.v;;;;;;;;;;vv.uvu.nPn$$$$$v
+vc.....c|?...c....cc..c..c...ff.v;;vvvvvvvvv..vvv.nPnnnnnnv
+vc.....c||?EEcBcBcc...c..c....f.v;;;;;;;;;;+..uvu.nPPPPPPPv
+vc++cccccccccccccc...cc..c......v;;;;;;;;;;+......nnnnnnn=v
+vc.....G............cc...m..G...vvvvvvvvvvvv.H............v
+vc.....G...........cc...cc......v....vvvvvvv..............v
+vccccccccccccccccccc...cc...ff..v.JJ...vvvvvv....v..v..v..v
+vc.....;;;;;;.........cc..fffff.v.......vvvvv.............v
+vc......;;;;.........ccE..fffff.vv+vv....vvvvv...v..v..v..v
+vccmcccmm++mmcccmcccmc...fffff..v...vvv...vvvvv...........v
+v.......f..f............fffffff.v.....vv...vvvvv..........v
+v....ffff..ffff.........fffFfff.v......v...vvvvvvvvvvvv++vv
+v.G.ffff...ffff...G....ffffffff.v......vv...v;..;.I;..;..;v
+v...ffff...fffff.......fffffff..v.......v...+.;..;..;..;..v
+v....ffff....ffff.......f.ffff..v.......v...+..;..;..;..;.v
+v......f.f....ffff..............v.......v...v;..;.I;..;..;v
+vvvvvvvvvvvvvv==vvvvvvvvvvvvvvvvvvvvvvv=vvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvv....v??llv??llv??llvvvvvvo.ovvvWWWWWWW.......v
+vvvvvlllvvvvv....v?.tlv?.tlv?.tlvvvv.......vvWWWWWWZ.mmmm;v
+vvv.......vvv....v....v....v....vvv.........vvWWWWWWWm*|m.v
+vv.........vv....v....v....v....vv...........vWWWWWWWW*|m;v
+v..ccc.ccc..vv++vvv==vvv==vvv==vvv...R.Q.R...vvWWWWmWW%|m.v
+v...lc.cl...v...................vo...........ovWWWWmmmmmm;v
+v..t.c.c.t..+.;;;;;;;;;;;;;;;;;.=......U......=...........v
+v...........v...................vo...........ov...........v
+v.cccc.cccc.vvvvvvvvvKvvvvvvvvvvvv.........vvvvvvvvvvvvvvvv
+v.cll...llc.v??......<vvvvvvvvvvvv.........+..;=..........v
+v.clt...tlc.K???.....Kvvvvvvvvvvvvv........+.;.vvvvvvvvvv.v
+v.c...X...c.v????|KKvvwwwwwwwwvvvvvv.......v;...vvvW.R.%v.v
+v...........vRRRRKvwwwwwwwwwwwwwwvvvvvo.ovvv=v...vvW...%v.v
+v..ccc.ccc..vRRKvvwwwwwwwwwwwwwwwwvvvvv=vvvv.vv...vv...$v.v
+v..lc...cl..vvvvwwwwwwwwwwwwwwwwwwwwvvv<v....vvv...vvv=vv.v
+v.t.......t.vvvwwwwwwwwwwwwwwwwwwwwwwvvvv.vvvvvvv...vv....v
+v....lll....vvvwwwwwwwwwwwwwwwwwwwwwwvvvv.v%RWvvvv...vvvv.v
+v....lml....vvwwwwwwwwwwwwwwwwwwwwwwwwvvv.v..Wvvvvv...vvv.v
+v....lll....vwwwwwwwwwwwwwwwwwwwwwwwwwwvv.v.vvvvvvvv...vv.v
+v...........vwwwwwwwwwwwwwwwwwwwwwwwwwwvv.v.v%R.Wv%vv...vvv
+vvvv++vvvvvvvwwwwwww..8..wwwwwwwwwwwwwwvv.v.v...WvRWvv...vv
+v........stvwwwwww.........wwwwwwwwwwwwwv.v=v=vvvv=vvvv...v
+v...ll...vsvwwwww...........wwwwwwwwwwwwv............vvv..v
+v...ll...stvwwww.............wwwwwwwwwwwvvvvvvvvvvvvvvvvv+v
+v...ll...vsvwwww.............wwww..;;.;;+.;;.....R......v.v
+v...ll...stvwww...............ww...;;.;;+.;;.V.S.R.V....v.v
+v.llllll.vsvwww...................wwwwwwv.;;...S........v.v
+v.llllll.stvwww8.............8...wwwwwwwv.;;.V.S.R.V....v.v
+v...ll...vsvwww.................wwwwwwwwv.;;.....R......v.v
+v.t.ll...vtvvww...............wwwwwwwwwvvvvvv''vvvvvvv+vv+v
+v.t.ll...v.*vwww.{...........wwwwwwwwwwv<..;...'o$.....vv.v
+v...ll...v.%vwww..[..........wwwwwwwwwwv....;..v$;....vvv.v
+v........=.*vvwww..(........wwwwwwwwwwvv..W..;.v..;..vvv..v
+vvvvvvvvvvvvvvvwww.........wwwwwwwwwwvv..SW...;v.S.;vvv.S.v
+vvvvvvvvvvvvvvvwwwww..8..wwwwwwwwwwwwv;.WWWWW..'...vvv;...v
+vvvvvvvvvvvvvvvvwwwwwwwwwwwwwwwwwwwwvv.;..W....v..vvv..;..v
+vvvvvvvvvvvvvvvvvvwwwwwwwwwwwwwwwwvvv...;.W....v+vvv....;$v
+vvvvvvvvvvvvvvvvvvvwwwwwwwwwwwwwwvv!s....;..R..'........$ov
+vvvvvvvvvvvvvvvvvvvvvvwwwwwwwwvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+### Haunted Forest #############################################################
+#
+# Q: How is there a dead forest in the Crypt?
+# A: ~use your Imagination~
+#
+NAME:   evilmike_haunted_forest
+ORIENT: encompass
+PLACE:  Crypt:5
+TAGS:   no_monster_gen no_item_gen no_pool_fixup no_rotate
+SUBST:  T = t., w = Wwww
+SUBST:  v = cccc.-
+COLOUR: t = w:5 lightgrey / w:5 darkgrey / brown
+COLOUR: x'D = white
+COLOUR: G = lightgrey
+COLOUR: "2 = brown
+NSUBST: . = 68:f / *:.
+KMONS:  f = col:darkgrey plant name:withered name_adjective               \
+            tile:mons_withered_plant / col:lightgrey plant name:withered  \
+            name_adjective tile:mons_withered_plant
+FTILE:  .tT5f?<8 = FLOOR_GREY_DIRT, "G2{[( = FLOOR_PEBBLE_BROWN
+FTILE:  '_D = FLOOR_SANDSTONE
+TILE:   x = WALL_STONE_GRAY, t = DNGN_TREE_DEAD, G = DNGN_GRAVESTONE
+SUBST:  x: c, -'": ., ?: |
+SUBST:  D = +, d = cc=
+NSUBST: * = 12:* / 12:% / *:$
+KFEAT:  m = iron_grate
+MONS:   w:3 patrolling lich / w:1 patrolling ancient lich
+MONS:   patrolling large zombie / w:5 patrolling small zombie / w:15 nothing
+MONS:   spider / jumping spider / wolf spider / redback / w:25 nothing
+MONS:   w:5 wraith / phantasmal warrior / eidolon / w:5 freezing wraith / w:5 nothing
+MONS:   raven skeleton / w:30 nothing
+MONS:   w:3 guardian mummy / w:1 mummy
+MONS:   w:5 patrolling mummy priest / w:1 patrolling greater mummy
+# This statue doesn't have a tile of its own
+KMONS:  8 = statue name:spooky n_adj spells:haunt tile:MONS_STATUE_MAGE col:death
+: if crawl.coinflip() then
+# Temple of yred
+KFEAT: _ = altar_yredelemnul
+KMONS:  9 = patrolling profane servitor
+KMONS:  H = patrolling unborn deep dwarf
+KMONS:  0 = patrolling ghoul
+KMONS:  A = patrolling deep dwarf death knight
+KMONS:  B = skeletal warrior
+KMONS:  C = necrophage / rotting hulk
+KMONS:  E = flayed ghost / w:4 hungry ghost / w:1 phantom / w:1 shadow
+KMONS:  F = patrolling bone dragon
+: else
+# Temple of kiku - more necromancers, more demonic (kiku's description refers to
+# him/her/it being demonic). Not as much undead in this set.
+KFEAT:  _ = altar_kikubaaqudgha
+KMONS:  9 = patrolling ancient lich
+KMONS:  H = patrolling lich / w:20 nothing
+KMONS:  0 = patrolling reaper w:5 / patrolling soul eater
+KMONS:  A = patrolling deep elf death mage
+KMONS:  B = w:4 necromancer / w:1 deep dwarf necromancer
+KMONS:  C = rotting devil
+KMONS:  E = large skeleton / w:3 small skeleton
+KMONS:  F = patrolling reaper
+: end
+SUBST:  n : nc
+KFEAT: ABCEFH = .
+: dgn.set_feature_desc_short("granite statue", "gravestone")
+: dgn.set_feature_desc_long("granite statue", "A nameless gravestone.\n")
+: dgn.set_feature_desc_short("tree", "dead tree")
+: dgn.set_feature_desc_long("tree", "This tree is as dead as everything else here.\n")
+MAP
+tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+ttt"""ttttttttvvvvvvvvTttTtttttttttttttttttttttttTTTT...Tttttw8wtttttwttt8t??ttt
+tt""("ttttttttv%--v-4v.....TtttttttttTTTTtttttttT....TTT..ttwwwwwttwwwttttT?Tttt
+ttT""ttttTTTttv4-4v4-v..T.t..TTTtttTT...TTTT.ttTT.TTttttT..WWWwwwwwwwwwtwwwW.Ttt
+ttT"TttTT..t..v---vvv.T....T..t..TTt.TTT.t....T..TtttttttTTTWWWwwwwwwwwwwwwwWttt
+tt""ttT..t...Tv--...."..ccccc...T...ccccc.T..t..TTTTtttttttTTWWWWWWwwtwwwwwWTttt
+tt""ttTt...T..vv."""....c*0-+.......+CC*c...T.T..t..TttttttttTTWWWTtttttWWW.Tttt
+tt""TtT..T..""".""".....c*-cccccccccccC*c.......t..t..ttttttttTTT.ttttttTW.Ttttt
+ttT""T.t.."""""""".....cccccc---9---cccccc......T....t.TTTTTtttttT.TtttT..Tttttt
+tttT"""""""".......T...c------*|||*------c..555....t.....t.tTtttttT.TtT.TTtttttt
+ttttt"""""".vvvvv.....ccc--xx**|V|**xx--ccc..555...t..tt..t...TTtttT....Tttttttt
+ttttttTtT"".v--4vvv...ccc--xx-*|||*-xx--ccc.......T.....t....t..TttttTTTTttttttt
+ttttttT..."...-%v--v...c--------H--------c...........t...t..t.t..Ttttttttttttttt
+ttttttT.t.".v-4-v4-v...c------ccccc------c....T.vvvT...t..t......Ttttttttcnnnctt
+ttttT.t.....vvvvvvvv..cccc+cccc$$$cccc+cccc.....v4--.T..t....t..tTttttt..c***ctt
+tttT.t........v-%-4v..ccc--Bcc0---0ccB--ccc.T...v4%4-v.T...t.....Ttttt...c%%%ctt
+ttT....T...T..v4--.....n--cccccc+cccccc--n......vvvvvv...T..T..t..Tttcc+cc---ctt
+tttT.t........vvvvvv...n--ccccc---ccccc--n.........T...............Ttc3333333ctt
+ttttT.t.T.............ccc-cccc-C'C-cccc-ccc..T...............T...t..tc3333333ctt
+tttttT.....cccccccccccccc-cVcC-'''-CcVc-cccccccccccccc.........T...tTcccnnnccctt
+ttttT..t..cc----+---------c-+-''x''-+-c---------+--E-cc....vvvv.T.t.Tttttttttttt
+ttttTt.....n-B--cccmmcccccc-c--'''--c-ccccccmmcccEEE-n..T..v44vT....Tttttttttttt
+ttttT..T..ccEEE-ccc00cc-----cc--'--cc-----cc00ccc-EEEcc....v--v....t.Ttttttttttt
+tttTt.T....n----cc--cc--ccccccc---ccccccc--cc--cc-E--n.....-vvv...t...Tttttttttt
+ttT.......ccc+ccc--cc--ccccccccc+ccccccccc--cc--ccc+ccc.........T....tTttttttttt
+ttT..t555..cc-cc**cc--ccccccc-------ccccccc--cc**cc-cc....T.......T....Ttttttttt
+tttT.55T..ccc-c**ccc+cc-------AV-VA-------cc+ccc**c-ccc.............t...Tttttttt
+ttttT5t....cc-cccc-EE-c-B-xxxx'''''xxxx-B-c----cccc-cc...vvvvvvv..T...t.Tttttttt
+tttttT....ccc+ccccEEEEc---xxxx'''''xxxx---c0--0cccc+ccc..v---4--v....t.Ttttttttt
+ttttT..t...n--'F-c-EE-c---xxxx''_''xxxx---c----c--'B-n...v-xxxx-v..T..tTtttttttt
+ttttT.t...cc-'x'-ccc+cc-V----B'''''B---V--cc+ccc-'x'-cc..v-xxxx4v......Ttttttttt
+tttttT..T..n--'--+----d--------'''--------d----+--'B-n...v4xxxx-v..T..t.Tttttttt
+ttttttTt...cccdcccccccccc-xxx--'''--xxx-ccccccccccdccc...v%---4-v........Ttttttt
+tttttttT..............ccc-xxx--'''--xxx-ccc..............vvvvvvvv....T.t.tTttttt
+ttttttttTt....xxxxx....n-------'''-------n...555....T..............--v....Tttttt
+tttttttT......x*1*x....n---B---'''---B---n..555......ccccccccc....--Tv..t.Tttttt
+ttttttT.t..T..x*|*x...ccc-xxx--'''--xxx-ccc...T......c$$$$$$$c...--44vT...tTtttt
+ttttttT.......x***x...ccc-xxx--'''--xxx-ccc.T........c$$$$$$$c..vvvvvvvvvv.Ttttt
+tttttttT.t.T..xx=xx....n-------'''-------n.......T...c$$$7$$$c..--4--vT..t.Ttttt
+ttttttttT......x-x.....n-------'''-------n.....t..t..c**666**c....---v..t...Tttt
+tttttttttTt..T.x=x....ccc-xxx--'''--xxx-ccc..T...t..tc-------c....T..t....t..Ttt
+tttttttttT......".....ccc-xxx--'''--xxx-ccc...t....ttcccc=cccct.t.t........tTttt
+ttttttttTt..T..."".....n--C----'''----C--n..t..tt.ttttccc-ccctt.....t...t..Ttttt
+tttttttT.........".....nCC-----'''-----CCn....ttttt"""c-----ctttttt...t..Ttttttt
+tttttTT.t..T....."....cccccxxxcDDDcxxxccccc.tttt"""2""cc+++cc""""2tt.t..Tttttttt
+ttttT.t5........""....ccc--xxxV'''Vxxx--ccc<tt""""""G"""""""""2"G""tt..tTttttttt
+tttT.t5....T...."......d-------'''-------cttt""2""""""2"""G"""""""""tt...Ttttttt
+ttT.55.t........"".....ccnnccc-'''-cccnncctt""""""G"""""2"""2"G""2"2"t..t.Tttttt
+tttTt.....T......""..........ccDDDcc....t.tt"G""""""2""""2"""""2""G""tt..t.Ttttt
+ttttT.t..........""....T..T....""".........t"""""2"""""G"""""""G"""""t..t.t..Ttt
+tttttT.t...T......"".....T....""""....."""""""2G"""""2"""2""""2"""2"ttt.....Tttt
+ttttT.....T..vvv...""".......""""..."""""""""""""""G"""""2"G""""G"""""...t.Ttttt
+tttTt.t.....v--v....."""..T..""""""""""""..t""G""""""""G""""""2""""""tt.t..Ttttt
+tttT......T.v44v....T..""...""""""""""....tt"""""2"""""2"""2""""2""G"tt..t..Tttt
+ttttTTt.....vvvv........""."""...vvvvvv...ttt""""G"""2"""G""""G""""""tt....t.Ttt
+ttttttT..t..T.....T......""""....v%-44v..t.ttttt"""""""""""2""""""G"ttt..t...Ttt
+tttttTT.t.....T........."""".....v4---v.......ttt""2""G"2"""G"""2"""tt.t...Ttttt
+tttttttTTT.t.t.....""""""".......v---......t.t.ttttt"""""2"""2""""ttt...t.Tttttt
+ttttttttttT....."""""""""".......vvvv....T........tttttttt"""ttttttt..t..Ttttttt
+tttttttttttT""""""""..............T...T.......t..t.tt..ttttttttt..t......Ttttttt
+ttttttttttt"""""...t.......T..............t...5555.......tt....t....t..tTTtttttt
+tttttttttt"""tttTt...t........t....T..t....t.t.55t..t..t....t.....t..TTTtttttttt
+tttttt""""""tttttT.t.....t.......t.......t......55...t...t.....t...TTttttttttttt
+ttt"""""""tttttttTT..TTTTTT..t......TTttT.TTtT..t...t.......t.TTTTTttttttttttttt
+tttt""[""""tttttttTTTtttttTT.....TTTtttttTttttTTT..t...TTTTttttttttttttttttttttt
+ttt""{""tttttttttttttttttttTTTTTTttttttttttttttttTT.TTTttttttttttttttttttttttttt
+tttt"""ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+ENDMAP
+
+###############################################################################
+# due -- elkab
+#
+# The triparte Egyptian temple! Like Bobbens' church of pain, it has four sets
+# of monsters: skeletal, ghost, vampire, mummy and demon.
+#
+# There are also three distinct sections:
+#
+# Monster layouts:
+#  skeletal (ancient lich, liches, bone dragons)
+#  vampire (vampire knight, vampire mage, Jory)
+#  ghostly (ghost moth, shadow dragon, phantasmal warrior, eidolon)
+#  mummy (greater mummy, mummy priests, buffed guardian mummy, sphinx)
+#
+# Loot:
+#  around 30k per map, regardless of monster set
+#  roughly similar loot to evilmike's haunted forest
+NAME:   due_elkab
+PLACE:  Crypt:5
+ORIENT: float
+TAGS:   no_monster_gen no_item_gen no_pool_fixup no_rotate no_trap_gen
+NSUBST: A = 1:= / *:c
+NSUBST: B = 1:= / *:c
+NSUBST: C = 1:6 / *:5
+KFEAT:  YD = closed_door
+KFEAT:  ER = alarm trap
+KFEAT:  CSd = floor
+COLOUR: YsDdE = darkgrey
+SUBST:  - = ^.....
+: local brnd = crawl.random2(15)
+: if brnd > 10 then
+MONS:   patrolling skeletal warrior w:8 / patrolling wight
+MONS:   ancient lich
+MONS:   bone dragon w:1 / skeletal warrior / lich w:1
+MONS:   flying skull w:20 / large skeleton / small skeleton
+MONS:   w:40 large skeleton / small skeleton / wight
+MONS:   generate_awake curse skull / generate_awake curse toe
+: elseif brnd > 6 then
+MONS:   patrolling vampire hd:8 col:green name:noble n_suf / patrolling \
+        vampire hd:10 col:blue spells:.;.;haste;.;.;.; name:vampire_warrior \
+        n_rpl n_des actual_spells ; long sword | great sword | battleaxe | \
+        war axe | broad axe . chain mail w:10 | splint mail w:5 | plate armour \
+        w:1
+MONS:   vampire knight / Jory
+MONS:   dancing weapon ; any weapon ego:vampiricism / vampire hd:10 col:blue \
+        spells:.;.;haste;.;.;.; name:vampire_warrior n_rpl n_des actual_spells \
+        ; long sword | great sword | battleaxe | war axe | broad axe . chain \
+        mail w:10 | splint mail w:5 | plate armour w:1
+MONS:   phantasmal warrior / vampire hd:10 col:blue spells:.;.;haste;.;.;.; \
+        name:vampire_warrior n_rpl n_des actual_spells ; long sword | great \
+        sword | battleaxe | war axe | broad axe . chain mail w:10 | splint \
+        mail w:5 | plate armour w:1
+MONS:   vampire / large zombie / golden dragon zombie w:3 / storm dragon zombie \
+        w:3
+MONS:   generate_awake vampire mage
+: elseif brnd > 2 then
+MONS:   patrolling freezing wraith / patrolling phantasmal warrior
+MONS:   ghost moth name:greater col:lightmagenta n_adj n_spe hd:15
+MONS:   eidolon / shadow wraith
+MONS:   freezing wraith / phantasmal warrior
+MONS:   spectral thing / large simulacrum / shadow wraith / phantasmal warrior \
+        / spectral storm dragon / spectral ice dragon / spectral iron dragon
+MONS:   generate_awake shadow dragon / generate_awake spectral golden dragon
+: else
+MONS:   patrolling guardian mummy
+MONS:   greater mummy
+MONS:   mummy priest w:8 / guardian mummy hd:9 col:lightcyan spells:.;.;haste;\
+        .;.;.; name:mummy_warrior n_rpl n_des actual_spells ; long sword | great \
+        sword | battleaxe | war axe | broad axe . chain mail w:10 | splint mail \
+        w:5 | plate armour w:1
+MONS:   guardian mummy
+MONS:   bog mummy / mummy / guardian mummy
+MONS:   generate_awake sphinx
+: end
+KFEAT:  Q = closed_door
+NSUBST: T = 1:= / 1:+
+MARKER: Q = lua:restrict_door()
+MAP
+                 ccccccccccccccccccccccccccccc
+                 c*$*c|%*.......**|c.........c
+                 c$3$c|*....2....%|c..G.3.G..c
+                 c...c|%|.......|%|c.........c
+                 cc+cccccc.....ccccccc+cccBBBc
+                 c...c---ccc+ccc---c-----c$$$c
+                 c.4.c-G-4-RRR-4-G-=--G--c$$$c
+                 c...c-------------c-----c%%*c
+ccccccccccccccccccc+ccccccc+++ccccccc+cccccccc
+c$$A...c|...*c%.*cc...ccc-------ccc...cc%*|%*c
+c$$A.3.c..3..c.3.c..G..---G---G---..G..c..3..c
+c$$A...c.....c...c..1...............1..c.....c
+c$$Ac+cccc+cccc+cc..G..G..G...G..G..G..cc+++cc
+ccccc-----------cc..1...............1..c-----c
+---cc--G4---4G--cc..G..G..G...G..G..G..c-4-4-c
+---ccc---------ccc..1...............1..c-----c
+@--cccccc+++cccccc..G..G..G...G..G..G..c-----c
+---ccc.........cccc...................ccc---cc
+---cc..G1...1G..cccQcQcQcQc...cQcQcQcQccc+++cccc
+c..cc...........ccc5c5c5c5c+++c5c5c5c5ccc...cQCc
+c..ccccc.....cccccc=ccccccc---cccccccccc.....ccc
+c..c...c.....c...cc.c.....-----.....ccCQ.....QCc
+c--c.............cc.c....1-----1....cccc.....ccc
+c---...G.....G...cc.cc....-----....=ccCQ.....QCc
+c---....1...1....cc.cccccc-----ccccc.ccc.....ccc
+c---...G.....G...cc=cc....-----....cc=CQ.....QCc
+c---....1...1....+..+....1-----1....cccc.....ccc
+c---...G.....G...cccc.....-----.....ccCQ.....QCc
+c..c.............cccccccccc+++cccccccccc.....ccc
+c..c...c-----c...c.......--------............QCc
+cccccccc-----ccccc...........................ccc
+   c.............c...........................QCc
+   c.G.G.....G.G.c.cccccc.......ccccccc......ccc
+   c..1.......1..ccT$$$$cc-----cc%....Tc.....QCc
+   c.G.........G.cc$$$$$cc-----cc%1...cccccccccc
+   c..1.......1..cc$$$$1cc-----cc*%%%%cc...----.
+   c.G.........G.cccccccc.......ccccccc....----.
+   c..1.......1..c.........................----@
+  cc.G.........G.c.........................----.
+  @-.......................................----.
+  cccccc-----ccccccccccccccccccccccccccccccccccc
+  cccccc-----ccccc
+  cc.............c
+    .............c
+  ........@.......
+ENDMAP

@@ -1,0 +1,112 @@
+%name gui
+%prefix TILEG
+%startvalue 0
+
+%back none
+%rim 0
+
+# idx == 0 must be invalid
+dc-dngn/dngn_unseen
+
+%sdir gui/startup
+stonesoup STARTUP_STONESOUP
+tutorial STARTUP_TUTORIAL
+hints_mode STARTUP_HINTS
+dungeon_sprint STARTUP_SPRINT
+zot_defence STARTUP_ZOTDEF
+instructions STARTUP_INSTRUCTIONS
+arena STARTUP_ARENA
+tavern TAVERN
+
+%include dc-spells.txt
+
+%include dc-skills.txt
+
+%include dc-commands.txt
+
+dc-misc/todo TODO
+dc-misc/error ERROR
+
+%rim 0
+%sdir gui
+
+# Each tab needs to have an unselected, mouseover, and selected image, in that
+# order.  All three of those images must be the same size.
+
+%start
+%compose tab_unselected
+%compose tab_label_item
+%finish TAB_ITEM
+%start
+%compose tab_mouseover
+%compose tab_label_item
+%finish
+%start
+%compose tab_selected
+%compose tab_label_item
+%finish
+
+%start
+%compose tab_unselected
+%compose tab_label_spell
+%finish TAB_SPELL
+%start
+%compose tab_mouseover
+%compose tab_label_spell
+%finish
+%start
+%compose tab_selected
+%compose tab_label_spell
+%finish
+
+%start
+%compose tab_unselected
+%compose tab_label_memorise
+%finish TAB_MEMORISE
+%start
+%compose tab_mouseover
+%compose tab_label_memorise
+%finish
+%start
+%compose tab_selected
+%compose tab_label_memorise
+%finish
+
+%start
+%compose tab_unselected
+%compose tab_label_monster
+%finish TAB_MONSTER
+%start
+%compose tab_mouseover
+%compose tab_label_monster
+%finish
+%start
+%compose tab_selected
+%compose tab_label_monster
+%finish
+
+%start
+%compose tab_unselected
+%compose tab_label_skill
+%finish TAB_SKILL
+%start
+%compose tab_mouseover
+%compose tab_label_skill
+%finish
+%start
+%compose tab_selected
+%compose tab_label_skill
+%finish
+
+%start
+%compose tab_unselected
+%compose tab_label_command
+%finish TAB_COMMAND
+%start
+%compose tab_mouseover
+%compose tab_label_command
+%finish
+%start
+%compose tab_selected
+%compose tab_label_command
+%finish

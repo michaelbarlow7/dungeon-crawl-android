@@ -1,0 +1,1003 @@
+# A note on variations.  To create additional variations for weapons or armour,
+# simply create 1-5 images, e.g.:
+#
+#    weapon_normal WEP_SOME_WEAPON
+#    weapon_shiny
+#    weapon_runed
+#    weapon_glowing
+#    weapon_randart
+#
+# If only the first line has a define on it, then the following images will be
+# considered as variations.  If you don't have five, images will be reused for
+# multiple types.  Orcish/elven/dwarven equipment are considered separate items
+# with respect to variations and will not share variations with the base
+# equipment.  See tilepick.cc for more details.
+
+##### Artefacts (fixed and unrandart)
+%include dc-unrand.txt
+
+#####NORMAL
+%sdir item/weapon
+%rim 1
+##Blunt
+club WPN_CLUB
+mace1 WPN_MACE
+mace2
+mace_large1 WPN_GREAT_MACE
+mace_large2
+flail1 WPN_FLAIL
+flail2
+spiked_flail1 WPN_SPIKED_FLAIL
+spiked_flail2
+great_flail1 WPN_GREAT_FLAIL
+great_flail2
+morningstar1 WPN_MORNINGSTAR
+morningstar2
+eveningstar1 WPN_EVENINGSTAR
+eveningstar2
+hammer1 WPN_HAMMER
+hammer2
+ankus WPN_ANKUS
+bullwhip WPN_WHIP
+bullwhip2
+%rim 0
+sacred_scourge WPN_SACRED_SCOURGE
+trishula WPN_TRISHULA
+%rim 1
+demon_whip WPN_DEMON_WHIP
+giant_club WPN_GIANT_CLUB
+giant_spiked_club WPN_GIANT_SPIKED_CLUB
+
+##Edged
+knife WPN_KNIFE
+
+dagger WPN_DAGGER
+dagger2
+dagger3
+orcish_dagger WPN_DAGGER_ORC
+orcish_dagger2
+elven_dagger WPN_DAGGER_ELF
+elven_dagger2
+
+short_sword1 WPN_SHORT_SWORD
+short_sword2
+orcish_short_sword WPN_SHORT_SWORD_ORC
+orcish_short_sword2
+elven_short_sword WPN_SHORT_SWORD_ELF
+
+long_sword1 WPN_LONG_SWORD
+%rim 0
+long_sword2
+%rim 1
+orcish_long_sword WPN_LONG_SWORD_ORC
+
+greatsword1 WPN_GREAT_SWORD
+greatsword2
+orcish_great_sword WPN_GREAT_SWORD_ORC
+
+falchion1 WPN_FALCHION
+falchion2
+scimitar1 WPN_SCIMITAR
+scimitar2
+
+sabre1_silver WPN_SABRE
+sabre2
+
+quickblade WPN_QUICK_BLADE
+
+double_sword WPN_DOUBLE_SWORD
+triple_sword WPN_TRIPLE_SWORD
+demon_blade WPN_DEMON_BLADE
+%rim 0
+blessed_blade WPN_BLESSED_BLADE
+%rim 1
+
+##Axe
+hand_axe1 WPN_HAND_AXE
+hand_axe2
+war_axe1 WPN_WAR_AXE
+war_axe2
+broad_axe1 WPN_BROAD_AXE
+broad_axe2
+broad_axe3
+battle_axe1 WPN_BATTLEAXE
+battle_axe2
+battle_axe3
+executioner_axe1 WPN_EXECUTIONERS_AXE
+executioner_axe2
+
+##Polearm
+spear1_elven WPN_SPEAR
+spear2
+trident1 WPN_TRIDENT
+trident2
+demon_trident WPN_DEMON_TRIDENT
+halberd1 WPN_HALBERD
+halberd2
+scythe1 WPN_SCYTHE
+scythe2
+glaive1 WPN_GLAIVE
+glaive2
+orcish_glaive WPN_GLAIVE_ORC
+bardiche1 WPN_BARDICHE
+bardiche2
+
+##Staff
+staff WPN_STAFF
+quarterstaff WPN_QUARTERSTAFF
+quarterstaff2
+lajatang1 WPN_LAJATANG
+lajatang2
+
+
+##Ranged
+%sdir item/weapon/ranged
+blowgun1 WPN_BLOWGUN
+blowgun2
+sling1 WPN_SLING
+sling2
+bow1 WPN_BOW
+bow2
+crossbow1 WPN_CROSSBOW
+crossbow2
+longbow WPN_LONGBOW
+
+%sdir item/weapon/brands
+%rim 0
+# The order of weapon brands must be identical to the one defined
+# in itemprop-enum.h.
+i-flaming BRAND_FLAMING BRAND_WEP_FIRST
+i-freezing BRAND_FREEZING
+i-holy_wrath BRAND_HOLY_WRATH
+i-electrocution BRAND_ELECTROCUTION
+i-orc_slaying BRAND_ORC_SLAYING
+i-dragon_slaying BRAND_DRAGON_SLAYING
+i-venom BRAND_VENOM
+i-protection BRAND_PROTECTION
+i-draining BRAND_DRAINING
+i-speed BRAND_SPEED
+i-vorpal BRAND_VORPAL
+i-flaming BRAND_FLAME
+i-freezing BRAND_FROST
+i-vampiricism BRAND_VAMPIRICISM
+i-pain BRAND_PAIN
+%rim 1
+i-antimagic BRAND_ANTIMAGIC
+%rim 0
+i-distortion BRAND_DISTORTION
+i-reaching BRAND_REACHING
+i-returning BRAND_RETURNING
+i-chaos BRAND_CHAOS
+i-evasion BRAND_EVASION
+i-confusion BRAND_CONFUSION
+i-penetration BRAND_PENETRATION
+i-reaping BRAND_REAPING BRAND_WEP_LAST
+# missile-only brands, order doesn't matter
+i-dispersal BRAND_DISPERSAL
+i-explosion BRAND_EXPLOSION
+i-venom BRAND_POISONED
+i-curare BRAND_CURARE
+i-electrocution BRAND_ELECTRIC
+i-sickness BRAND_SICKNESS
+i-slowing BRAND_SLOWING
+i-paralysis BRAND_PARALYSIS
+i-berserk-rage BRAND_RAGE
+i-sleep BRAND_SLEEP
+%rim 1
+%sdir item/weapon/ranged
+
+######OBJ_MISSILES
+stone MI_STONE
+# flying stone
+effect/stone0 MI_STONE0
+
+sling_bullet1 MI_SLING_BULLET
+sling_bullet2
+steel_sling_bullet1 MI_SLING_BULLET_STEEL
+steel_sling_bullet2
+silver_sling_bullet1 MI_SLING_BULLET_SILVER
+silver_sling_bullet2
+# flying bullets
+effect/sling_bullet0 MI_SLING_BULLET0
+effect/sling_bullet_runed0
+effect/steel_sling_bullet0 MI_SLING_BULLET_STEEL0
+effect/steel_sling_bullet_runed0
+effect/silver_sling_bullet0 MI_SLING_BULLET_SILVER0
+effect/silver_sling_bullet_runed0
+
+arrow1 MI_ARROW
+arrow2
+steel_arrow1 MI_ARROW_STEEL
+steel_arrow2
+silver_arrow1 MI_ARROW_SILVER
+silver_arrow2
+# flying arrows
+effect/arrow0 MI_ARROW0
+effect/arrow1 MI_ARROW1
+effect/arrow2 MI_ARROW2
+effect/arrow3 MI_ARROW3
+effect/arrow4 MI_ARROW4
+effect/arrow5 MI_ARROW5
+effect/arrow6 MI_ARROW6
+effect/arrow7 MI_ARROW7
+
+crossbow_bolt1 MI_BOLT
+crossbow_bolt2
+steel_crossbow_bolt1 MI_BOLT_STEEL
+steel_crossbow_bolt2
+silver_crossbow_bolt1 MI_BOLT_SILVER
+silver_crossbow_bolt2
+# flying bolts
+effect/bolt0 MI_BOLT0
+effect/bolt1 MI_BOLT1
+effect/bolt2 MI_BOLT2
+effect/bolt3 MI_BOLT3
+effect/bolt4 MI_BOLT4
+effect/bolt5 MI_BOLT5
+effect/bolt6 MI_BOLT6
+effect/bolt7 MI_BOLT7
+
+dart1 MI_DART UNSEEN_MISSILE
+dart2
+dart-p MI_DART_POISONED
+steel_dart1 MI_DART_STEEL
+steel_dart2
+silver_dart1 MI_DART_SILVER
+silver_dart2
+# flying darts
+effect/dart0 MI_DART0
+effect/dart1 MI_DART1
+effect/dart2 MI_DART2
+effect/dart3 MI_DART3
+effect/dart4 MI_DART4
+effect/dart5 MI_DART5
+effect/dart6 MI_DART6
+effect/dart7 MI_DART7
+
+needle1 MI_NEEDLE
+needle2
+needle-p MI_NEEDLE_P
+# flying needles
+effect/needle0 MI_NEEDLE0
+effect/needle1 MI_NEEDLE1
+effect/needle2 MI_NEEDLE2
+effect/needle3 MI_NEEDLE3
+effect/needle4 MI_NEEDLE4
+effect/needle5 MI_NEEDLE5
+effect/needle6 MI_NEEDLE6
+effect/needle7 MI_NEEDLE7
+
+javelin1 MI_JAVELIN
+javelin2
+steel_javelin1 MI_JAVELIN_STEEL
+steel_javelin2
+silver_javelin1 MI_JAVELIN_SILVER
+silver_javelin2
+# flying javelins
+effect/javelin0 MI_JAVELIN0
+effect/javelin1 MI_JAVELIN1
+effect/javelin2 MI_JAVELIN2
+effect/javelin3 MI_JAVELIN3
+effect/javelin4 MI_JAVELIN4
+effect/javelin5 MI_JAVELIN5
+effect/javelin6 MI_JAVELIN6
+effect/javelin7 MI_JAVELIN7
+
+throwing_net MI_THROWING_NET
+# flying nets
+effect/throwing_net0 MI_THROWING_NET0
+effect/throwing_net1 MI_THROWING_NET1
+effect/throwing_net2 MI_THROWING_NET2
+effect/throwing_net3 MI_THROWING_NET3
+effect/throwing_net4 MI_THROWING_NET4
+effect/throwing_net5 MI_THROWING_NET5
+effect/throwing_net6 MI_THROWING_NET6
+effect/throwing_net7 MI_THROWING_NET7
+
+rock MI_LARGE_ROCK
+# flying rock
+effect/rock0 MI_LARGE_ROCK0
+
+######OBJ_ARMOUR
+%sdir item/armour
+robe1 ARM_ROBE
+robe2
+robe3
+
+leather_armour1 ARM_LEATHER_ARMOUR
+leather_armour2
+leather_armour3
+orcish_leather_armor ARM_LEATHER_ARMOUR_ORC
+orcish_leather_armor2
+elven_leather_armor ARM_LEATHER_ARMOUR_ELF
+elven_leather_armor2
+
+ring_mail1 ARM_RING_MAIL
+ring_mail2
+orcish_ringmail ARM_RING_MAIL_ORC
+orcish_ringmail2
+elven_ringmail ARM_RING_MAIL_ELF
+elven_ringmail2
+dwarven_ringmail ARM_RING_MAIL_DWA
+
+scale_mail1 ARM_SCALE_MAIL
+scale_mail2
+elven_scalemail ARM_SCALE_MAIL_ELF
+elven_scalemail2
+
+chain_mail1 ARM_CHAIN_MAIL
+chain_mail2
+chain_mail3 ARM_CHAIN_MAIL_ELF
+orcish_chain_mail ARM_CHAIN_MAIL_ORC
+orcish_chain_mail2
+
+splint_mail1 ARM_SPLINT_MAIL
+splint_mail2
+banded_mail1
+banded_mail2
+
+plate1 ARM_PLATE_ARMOUR
+plate2
+orcish_plate ARM_PLATE_ARMOUR_ORC
+orcish_plate2
+
+crystal_plate ARM_CRYSTAL_PLATE_ARMOUR
+crystal_plate2
+crystal_plate3
+crystal_plate4
+
+animal_skin1 ARM_ANIMAL_SKIN
+animal_skin2
+
+troll_hide ARM_TROLL_HIDE
+troll_leather_armour ARM_TROLL_LEATHER_ARMOUR
+green_dragon_scales ARM_FIRE_DRAGON_HIDE
+green_dragon_scale_mail ARM_FIRE_DRAGON_ARMOUR
+ice_dragon_hide ARM_ICE_DRAGON_HIDE
+ice_dragon_armour ARM_ICE_DRAGON_ARMOUR
+silver_dragon_scales ARM_STEAM_DRAGON_HIDE
+silver_dragon_scale_mail ARM_STEAM_DRAGON_ARMOUR
+mottled_dragon_hide ARM_MOTTLED_DRAGON_HIDE
+mottled_dragon_armour ARM_MOTTLED_DRAGON_ARMOUR
+blue_dragon_scales ARM_STORM_DRAGON_HIDE
+blue_dragon_scale_mail ARM_STORM_DRAGON_ARMOUR
+gold_dragon_hide ARM_GOLD_DRAGON_HIDE
+gold_dragon_armour ARM_GOLD_DRAGON_ARMOUR
+swamp_dragon_hide ARM_SWAMP_DRAGON_HIDE
+swamp_dragon_armour ARM_SWAMP_DRAGON_ARMOUR
+pearl_dragon_hide ARM_PEARL_DRAGON_HIDE
+pearl_dragon_armour ARM_PEARL_DRAGON_ARMOUR
+
+cloak1_leather ARM_CLOAK
+cloak2
+cloak3
+cloak4
+
+%sdir item/armour/bardings
+naga_barding_blue ARM_NAGA_BARDING
+naga_barding_metal
+naga_barding_magenta
+naga_barding_red
+centaur_barding_blue ARM_CENTAUR_BARDING
+centaur_barding_metal
+centaur_barding_magenta
+centaur_barding_red
+
+%sdir item/armour/shields
+%rim 0
+buckler1 ARM_BUCKLER
+buckler2
+buckler3
+%rim 1
+
+shield1_elven ARM_SHIELD
+shield2_kite
+shield3_round
+
+large_shield1 ARM_LARGE_SHIELD
+large_shield2
+large_shield3
+
+%sdir item/armour/headgear
+#####ARM_HELMET
+elven_leather_helm THELM_CAP
+wizard_hat1 THELM_WIZARD_HAT
+wizard_hat2
+
+helmet1_visored THELM_HELM
+helmet2_etched
+helmet3
+helmet4_visor
+helmet_horned THELM_HELM_HORNED
+helmet_spiked THELM_HELM_SPIKED
+helmet_plumed THELM_HELM_PLUMED
+helmet_winged THELM_HELM_WINGED
+
+%sdir item/armour
+###### GLOVES
+glove1 ARM_GLOVES
+glove2
+glove3
+glove4_gauntlets
+
+###### BOOTS
+boots1_brown ARM_BOOTS
+boots2_jackboots
+boots3_stripe
+boots4_green
+
+### Armour brands
+%sdir item/armour/brands
+i-running BRAND_ARM_RUNNING BRAND_ARM_FIRST
+i-fire-res BRAND_ARM_FIRE_RESISTANCE
+i-cold-res BRAND_ARM_COLD_RESISTANCE
+i-poison-res BRAND_ARM_POISON_RESISTANCE
+i-see-invis BRAND_ARM_SEE_INVISIBLE
+i-darkness BRAND_ARM_DARKNESS
+i-strength BRAND_ARM_STRENGTH
+i-dexterity BRAND_ARM_DEXTERITY
+i-intelligence BRAND_ARM_INTELLIGENCE
+i-ponderous BRAND_ARM_PONDEROUSNESS
+i-levitation BRAND_ARM_LEVITATION
+i-magic-res BRAND_ARM_MAGIC_RESISTANCE
+i-protection BRAND_ARM_PROTECTION
+%rim 0
+i-stealth BRAND_ARM_STEALTH
+%rim 1
+i-resistance BRAND_ARM_RESISTANCE
+i-positive-energy BRAND_ARM_POSITIVE_ENERGY
+i-archmagi BRAND_ARM_ARCHMAGI
+i-preservation BRAND_ARM_PRESERVATION
+i-reflection BRAND_ARM_REFLECTION
+i-spirit BRAND_ARM_SPIRIT_SHIELD
+i-archery BRAND_ARM_ARCHERY BRAND_ARM_LAST
+
+###########OBJ_WANDS
+%sdir item/wand
+gem_iron WAND_OFFSET UNSEEN_WAND
+gem_brass
+gem_bone
+gem_wood
+gem_copper
+gem_gold
+gem_silver
+gem_bronze
+gem_ivory
+gem_glass
+gem_lead
+gem_plastic
+
+%sdir item/wand
+%back i-label
+i-flame WAND_FLAME WAND_ID_FIRST
+i-frost WAND_FROST
+i-slowing WAND_SLOWING
+i-hasting WAND_HASTING
+i-magic_darts WAND_MAGIC_DARTS
+i-heal_wounds WAND_HEAL_WOUNDS
+i-paralysis WAND_PARALYSIS
+i-fire WAND_FIRE
+i-cold WAND_COLD
+i-confusion WAND_CONFUSION
+i-invisibility WAND_INVISIBILITY
+i-digging WAND_DIGGING
+i-fireball WAND_FIREBALL
+i-teleportation WAND_TELEPORTATION
+i-lightning WAND_LIGHTNING
+i-polymorph_other WAND_POLYMORPH_OTHER
+i-enslavement WAND_ENSLAVEMENT
+i-draining WAND_DRAINING
+i-random_effects WAND_RANDOM_EFFECTS
+i-disintegration WAND_DISINTEGRATION WAND_ID_LAST
+
+%back none
+#################OBJ_FOOD
+%sdir item/food
+meat_ration FOOD_MEAT_RATION UNSEEN_FOOD
+bread_ration FOOD_BREAD_RATION
+pear FOOD_PEAR
+apple FOOD_APPLE
+choko FOOD_CHOKO
+honeycomb FOOD_HONEYCOMB
+lump_of_royal_jelly FOOD_ROYAL_JELLY
+snozzcumber FOOD_SNOZZCUMBER
+pizza FOOD_PIZZA
+apricot FOOD_APRICOT
+orange FOOD_ORANGE
+banana FOOD_BANANA
+strawberry FOOD_STRAWBERRY
+rambutan FOOD_RAMBUTAN
+lemon FOOD_LEMON
+grape FOOD_GRAPE
+sultana FOOD_SULTANA
+lychee FOOD_LYCHEE
+beef_jerky FOOD_BEEF_JERKY
+cheese FOOD_CHEESE
+sausage FOOD_SAUSAGE
+piece_of_ambrosia FOOD_AMBROSIA
+bone FOOD_BONE
+chunk FOOD_CHUNK
+chunk_rotten FOOD_CHUNK_ROTTEN
+%back chunk
+chunk_brands/i-poison FOOD_CHUNK_POISONED
+chunk_brands/i-mutation FOOD_CHUNK_MUTAGENIC
+chunk_brands/i-decay FOOD_CHUNK_ROTTING
+chunk_brands/i-forbidden FOOD_CHUNK_FORBIDDEN
+chunk_brands/i-sickness FOOD_CHUNK_CONTAMINATED
+%back chunk_rotten
+chunk_brands/i-poison FOOD_CHUNK_ROTTEN_POISONED
+chunk_brands/i-mutation FOOD_CHUNK_ROTTEN_MUTAGENIC
+chunk_brands/i-decay FOOD_CHUNK_ROTTEN_ROTTING
+chunk_brands/i-forbidden FOOD_CHUNK_ROTTEN_FORBIDDEN
+chunk_brands/i-sickness FOOD_CHUNK_ROTTEN_CONTAMINATED
+%back none
+chunk_brands/i-poison FOOD_POISONED
+chunk_brands/i-mutation FOOD_MUTAGENIC
+chunk_brands/i-decay FOOD_ROTTING
+chunk_brands/i-forbidden FOOD_FORBIDDEN
+chunk_brands/i-sickness FOOD_CONTAMINATED
+chunk_brands/i-rotten FOOD_INEDIBLE
+
+#################OBJ_UNKNOWN_I
+##################OBJ_SCROLLS
+%sdir item/scroll
+scroll SCROLL UNSEEN_SCROLL
+
+%back scroll
+%sdir item/scroll
+i-identify SCR_IDENTIFY SCR_ID_FIRST
+i-teleportation SCR_TELEPORTATION
+i-fear SCR_FEAR
+i-noise SCR_NOISE
+i-remove_curse SCR_REMOVE_CURSE
+i-detect_curse SCR_DETECT_CURSE
+i-summoning SCR_SUMMONING
+i-enchant-weapon1 SCR_ENCHANT_WEAPON_I
+i-enchant_armour SCR_ENCHANT_ARMOUR
+i-torment SCR_TORMENT
+i-random_uselessness SCR_RANDOM_USELESSNESS
+i-curse_weapon SCR_CURSE_WEAPON
+i-curse_armour SCR_CURSE_ARMOUR
+i-immolation SCR_IMMOLATION
+i-blinking SCR_BLINKING
+item/scroll/blank_paper SCR_PAPER
+i-magic_mapping SCR_MAGIC_MAPPING
+i-fog SCR_FOG
+i-acquirement SCR_ACQUIREMENT
+i-enchant-weapon2 SCR_ENCHANT_WEAPON_II
+i-vorpalize-weapon SCR_VORPALISE_WEAPON
+i-recharging SCR_RECHARGING
+i-enchant-weapon3 SCR_ENCHANT_WEAPON_III
+i-holy_word SCR_HOLY_WORD
+i-vulnerability SCR_VULNERABILITY
+i-silence SCR_SILENCE
+i-amnesia SCR_AMNESIA
+i-curse-jewellery SCR_CURSE_JEWELLERY SCR_ID_LAST
+%back none
+
+##################OBJ_JEWELLERY
+############ring
+%sdir item/ring
+wooden RING_NORMAL_OFFSET UNSEEN_RING
+silver
+gold
+iron
+steel
+bronze
+brass
+copper
+granite
+ivory
+clay
+tiger_eye
+jade
+glass
+###########random
+agate RING_RANDOM_OFFSET RING_COL_FIRST
+clay
+diamond
+emerald
+gold_green
+gold_red
+opal
+pearl
+coral
+gold_blue
+plain_red
+plain_yellow
+plain_black
+bronze
+moonstone RING_COL_LAST
+
+#########ID-ed
+%rim 0
+i-regeneration RING_REGENERATION RING_ID_FIRST
+i-protection RING_PROTECTION
+i-r-fire RING_PROTECTION_FROM_FIRE
+i-r-poison RING_POISON_RESISTANCE
+i-r-cold RING_PROTECTION_FROM_COLD
+i-str RING_STRENGTH
+i-slaying RING_SLAYING
+i-see-invis RING_SEE_INVISIBLE
+i-invisibility RING_INVISIBILITY
+i-hunger RING_HUNGER
+i-teleport RING_TELEPORTATION
+i-evasion RING_EVASION
+i-s-abil RING_SUSTAIN_ABILITIES
+i-sustenance RING_SUSTENANCE
+i-dex RING_DEXTERITY
+i-int RING_INTELLIGENCE
+i-wizardry RING_WIZARDRY
+i-magical-power RING_MAGICAL_POWER
+i-levitation RING_LEVITATION
+i-life-protection RING_LIFE_PROTECTION
+i-r-magic RING_PROTECTION_FROM_MAGIC
+i-fire RING_FIRE
+i-ice RING_ICE
+i-c-teleport RING_TELEPORT_CONTROL RING_ID_LAST
+%rim 1
+
+###amulets
+%sdir item/amulet
+crystal_white AMU_NORMAL_OFFSET UNSEEN_AMULET
+stone3_blue
+face1_gold
+stone3_green
+stone2_red
+eye_magenta
+face2
+penta_orange
+celtic_red
+cameo_blue
+bone_gray
+cylinder_gray
+ring_green
+ring_cyan
+###random
+crystal_green AMU_RANDOM_OFFSET AMU_COL_FIRST
+cameo_orange
+celtic_blue
+eye_cyan
+penta_green
+ring_red
+stone1_cyan
+stone1_pink
+stone2_green
+stone3_magenta
+celtic_yellow
+stone1_green
+stone2_blue
+crystal_red
+eye_green AMU_COL_LAST
+
+%rim 0
+### ID-ed amulet
+i-rage AMU_RAGE AMU_ID_FIRST
+i-clarity AMU_CLARITY
+i-warding AMU_WARDING
+i-r-corrosion AMU_RESIST_CORROSION
+i-gourmand AMU_THE_GOURMAND
+i-conservation AMU_CONSERVATION
+i-c-flight AMU_CONTROLLED_FLIGHT
+i-inaccuracy AMU_INACCURACY
+i-r-mutation AMU_RESIST_MUTATION
+i-spirit AMU_SPIRIT_SHIELD
+i-faith AMU_FAITH
+i-stasis AMU_STASIS AMU_ID_LAST
+%rim 1
+
+####################OBJ_POTIONS
+%sdir item/potion
+clear POTION_OFFSET UNSEEN_POTION
+brilliant_blue
+black
+silver
+cyan
+magenta
+orange
+dark
+ruby
+yellow
+emerald
+brown
+pink
+white
+
+%sdir item/potion
+%back i-label
+%rim 0
+i-curing POT_CURING POT_ID_FIRST
+i-heal-wounds POT_HEAL_WOUNDS
+i-speed POT_SPEED
+i-might POT_MIGHT
+i-brilliance POT_BRILLIANCE
+i-agility POT_AGILITY
+i-gain-strength POT_GAIN_STRENGTH
+i-gain-dexterity POT_GAIN_DEXTERITY
+i-gain-intelligence POT_GAIN_INTELLIGENCE
+i-levitation POT_LEVITATION
+i-poison POT_POISON
+i-slowing POT_SLOWING
+i-paralysis POT_PARALYSIS
+i-confusion POT_CONFUSION
+i-invisibility POT_INVISIBILITY
+i-porridge POT_PORRIDGE
+i-degeneration POT_DEGENERATION
+i-decay POT_DECAY
+i-water POT_WATER
+i-experience POT_EXPERIENCE
+i-magic POT_MAGIC
+i-restore-abilities POT_RESTORE_ABILITIES
+i-strong-poison POT_STRONG_POISON
+i-berserk-rage POT_BERSERK_RAGE
+i-cure-mutation POT_CURE_MUTATION
+i-mutation POT_MUTATION
+i-resistance POT_RESISTANCE
+i-blood POT_BLOOD
+i-coagulated-blood POT_BLOOD_COAGULATED
+i-water POT_FIZZING POT_ID_LAST
+%back none
+%rim 1
+
+####################OBJ_UNKNOWN_II
+#####################OBJ_BOOKS
+###0paperback / hardback 16
+%sdir item/book
+book_of_the_dead BOOK_PAPER_OFFSET
+dark_blue BOOK_COL_FIRST
+dark_green
+cyan
+red
+purple
+tan
+light_gray
+dark_gray
+light_blue
+light_green
+turquoise
+pink
+magenta
+yellow
+white BOOK_COL_LAST
+##########leather 8
+parchment BOOK_LEATHER_OFFSET UNSEEN_BOOK
+leather
+tan
+plaid
+light_brown
+light_brown
+dark_brown
+dark_brown
+###########metal 8
+bronze BOOK_METAL_OFFSET
+copper
+silver
+gold
+glittering
+metal_blue
+metal_cyan
+metal_green
+############papyrus 1
+cloth BOOK_PAPYRUS
+# randarts
+%sdir item/book/artefact
+wrinkled BOOK_RANDART_OFFSET
+vellum
+velvet
+thick
+buckle
+bookmark
+thin
+
+#####################OBJ_STAVES
+%sdir item/staff
+staff00 STAFF_OFFSET UNSEEN_STAFF
+staff01
+staff02
+staff03
+staff04
+staff05
+staff06
+staff07
+staff08
+staff09
+
+i-staff_wizardry STAFF_WIZARDRY STAFF_ID_FIRST
+i-staff_power STAFF_POWER
+i-staff_fire STAFF_FIRE
+i-staff_cold STAFF_COLD
+i-staff_poison STAFF_POISON
+i-staff_energy STAFF_ENERGY
+i-staff_death STAFF_DEATH
+i-staff_conjuration STAFF_CONJURATION
+i-staff_enchantment STAFF_ENCHANTMENT
+i-staff_summoning STAFF_SUMMONING
+i-staff_air STAFF_AIR
+i-staff_earth STAFF_EARTH
+%rim 0
+i-staff_channeling STAFF_CHANNELING STAFF_ID_LAST
+%rim 1
+
+%sdir item/rod
+rod00 ROD_OFFSET
+rod01
+rod02
+rod03
+rod04
+rod05
+rod06
+rod07
+rod08
+rod09
+
+i-rod_smiting ROD_SMITING ROD_ID_FIRST
+i-rod_summoning ROD_SUMMONING
+i-rod_destruction_fire ROD_DESTRUCTION_FIRE
+i-rod_destruction_ice ROD_DESTRUCTION_ICE
+i-rod_destruction_lightning ROD_DESTRUCTION_LIGHTNING
+i-rod_destruction_inaccuracy ROD_DESTRUCTION_INACCURACY
+i-rod_warding ROD_WARDING
+i-rod_demonology ROD_DEMONOLOGY
+i-rod_striking ROD_STRIKING
+i-rod_venom ROD_VENOM ROD_ID_LAST
+
+#OBJ_ORBS
+%sdir item/misc
+misc_orb ORB UNSEEN_ORB
+misc_orb2
+
+#OBJ_MISCELLANY
+misc_bottle MISC_BOTTLED_EFREET
+misc_crystal MISC_CRYSTAL_BALL_OF_ENERGY
+misc_crystal MISC_CRYSTAL_BALL_OF_FIXATION
+misc_crystal MISC_CRYSTAL_BALL_OF_SEEING UNSEEN_MISC
+misc_fan MISC_AIR_ELEMENTAL_FAN
+misc_lamp MISC_LAMP_OF_FIRE
+misc_stone MISC_STONE_OF_EARTH_ELEMENTALS
+misc_lantern MISC_LANTERN_OF_SHADOWS
+misc_horn MISC_HORN_OF_GERYON
+misc_box MISC_EMPTY_EBONY_CASKET
+misc_box MISC_BOX_OF_BEASTS
+misc_disc MISC_DISC_OF_STORMS
+misc_deck MISC_DECK
+%start
+%compose misc_deck
+%compose i-deck_escape
+%finish
+%start
+%compose misc_deck
+%compose i-deck_destruction
+%finish
+%start
+%compose misc_deck
+%compose i-deck_dungeons
+%finish
+%start
+%compose misc_deck
+%compose i-deck_summoning
+%finish
+%start
+%compose misc_deck
+%compose i-deck_wonders
+%finish
+%start
+%compose misc_deck
+%compose i-deck_punishment
+%finish
+%start
+%compose misc_deck
+%compose i-deck_war
+%finish
+%start
+%compose misc_deck
+%compose i-deck_changes
+%finish
+%start
+%compose misc_deck
+%compose i-deck_defense
+%finish
+misc_deck_rare MISC_DECK_RARE
+%start
+%compose misc_deck_rare
+%compose i-deck_escape
+%finish
+%start
+%compose misc_deck_rare
+%compose i-deck_destruction
+%finish
+%start
+%compose misc_deck_rare
+%compose i-deck_dungeons
+%finish
+%start
+%compose misc_deck_rare
+%compose i-deck_summoning
+%finish
+%start
+%compose misc_deck_rare
+%compose i-deck_wonders
+%finish
+%start
+%compose misc_deck_rare
+%compose i-deck_punishment
+%finish
+%start
+%compose misc_deck_rare
+%compose i-deck_war
+%finish
+%start
+%compose misc_deck_rare
+%compose i-deck_changes
+%finish
+%start
+%compose misc_deck_rare
+%compose i-deck_defense
+%finish
+misc_deck_legendary MISC_DECK_LEGENDARY
+%start
+%compose misc_deck_legendary
+%compose i-deck_escape
+%finish
+%start
+%compose misc_deck_legendary
+%compose i-deck_destruction
+%finish
+%start
+%compose misc_deck_legendary
+%compose i-deck_dungeons
+%finish
+%start
+%compose misc_deck_legendary
+%compose i-deck_summoning
+%finish
+%start
+%compose misc_deck_legendary
+%compose i-deck_wonders
+%finish
+%start
+%compose misc_deck_legendary
+%compose i-deck_punishment
+%finish
+%start
+%compose misc_deck_legendary
+%compose i-deck_war
+%finish
+%start
+%compose misc_deck_legendary
+%compose i-deck_changes
+%finish
+%start
+%compose misc_deck_legendary
+%compose i-deck_defense
+%finish
+misc_rune MISC_RUNE_OF_ZOT
+runes/rune_tartarus MISC_RUNE_TARTARUS
+runes/rune_cocytus MISC_RUNE_COCYTUS
+runes/rune_dis MISC_RUNE_DIS
+runes/rune_gehenna MISC_RUNE_GEHENNA
+runes/rune_cerebov MISC_RUNE_CEREBOV
+runes/rune_gloorx_vloq MISC_RUNE_GLOORX_VLOQ
+runes/rune_mnoleg MISC_RUNE_MNOLEG
+runes/rune_lom_lobon MISC_RUNE_LOM_LOBON
+runes/rune_snake MISC_RUNE_SNAKE
+runes/rune_swamp MISC_RUNE_SWAMP
+runes/rune_shoals MISC_RUNE_SHOALS
+runes/rune_slime MISC_RUNE_SLIME
+runes/rune_vaults MISC_RUNE_VAULTS
+runes/rune_tomb MISC_RUNE_TOMB
+runes/rune_abyss MISC_RUNE_ABYSS
+runes/rune_demonic_1 MISC_RUNE_DEMONIC
+runes/rune_demonic_2
+runes/rune_demonic_3
+runes/rune_demonic_4
+runes/rune_demonic_5
+runes/rune_demonic_6
+%rim 0
+misc_quad MISC_QUAD_DAMAGE
+%rim 1
+
+#OBJ_CORPSES
+#handled in dc-corpse.txt
+
+#OBJ_GOLD
+gold_pile GOLD UNSEEN_GOLD
