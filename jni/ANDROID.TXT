@@ -36,7 +36,10 @@ ZOMG COMPILES
 So ideally, to build from the checked out code, one would:
 1. Run source/util/art-data.pl
 2. Run source/util/gen-mst.pl
-3. Run 'make' in source/rltiles
-4. Run 'source/util/gen_ver.pl build.h'
-5. Run 'util/gen-cflg.pl compflag.h none armeabi android android'
-6. Then run $NDK/ndk-build (assuming you have the NDK. We're using r8 atm.
+3. Run source/util/gen-luatags.pl to get dat/dlua/tags.lua
+4. Run 'make' in source/rltiles
+5. Run 'source/util/gen_ver.pl build.h'
+6. Run 'util/gen-cflg.pl compflag.h none armeabi android android'
+7. Then run $NDK/ndk-build (assuming you have the NDK. We're using r8 atm.
+
+Useful resource regarding sqlite: http://www.roman10.net/how-to-compile-sqlite-for-android-using-ndk/
