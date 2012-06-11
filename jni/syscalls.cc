@@ -211,7 +211,8 @@ bool file_exists(const std::string &name)
             && !(lAttr & FILE_ATTRIBUTE_DIRECTORY));
 #else
     struct stat st;
-    const int err = ::stat(OUTS(name), &st);
+    //const int err = ::stat(OUTS(name), &st);
+    const int err = ::stat(name.c_str(), &st);
     return (!err && S_ISREG(st.st_mode));
 #endif
 }
@@ -225,10 +226,12 @@ bool dir_exists(const std::string &dir)
             && (lAttr & FILE_ATTRIBUTE_DIRECTORY));
 #elif defined(HAVE_STAT)
     struct stat st;
-    const int err = ::stat(OUTS(dir), &st);
+    //const int err = ::stat(OUTS(dir), &st);
+    const int err = ::stat(dir.c_str(), &st);
     return (!err && S_ISDIR(st.st_mode));
 #else
-    DIR *d = opendir(OUTS(dir));
+    //DIR *d = opendir(OUTS(dir));
+    DIR *d = opendir(dir.c_str());
     const bool exists = !!d;
     if (d)
         closedir(d);
@@ -266,7 +269,7 @@ std::vector<std::string> get_dir_files(const std::string &dirname)
     }
 #else
 
-    DIR *dir = opendir(OUTS(dirname));
+    DIR *dir = opendir(dirname.c_str());
     if (!dir)
         return (files);
 
@@ -288,7 +291,8 @@ int rename_u(const char *oldpath, const char *newpath)
     return !MoveFileExW(OUTW(oldpath), OUTW(newpath),
                         MOVEFILE_REPLACE_EXISTING);
 #else
-    return rename(OUTS(oldpath), OUTS(newpath));
+	return rename(oldpath, newpath);
+    //return rename(OUTS(oldpath), OUTS(newpath));
 #endif
 }
 
@@ -297,7 +301,8 @@ int unlink_u(const char *pathname)
 #ifdef TARGET_OS_WINDOWS
     return _wunlink(OUTW(pathname));
 #else
-    return unlink(OUTS(pathname));
+    //return unlink(OUTS(pathname));
+    return unlink(pathname);
 #endif
 }
 
@@ -307,7 +312,8 @@ FILE *fopen_u(const char *path, const char *mode)
     // Why it wants the mode string as double-byte is beyond me.
     return _wfopen(OUTW(path), OUTW(mode));
 #else
-    return fopen(OUTS(path), mode);
+    return fopen(path, mode);
+    //return fopen(OUTS(path), mode);
 #endif
 }
 
@@ -316,7 +322,8 @@ int mkdir_u(const char *pathname, mode_t mode)
 #ifdef TARGET_OS_WINDOWS
     return _wmkdir(OUTW(pathname));
 #else
-    return mkdir(OUTS(pathname), mode);
+    //return mkdir(OUTS(pathname), mode);
+    return mkdir(pathname, mode);
 #endif
 }
 
@@ -325,6 +332,7 @@ int open_u(const char *pathname, int flags, mode_t mode)
 #ifdef TARGET_OS_WINDOWS
     return _wopen(OUTW(pathname), flags, mode);
 #else
-    return open(OUTS(pathname), flags, mode);
+    //return open(OUTS(pathname), flags, mode);
+    return open(pathname, flags, mode);
 #endif
 }
