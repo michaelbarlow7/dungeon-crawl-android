@@ -491,7 +491,7 @@ void putwch(ucs_t chr)
     {
 		c = ' ';
 	}
-	printf("putwch(%c)", chr);
+	printf("%c", chr);
         
     // TODO: recognize unsupported characters and try to transliterate
     //~ addnwstr(&c, 1); ANDROID: fucking curses everywhere. Might have to replace this function or something
@@ -536,7 +536,7 @@ void update_screen(void)
 
 void clear_to_end_of_line(void)
 {
-	printf("clear_to_end_of_line\n");
+	printf("\nclear_to_end_of_line\n");
     //~ textcolor(LIGHTGREY);
     //~ textbackground(BLACK);
     //~ clrtoeol();
@@ -548,13 +548,13 @@ void clear_to_end_of_line(void)
 
 int get_number_of_lines(void)
 {
-	return 25;
+	return 25;//TODO: Edit this!
     //~ return (LINES);
 }
 
 int get_number_of_cols(void)
 {
-	return 80;
+	return 80;//TODO: Edit this! screen size, dimen, width, height
     //~ return (COLS);
 }
 
@@ -670,7 +670,7 @@ void textcolor(int col)
 //~ #ifdef USE_TILE_WEB
     //~ tiles.textcolor(col);
 //~ #endif
-	printf("Changing textcolor to %i \n", col);
+	printf("\nChanging textcolor to %i \n", col);
 }
 
 static int curs_bg_attr(int col)
@@ -731,7 +731,7 @@ void textbackground(int col)
 {
     //~ (void)attrset(Current_Colour = curs_bg_attr(col));
 
-	printf("Changing textbackground to : %i", col);
+	printf("\nChanging textbackground to : %i\n", col);
 //~ #ifdef USE_TILE_WEB
     //~ tiles.textbackground(col);
 //~ #endif
@@ -740,7 +740,7 @@ void textbackground(int col)
 
 void gotoxy_sys(int x, int y)
 {
-	printf("Go to x: %i y: %i \n", x, y);
+	printf("\nGo to x: %i y: %i \n", x, y);
 	myXPos = x;
 	myYPos = y;
     //~ move(y - 1, x - 1);
@@ -791,7 +791,7 @@ static int faked_x = -1, faked_y;
 // What does this do???
 void fakecursorxy(int x, int y)
 {
-	printf("fakecursorxy(%i,%i)", x, y);
+	printf("\nfakecursorxy(%i,%i)\n", x, y);
     //~ if (valid_char(oldch) && faked_x != -1
         //~ && character_at(faked_y, faked_x) == oldmangledch)
     //~ {
@@ -823,7 +823,7 @@ int wherey()
 
 void delay(unsigned int time)
 {
-	printf("delay (%i) called", time);
+	printf("\ndelay (%i) called\n", time);
     if (crawl_state.disables[DIS_DELAY])
         return;
 
