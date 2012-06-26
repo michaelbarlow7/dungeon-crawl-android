@@ -17,6 +17,7 @@
  */
 #include "AppHdr.h"
 
+#include <jni.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -872,3 +873,20 @@ bool kbhit()
     return result;
 #endif
 }
+extern "C" {
+	jstring Java_com_crawlmb_CrawlAppActivity_stringFromJNI( JNIEnv* env, jobject thiz );
+};
+//~ static jmethodID CrawlAppActivity_fatal;
+//~ static jclass NativeWrapperClass;
+//~ static jobject NativeWrapperObj;
+//~ #define JAVA_METHOD(m,s) (env->GetMethodID(NativeWrapperClass, m, s))
+//~ #define JAVA_CALL(...) (env->CallVoidMethod(NativeWrapperObj, __VA_ARGS__))
+
+jstring Java_com_crawlmb_CrawlAppActivity_stringFromJNI( JNIEnv* env, jobject thiz )
+{
+	//~ NativeWrapperClass = env->GetObjectClass(NativeWrapperObj);
+	//~ NativeWrapper_fatal = JAVA_METHOD("fatal", "(Ljava/lang/String;)V");
+	//~ JAVA_CALL(NativeWrapper_fatal, env->NewStringUTF(msg));
+    return env->NewStringUTF("ZOMG");
+}
+//~ ((*env)->GetMethodID(env, NativeWrapperClass, m, s))
