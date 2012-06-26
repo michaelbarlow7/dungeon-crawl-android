@@ -5,20 +5,29 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 public class CrawlAppActivity extends Activity {
-    /** Called when the activity is first created. */
+    private TextView textView;
+
+	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) 
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
-        TextView textView = (TextView) findViewById(R.id.text);
-        textView.setText(stringFromJNI());
+        textView = (TextView) findViewById(R.id.text);
+        stringFromJNI();
     }
     
-	public void fatal(String msg) 
+	public void fatal(final String msg) 
 	{
-		System.out.println("############ this seriously got called???");
+		runOnUiThread(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				textView.setText(msg);
+			}
+		});
 	}
 
     public native String  stringFromJNI();

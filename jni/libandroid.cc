@@ -876,17 +876,18 @@ bool kbhit()
 extern "C" {
 	jstring Java_com_crawlmb_CrawlAppActivity_stringFromJNI( JNIEnv* env, jobject thiz );
 };
-//~ static jmethodID CrawlAppActivity_fatal;
-//~ static jclass NativeWrapperClass;
-//~ static jobject NativeWrapperObj;
-//~ #define JAVA_METHOD(m,s) (env->GetMethodID(NativeWrapperClass, m, s))
-//~ #define JAVA_CALL(...) (env->CallVoidMethod(NativeWrapperObj, __VA_ARGS__))
+static jmethodID CrawlAppActivity_fatal;
+static jclass mainClass;
+static jobject mainObject;
+#define JAVA_METHOD(m,s) (env->GetMethodID(mainClass, m, s))
+#define JAVA_CALL(...) (env->CallVoidMethod(mainObject, __VA_ARGS__))
 
 jstring Java_com_crawlmb_CrawlAppActivity_stringFromJNI( JNIEnv* env, jobject thiz )
 {
-	//~ NativeWrapperClass = env->GetObjectClass(NativeWrapperObj);
-	//~ NativeWrapper_fatal = JAVA_METHOD("fatal", "(Ljava/lang/String;)V");
-	//~ JAVA_CALL(NativeWrapper_fatal, env->NewStringUTF(msg));
+	mainObject = thiz;
+	mainClass = env->GetObjectClass(mainObject);
+	CrawlAppActivity_fatal = env->GetMethodID(mainClass, "fatal", "(Ljava/lang/String;)V");//JAVA_METHOD("fatal", "(Ljava/lang/String;)V");
+	JAVA_CALL(CrawlAppActivity_fatal, env->NewStringUTF("ROUND TRIP!!"));
     return env->NewStringUTF("ZOMG");
 }
 //~ ((*env)->GetMethodID(env, NativeWrapperClass, m, s))
