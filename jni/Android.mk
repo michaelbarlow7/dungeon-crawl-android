@@ -60,16 +60,17 @@ RLTILES_DIR := rltiles
 
 # Crawl files are in .cc format
 LOCAL_CPP_EXTENSION=.cc
-# Need to include the rtiles folder, sqlite and lua
+# Need to include the rtiles folder, sqlite, lua and curses
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/rltiles \
 $(LOCAL_PATH)/rltiles/tool \
 $(LOCAL_PATH)/prebulit \
 $(LOCAL_PATH)/$(SQLITE_DIR) \
 $(LOCAL_PATH)/$(LUA_DIR) \
+$(LOCAL_PATH)/curses
 # Loading the sqlite and lua libraries
 LOCAL_STATIC_LIBRARIES:=libsqlite3 liblua
-# loading zlib
-LOCAL_LDLIBS := -lz
+# loading zlib and logging functions
+LOCAL_LDLIBS := -lz -llog
 
 # Need this because we're using dynamic cast in spl-miscast.h:101,106
 LOCAL_CFLAGS += -frtti -fexceptions
@@ -117,7 +118,9 @@ $(RLTILES_DIR)/tiledef-dngn.cc  $(RLTILES_DIR)/tiledef-feat.cc  $(RLTILES_DIR)/t
 $(RLTILES_DIR)/tiledef-gui.cc  $(RLTILES_DIR)/tiledef-icons.cc  $(RLTILES_DIR)/tiledef-main.cc  \
 $(RLTILES_DIR)/tiledef-player.cc  $(RLTILES_DIR)/tiledef-unrand.cc  $(RLTILES_DIR)/tiledef-wall.cc \
 \
-prebuilt/levcomp.lex.cc prebuilt/levcomp.tab.cc
+prebuilt/levcomp.lex.cc prebuilt/levcomp.tab.cc \
+\
+curses/curses.c
 #Removed from above
 # libunix.cc changed to libandroid.cc
 # tilecell.cc tiledgnbuf.cc
