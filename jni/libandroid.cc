@@ -33,6 +33,7 @@
 #include "enum.h"
 #include "externs.h"
 #include "libutil.h"
+#include "main.h"
 #include "options.h"
 #include "files.h"
 #include "state.h"
@@ -76,6 +77,30 @@ static int curs_bg_attr(int col);
 static bool cursor_is_enabled = true;
 static int myXPos = 0;
 static int myYPos = 0;
+
+//ANDROID STUFF BEGINS HERE
+extern "C" 
+{
+	void Java_com_crawlmb_CrawlAppActivity_initGame( JNIEnv* env1, jobject thiz , jstring jInitLocation);
+};
+static jmethodID CrawlAppActivity_logd;
+static JNIEnv *env;
+static jobject thiz;
+
+void Java_com_crawlmb_CrawlAppActivity_initGame( JNIEnv* env1, jobject thiz1 , jstring jInitLocation)
+{
+	env = env1;
+	thiz = thiz1;
+	CrawlAppActivity_logd = env->GetMethodID(env->GetObjectClass(thiz), "logd", "(Ljava/lang/String;)V");
+	env->CallVoidMethod(thiz, CrawlAppActivity_logd, env->NewStringUTF("Starting game oMG"));
+	const char *constInitLocation = env->GetStringUTFChars(jInitLocation, NULL);
+	char *initLocation = new char[strlen(constInitLocation) + 1];
+	strncpy (initLocation, constInitLocation, strlen(constInitLocation));
+	initLocation[strlen(constInitLocation)] = '\0';
+	int argc = 3;
+	char *argv[] = {"","-rc", initLocation};
+	main (argc, argv);
+}
 
 static unsigned int convert_to_curses_attr(int chattr)
 {
@@ -405,7 +430,7 @@ int unixcurses_get_vi_key(int keyin)
 
 void console_startup(void)
 {
-	printf("console_startup\n");
+	env->CallVoidMethod(thiz, CrawlAppActivity_logd, env->NewStringUTF("console_startup\n"));
     //~ termio_init();
 
 //~ #ifdef CURSES_USE_KEYPAD
@@ -452,7 +477,7 @@ void console_startup(void)
 
 void console_shutdown()
 {
-	printf("console_shutdown() \n");
+	env->CallVoidMethod(thiz, CrawlAppActivity_logd, env->NewStringUTF("console_shutdown\n"));
     // resetty();
     //endwin();
 
@@ -492,7 +517,9 @@ void putwch(ucs_t chr)
     {
 		c = ' ';
 	}
-	printf("%c", chr);
+	char * printstr = new char[1];
+	sprintf(printstr, "%c", chr);
+	env->CallVoidMethod(thiz, CrawlAppActivity_logd, env->NewStringUTF(printstr));
         
     // TODO: recognize unsupported characters and try to transliterate
     //~ addnwstr(&c, 1); ANDROID: fucking curses everywhere. Might have to replace this function or something
@@ -537,7 +564,8 @@ void update_screen(void)
 
 void clear_to_end_of_line(void)
 {
-	printf("\nclear_to_end_of_line\n");
+	env->CallVoidMethod(thiz, CrawlAppActivity_logd, env->NewStringUTF("\nclear to end of line\n"));
+	//printf("\nclear_to_end_of_line\n");
     //~ textcolor(LIGHTGREY);
     //~ textbackground(BLACK);
     //~ clrtoeol();
@@ -565,7 +593,7 @@ void clrscr()
     textbackground(BLACK);
     //~ clear();
 #ifdef DGAMELAUNCH
-    printf("%s", DGL_CLEAR_SCREEN);
+    env->CallVoidMethod(thiz, CrawlAppActivity_logd, env->NewStringUTF("\nclear screen\n"));
     fflush(stdout);
 #endif
 
@@ -671,7 +699,12 @@ void textcolor(int col)
 //~ #ifdef USE_TILE_WEB
     //~ tiles.textcolor(col);
 //~ #endif
-	printf("\nChanging textcolor to %i \n", col);
+	env->CallVoidMethod(thiz, CrawlAppActivity_logd, env->NewStringUTF("Changing textcolor to"));
+	char * x = new char[1];
+	sprintf(x,"%i", col);
+	env->CallVoidMethod(thiz, CrawlAppActivity_logd, env->NewStringUTF(x));
+
+	//printf("\nChanging textcolor to %i \n", col);
 }
 
 static int curs_bg_attr(int col)
@@ -732,7 +765,12 @@ void textbackground(int col)
 {
     //~ (void)attrset(Current_Colour = curs_bg_attr(col));
 
-	printf("\nChanging textbackground to : %i\n", col);
+
+	//printf("\nChanging textbackground to : %i\n", col);
+	env->CallVoidMethod(thiz, CrawlAppActivity_logd, env->NewStringUTF("Changing textbackground to"));
+	char * x = new char[1];
+	sprintf(x,"%i", col);
+	env->CallVoidMethod(thiz, CrawlAppActivity_logd, env->NewStringUTF(x));
 //~ #ifdef USE_TILE_WEB
     //~ tiles.textbackground(col);
 //~ #endif
@@ -740,8 +778,15 @@ void textbackground(int col)
 
 
 void gotoxy_sys(int x, int y)
-{
-	printf("\nGo to x: %i y: %i \n", x, y);
+{	
+	env->CallVoidMethod(thiz, CrawlAppActivity_logd, env->NewStringUTF("Go to"));
+	char * xc = new char[1];
+	char * yc = new char[1];
+	sprintf(xc,"%i", x);
+	y = sprintf(yc,"%i", y);
+	env->CallVoidMethod(thiz, CrawlAppActivity_logd, env->NewStringUTF(xc));
+	env->CallVoidMethod(thiz, CrawlAppActivity_logd, env->NewStringUTF(yc));
+	//printf("\nGo to x: %i y: %i \n", x, y);
 	myXPos = x;
 	myYPos = y;
     //~ move(y - 1, x - 1);
@@ -792,7 +837,8 @@ static int faked_x = -1, faked_y;
 // What does this do???
 void fakecursorxy(int x, int y)
 {
-	printf("\nfakecursorxy(%i,%i)\n", x, y);
+	env->CallVoidMethod(thiz, CrawlAppActivity_logd, env->NewStringUTF("fakecursorxy called. beh"));
+	//printf("\nfakecursorxy(%i,%i)\n", x, y);
     //~ if (valid_char(oldch) && faked_x != -1
         //~ && character_at(faked_y, faked_x) == oldmangledch)
     //~ {
@@ -824,7 +870,8 @@ int wherey()
 
 void delay(unsigned int time)
 {
-	printf("\ndelay (%i) called\n", time);
+	env->CallVoidMethod(thiz, CrawlAppActivity_logd, env->NewStringUTF("delay called"));
+	//~ printf("\ndelay (%i) called\n", time);
     if (crawl_state.disables[DIS_DELAY])
         return;
 
@@ -873,21 +920,4 @@ bool kbhit()
     return result;
 #endif
 }
-extern "C" {
-	jstring Java_com_crawlmb_CrawlAppActivity_stringFromJNI( JNIEnv* env, jobject thiz );
-};
-static jmethodID CrawlAppActivity_fatal;
-static jclass mainClass;
-static jobject mainObject;
-#define JAVA_METHOD(m,s) (env->GetMethodID(mainClass, m, s))
-#define JAVA_CALL(...) (env->CallVoidMethod(mainObject, __VA_ARGS__))
 
-jstring Java_com_crawlmb_CrawlAppActivity_stringFromJNI( JNIEnv* env, jobject thiz )
-{
-	mainObject = thiz;
-	mainClass = env->GetObjectClass(mainObject);
-	CrawlAppActivity_fatal = env->GetMethodID(mainClass, "fatal", "(Ljava/lang/String;)V");//JAVA_METHOD("fatal", "(Ljava/lang/String;)V");
-	JAVA_CALL(CrawlAppActivity_fatal, env->NewStringUTF("ROUND TRIP!!"));
-    return env->NewStringUTF("ZOMG");
-}
-//~ ((*env)->GetMethodID(env, NativeWrapperClass, m, s))

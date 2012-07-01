@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="hello">Text hasn\'t been set by jni yet</string>
+    <string name="hello">Click to start</string>
     <string name="app_name">Dungeon Crawl: Stone Soup for Android</string>
 
 </resources>

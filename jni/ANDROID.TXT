@@ -43,3 +43,5 @@ So ideally, to build from the checked out code, one would:
 7. Then run $NDK/ndk-build (assuming you have the NDK. We're using r8 atm.
 
 Useful resource regarding sqlite: http://www.roman10.net/how-to-compile-sqlite-for-android-using-ndk/
+To actually get the app to run, we also needed to:
+1. Symlink source/dat to <android-root>/assets/dat
