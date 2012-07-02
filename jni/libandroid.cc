@@ -12,12 +12,8 @@
    and white on white (used by me for "bright black" (darkgrey) on black
 
    Jan 1998 Svante Gerhard <svante@algonet.se>                          */
-/**
- * Android plan of attack:  
- */
 #include "AppHdr.h"
 
-#include <jni.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -55,15 +51,9 @@ static struct termios game_term;
 
 #include <time.h>
 
-// Its best if curses comes at the end (name conflicts with Solaris). -- bwr
-#ifndef CURSES_INCLUDE_FILE
-    #ifndef _XOPEN_SOURCE_EXTENDED
-    #define _XOPEN_SOURCE_EXTENDED
-    #endif
-//    #include <curses.h> ANDROID
-#else
-    #include CURSES_INCLUDE_FILE
-#endif
+extern "C" {
+   #include "curses/curses.h" //ANDROID: We have our own curses file
+ }
 
 // Globals holding current text/backg. colors
 static short FG_COL = WHITE;
@@ -75,8 +65,6 @@ static int curs_bg_attr(int col);
 
 //~ static bool cursor_is_enabled = true;
 static bool cursor_is_enabled = true;
-static int myXPos = 0;
-static int myYPos = 0;
 
 //ANDROID STUFF BEGINS HERE
 extern "C" 
@@ -92,7 +80,7 @@ void Java_com_crawlmb_CrawlAppActivity_initGame( JNIEnv* env1, jobject thiz1 , j
 	env = env1;
 	thiz = thiz1;
 	CrawlAppActivity_logd = env->GetMethodID(env->GetObjectClass(thiz), "logd", "(Ljava/lang/String;)V");
-	env->CallVoidMethod(thiz, CrawlAppActivity_logd, env->NewStringUTF("Starting game oMG"));
+	//~ env->CallVoidMethod(thiz, CrawlAppActivity_logd, env->NewStringUTF("Starting game oMG"));
 	const char *constInitLocation = env->GetStringUTFChars(jInitLocation, NULL);
 	char *initLocation = new char[strlen(constInitLocation) + 1];
 	strncpy (initLocation, constInitLocation, strlen(constInitLocation));
@@ -104,9 +92,7 @@ void Java_com_crawlmb_CrawlAppActivity_initGame( JNIEnv* env1, jobject thiz1 , j
 
 static unsigned int convert_to_curses_attr(int chattr)
 {
-	return chattr;
-	//ANDROID
-    /*switch (chattr & CHATTR_ATTRMASK)
+    switch (chattr & CHATTR_ATTRMASK)
     {
     case CHATTR_STANDOUT:       return (A_STANDOUT);
     case CHATTR_BOLD:           return (A_BOLD);
@@ -115,7 +101,7 @@ static unsigned int convert_to_curses_attr(int chattr)
     case CHATTR_REVERSE:        return (A_REVERSE);
     case CHATTR_DIM:            return (A_DIM);
     default:                    return (A_NORMAL);
-    }*/
+    }
 }
 
 static inline short macro_colour(short col)
@@ -126,9 +112,7 @@ static inline short macro_colour(short col)
 // Translate DOS colors to curses.
 static short translate_colour(short col)
 {
-	return col;
-	//ANDROID
-    /*switch (col)
+    switch (col)
     {
     case BLACK:
         return COLOR_BLACK;
@@ -146,25 +130,25 @@ static short translate_colour(short col)
         return COLOR_YELLOW;
     case LIGHTGREY:
         return COLOR_WHITE;
-    case DARKGREY:
-        return COLOR_BLACK + COLFLAG_CURSES_BRIGHTEN;
+    case DARKGREY: 
+        return COLOR_GRAY;
     case LIGHTBLUE:
-        return COLOR_BLUE + COLFLAG_CURSES_BRIGHTEN;
+        return COLOR_LIGHT_BLUE;
     case LIGHTGREEN:
-        return COLOR_GREEN + COLFLAG_CURSES_BRIGHTEN;
+        return COLOR_LIGHT_GREEN;
     case LIGHTCYAN:
-        return COLOR_CYAN + COLFLAG_CURSES_BRIGHTEN;
+        return COLOR_LIGHT_CYAN;
     case LIGHTRED:
-        return COLOR_RED + COLFLAG_CURSES_BRIGHTEN;
+        return COLOR_LIGHT_RED;
     case LIGHTMAGENTA:
-        return COLOR_MAGENTA + COLFLAG_CURSES_BRIGHTEN;
+        return COLOR_LIGHT_MAGENTA;
     case YELLOW:
-        return COLOR_YELLOW + COLFLAG_CURSES_BRIGHTEN;
+        return COLOR_LIGHT_YELLOW;
     case WHITE:
-        return COLOR_WHITE + COLFLAG_CURSES_BRIGHTEN;
+        return COLOR_LIGHT_WHITE;
     default:
         return COLOR_GREEN;
-    }*/
+    }
 }
 
 static void setup_colour_pairs(void)
@@ -175,20 +159,19 @@ static void setup_colour_pairs(void)
         for (j = 0; j < 8; j++)
         {
             if ((i > 0) || (j > 0));
-                //~ init_pair(i * 8 + j, j, i);
+                init_pair(i * 8 + j, j, i);
         }
 
-    //init_pair(63, COLOR_BLACK, Options.background_colour); ANDROID
-    //~ init_pair(63, BLACK, Options.background_colour);  
+    init_pair(63, COLOR_BLACK, Options.background_colour);
 }
 
 static void unix_handle_terminal_resize();
 
-static void termio_init()
+static void termio_init()// ANDROID: Input/terminal method. 
 {
-    //~ tcgetattr(0, &def_term); //termios function. Let's leave this
+    //~ tcgetattr(0, &def_term);
     //~ memcpy(&game_term, &def_term, sizeof(struct termios));
-//~ 
+
     //~ def_term.c_cc[VINTR] = (char) 3;        // ctrl-C
     //~ game_term.c_cc[VINTR] = (char) 3;       // ctrl-C
 //~ 
@@ -202,55 +185,13 @@ static void termio_init()
 //~ 
     //~ tcsetattr(0, TCSAFLUSH, &game_term); //termios function
 //~ 
-    //~ crawl_state.terminal_resize_handler = unix_handle_terminal_resize;
+    crawl_state.terminal_resize_handler = unix_handle_terminal_resize;
 }
 
 void set_mouse_enabled(bool enabled)
 {
-	return; //ANDROID
-//~ #ifdef NCURSES_MOUSE_VERSION
-    //~ const int mask = enabled? ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION : 0;
-    //~ mmask_t oldmask = 0;
-    //~ mousemask(mask, &oldmask);
-//~ #endif
+	return;
 }
-
-//~ #ifdef NCURSES_MOUSE_VERSION
-//~ static int proc_mouse_event(int c, const MEVENT *me)
-//~ {
-    //~ crawl_view.mousep.x = me->x + 1;
-    //~ crawl_view.mousep.y = me->y + 1;
-//~ 
-    //~ if (!crawl_state.mouse_enabled)
-        //~ return (CK_MOUSE_MOVE);
-//~ 
-    //~ c_mouse_event cme(crawl_view.mousep);
-    //~ if (me->bstate & BUTTON1_CLICKED)
-        //~ cme.bstate |= c_mouse_event::BUTTON1;
-    //~ else if (me->bstate & BUTTON1_DOUBLE_CLICKED)
-        //~ cme.bstate |= c_mouse_event::BUTTON1_DBL;
-    //~ else if (me->bstate & BUTTON2_CLICKED)
-        //~ cme.bstate |= c_mouse_event::BUTTON2;
-    //~ else if (me->bstate & BUTTON2_DOUBLE_CLICKED)
-        //~ cme.bstate |= c_mouse_event::BUTTON2_DBL;
-    //~ else if (me->bstate & BUTTON3_CLICKED)
-        //~ cme.bstate |= c_mouse_event::BUTTON3;
-    //~ else if (me->bstate & BUTTON3_DOUBLE_CLICKED)
-        //~ cme.bstate |= c_mouse_event::BUTTON3_DBL;
-    //~ else if (me->bstate & BUTTON4_CLICKED)
-        //~ cme.bstate |= c_mouse_event::BUTTON4;
-    //~ else if (me->bstate & BUTTON4_DOUBLE_CLICKED)
-        //~ cme.bstate |= c_mouse_event::BUTTON4_DBL;
-//~ 
-    //~ if (cme)
-    //~ {
-        //~ new_mouse_event(cme);
-        //~ return (CK_MOUSE_CLICK);
-    //~ }
-//~ 
-    //~ return (CK_MOUSE_MOVE);
-//~ }
-//~ #endif
 
 static int pending = 0;
 
@@ -263,17 +204,7 @@ int getchk()
         return c;
     }
 
-    wint_t c;//ANDROID: May get rid of?
-
-//~ #ifdef USE_TILE_WEB
-    //~ refresh();
-//~ 
-    //~ tiles.redraw();
-    //~ tiles.await_input(c, true);
-//~ 
-    //~ if (c > 0)
-        //~ return c;
-//~ #endif
+    wint_t c;
 
     //~ switch (get_wch(&c))
     //~ {
@@ -298,21 +229,13 @@ int m_getch()
     {
         c = getchk();
 
-//~ #ifdef NCURSES_MOUSE_VERSION
-        //~ if (c == -KEY_MOUSE)
-        //~ {
-            //~ MEVENT me;
-            //~ getmouse(&me);
-            //~ c = proc_mouse_event(c, &me);
-        //~ }
-//~ #endif
     } while ((c == CK_MOUSE_MOVE || c == CK_MOUSE_CLICK)
              && !crawl_state.mouse_enabled);
 
     return (c);
 }
 
-int getch_ck()
+int getch_ck() //ANDROID: Input
 {
     int c = m_getch();
     switch (c)
@@ -356,7 +279,7 @@ static void unix_handle_terminal_resize()
     console_startup();
 }
 
-static void unixcurses_defkeys(void)
+static void unixcurses_defkeys(void) //INPUT
 {
 	//ANDROID: define_key is a curses thing. The precompiler might filter this out, but whatevs
 //~ #ifdef NCURSES_VERSION
@@ -392,7 +315,7 @@ static void unixcurses_defkeys(void)
 //~ #endif
 }
 
-int unixcurses_get_vi_key(int keyin)
+int unixcurses_get_vi_key(int keyin) //INPUT
 {
     switch (-keyin)
     {
@@ -400,25 +323,24 @@ int unixcurses_get_vi_key(int keyin)
     case 1031: return -1007;
     case 1034: return -1001;
     case 1040: return -1005;
-	//ANDROID: Anything with KEY_ is from curses. BOO
-    //~ case KEY_HOME:   return -1007;
-    //~ case KEY_END:    return -1001;
-    //~ case KEY_DOWN:   return -1002;
-    //~ case KEY_UP:     return -1008;
-    //~ case KEY_LEFT:   return -1004;
-    //~ case KEY_RIGHT:  return -1006;
-    //~ case KEY_NPAGE:  return -1003;
-    //~ case KEY_PPAGE:  return -1009;
-    //~ case KEY_A1:     return -1007;
-    //~ case KEY_A3:     return -1009;
-    //~ case KEY_B2:     return -1005;
-    //~ case KEY_C1:     return -1001;
-    //~ case KEY_C3:     return -1003;
-    //~ case KEY_SHOME:  return 'Y';
-    //~ case KEY_SEND:   return 'B';
-    //~ case KEY_SLEFT:  return 'H';
-    //~ case KEY_SRIGHT: return 'L';
-    //~ case KEY_BTAB:   return CK_SHIFT_TAB;
+    case KEY_HOME:   return -1007;
+    case KEY_END:    return -1001;
+    case KEY_DOWN:   return -1002;
+    case KEY_UP:     return -1008;
+    case KEY_LEFT:   return -1004;
+    case KEY_RIGHT:  return -1006;
+    case KEY_NPAGE:  return -1003;
+    case KEY_PPAGE:  return -1009;
+    case KEY_A1:     return -1007;
+    case KEY_A3:     return -1009;
+    case KEY_B2:     return -1005;
+    case KEY_C1:     return -1001;
+    case KEY_C3:     return -1003;
+    case KEY_SHOME:  return 'Y';
+    case KEY_SEND:   return 'B';
+    case KEY_SLEFT:  return 'H';
+    case KEY_SRIGHT: return 'L';
+    case KEY_BTAB:   return CK_SHIFT_TAB;
     }
     return keyin;
 }
@@ -430,65 +352,33 @@ int unixcurses_get_vi_key(int keyin)
 
 void console_startup(void)
 {
-	env->CallVoidMethod(thiz, CrawlAppActivity_logd, env->NewStringUTF("console_startup\n"));
-    //~ termio_init();
+    termio_init();
 
-//~ #ifdef CURSES_USE_KEYPAD
-    //~ write(1, KPADAPP, strlen(KPADAPP));
-//~ #endif
+    initscr(); 
+    // raw(); ANDROID WTF IS THIS? Maybe we don't need it?
+    noecho();
 
-//~ #ifdef USE_UNIX_SIGNALS
-    //~ signal(SIGWINCH, handle_sigwinch);
-//~ #endif
+    nonl();
+    intrflush(stdscr, FALSE);
 
-    //initscr(); ANDROID: booo curses boooo
-    //raw();
-    //noecho();
+    //meta(stdscr, TRUE); ANDROID: Don't think we need this
+    unixcurses_defkeys(); //Looks like an input thing
+    start_color();
+    setup_colour_pairs();
 
-    //nonl();
-    //intrflush(stdscr, FALSE);
-//~ #ifdef CURSES_USE_KEYPAD
-    //keypad(stdscr, TRUE);
-
-//~ #ifdef CURSES_SET_ESCDELAY
-//~ #ifdef NCURSES_REENTRANT
-    //set_escdelay(CURSES_SET_ESCDELAY);
-//~ #else
-    //~ ESCDELAY = CURSES_SET_ESCDELAY;
-//~ #endif
-//~ #endif
-//~ #endif
-
-    //meta(stdscr, TRUE);
-    //unixcurses_defkeys(); This function has curses bullshit written all over it
-    //start_color();
-    //~ setup_colour_pairs();
-
-    //scrollok(stdscr, FALSE);
+    scrollok(stdscr, FALSE);
 
     crawl_view.init_geometry();// might check this is getting the right sizes and stuff
 
-    //~ set_mouse_enabled(false);
-
-//~ #ifdef USE_TILE_WEB
-    //tiles.resize(); We're not using webtiles, whatever they are
-//~ #endif
+    set_mouse_enabled(false);
 }
 
 void console_shutdown()
 {
-	env->CallVoidMethod(thiz, CrawlAppActivity_logd, env->NewStringUTF("console_shutdown\n"));
-    // resetty();
-    //endwin();
+    //resetty();
+    endwin();
 
-    //~ tcsetattr(0, TCSAFLUSH, &def_term);
-//~ #ifdef CURSES_USE_KEYPAD
-    //~ write(1, KPADCUR, strlen(KPADCUR));
-//~ #endif
-//~ 
-//~ #ifdef USE_UNIX_SIGNALS
-    //~ signal(SIGWINCH, SIG_DFL);
-//~ #endif
+    //~ tcsetattr(0, TCSAFLUSH, &def_term); //system
 }
 
 void cprintf(const char *format, ...)
@@ -519,17 +409,10 @@ void putwch(ucs_t chr)
 	}
 	char * printstr = new char[1];
 	sprintf(printstr, "%c", chr);
-	env->CallVoidMethod(thiz, CrawlAppActivity_logd, env->NewStringUTF(printstr));
         
     // TODO: recognize unsupported characters and try to transliterate
-    //~ addnwstr(&c, 1); ANDROID: fucking curses everywhere. Might have to replace this function or something
-
-//~ #ifdef USE_TILE_WEB
-    //~ ucs_t buf[2];
-    //~ buf[0] = chr;
-    //~ buf[1] = 0;
-    //~ tiles.put_ucs_string(buf);
-//~ #endif
+    //~ addnwstr(&c, 1); ANDROID: Not sure how to replace this D:
+    addnstr(1, printstr);
 }
 
 void puttext(int x1, int y1, const crawl_view_buffer &vbuf)
@@ -545,7 +428,7 @@ void puttext(int x1, int y1, const crawl_view_buffer &vbuf)
             cell++;
         }
     }
-    //~ update_screen();
+    update_screen();
 }
 
 // These next four are front functions so that we can reduce
@@ -555,7 +438,7 @@ void puttext(int x1, int y1, const crawl_view_buffer &vbuf)
 // C++ string class.  -- bwr
 void update_screen(void)
 {
-    //~ refresh();
+    refresh();
 
 #ifdef USE_TILE_WEB
     tiles.set_need_redraw();
@@ -564,11 +447,9 @@ void update_screen(void)
 
 void clear_to_end_of_line(void)
 {
-	env->CallVoidMethod(thiz, CrawlAppActivity_logd, env->NewStringUTF("\nclear to end of line\n"));
-	//printf("\nclear_to_end_of_line\n");
-    //~ textcolor(LIGHTGREY);
-    //~ textbackground(BLACK);
-    //~ clrtoeol();
+    textcolor(LIGHTGREY);
+    textbackground(BLACK);
+    clrtoeol();
 
 #ifdef USE_TILE_WEB
     tiles.clear_to_end_of_line();
@@ -577,34 +458,27 @@ void clear_to_end_of_line(void)
 
 int get_number_of_lines(void)
 {
-	return 25;//TODO: Edit this!
-    //~ return (LINES);
+    return (LINES);
 }
 
 int get_number_of_cols(void)
 {
-	return 80;//TODO: Edit this! screen size, dimen, width, height
-    //~ return (COLS);
+    return (COLS);
 }
 
 void clrscr()
 {
     textcolor(LIGHTGREY);
     textbackground(BLACK);
-    //~ clear();
+    clear();
 #ifdef DGAMELAUNCH
-    env->CallVoidMethod(thiz, CrawlAppActivity_logd, env->NewStringUTF("\nclear screen\n"));
     fflush(stdout);
 #endif
-
-//~ #ifdef USE_TILE_WEB
-    //~ tiles.clrscr();
-//~ #endif
 }
 
 void set_cursor_enabled(bool enabled)
 {
-    //~ curs_set(cursor_is_enabled = enabled);
+    curs_set(cursor_is_enabled = enabled);
 }
 
 bool is_cursor_enabled()
@@ -657,29 +531,28 @@ static int curs_fg_attr(int col)
                     macro_colour((brand & CHATTR_COLMASK) >> 8));
 
             if (fg == bg)
-                fg = BLACK;//COLOR_BLACK;
+                fg = COLOR_BLACK;
         }
 
         // If we can't do a dark grey friend brand, then we'll
         // switch the colour to light grey.
         if (Options.no_dark_brand
-                //~ && fg == (COLOR_BLACK | COLFLAG_CURSES_BRIGHTEN)
-                && fg == BLACK
+                && fg == (COLOR_LIGHT_BLACK)
                 && bg == 0)
         {
-            fg = WHITE;//COLOR_WHITE;
+            fg = COLOR_WHITE;
         }
     }
 
     // curses typically uses A_BOLD to give bright foreground colour,
     // but various termcaps may disagree
     if (fg & COLFLAG_CURSES_BRIGHTEN)
-        //~ flags |= A_BOLD; ANDROID
+        flags |= A_BOLD;
 
     // curses typically uses A_BLINK to give bright background colour,
     // but various termcaps may disagree (in whole or in part)
     if (bg & COLFLAG_CURSES_BRIGHTEN)
-        //~ flags |= A_BLINK; ANDROID
+        flags |= A_BLINK;
 
     // Strip out all the bits above the raw 3-bit colour definition
     fg &= 0x0007;
@@ -688,23 +561,12 @@ static int curs_fg_attr(int col)
     // figure out which colour pair we want
     const int pair = (fg == 0 && bg == 0) ? 63 : (bg * 8 + fg);
 
-	return flags; //probably causes all kinds o shit
-    //~ return (COLOR_PAIR(pair) | flags);
+    return (COLOR_PAIR(pair) | flags);
 }
 
 void textcolor(int col)
 {
-    //~ (void)attrset(Current_Colour = curs_fg_attr(col));
-
-//~ #ifdef USE_TILE_WEB
-    //~ tiles.textcolor(col);
-//~ #endif
-	env->CallVoidMethod(thiz, CrawlAppActivity_logd, env->NewStringUTF("Changing textcolor to"));
-	char * x = new char[1];
-	sprintf(x,"%i", col);
-	env->CallVoidMethod(thiz, CrawlAppActivity_logd, env->NewStringUTF(x));
-
-	//printf("\nChanging textcolor to %i \n", col);
+    (void)attrset(Current_Colour = curs_fg_attr(col));
 }
 
 static int curs_bg_attr(int col)
@@ -727,29 +589,28 @@ static int curs_bg_attr(int col)
         {
             bg = (brand & CHATTR_COLMASK) >> 8;
             if (fg == bg)
-                fg = BLACK;//fg = COLOR_BLACK;
+                fg = COLOR_BLACK;
         }
 
         // If we can't do a dark grey friend brand, then we'll
         // switch the colour to light grey.
         if (Options.no_dark_brand
-                //&& fg == (COLOR_BLACK | COLFLAG_CURSES_BRIGHTEN)
-                && fg == BLACK
+                && fg == (COLOR_LIGHT_BLACK)
                 && bg == 0)
         {
-            fg = WHITE;//COLOR_WHITE;
+            fg = COLOR_WHITE;
         }
     }
 
     // curses typically uses A_BOLD to give bright foreground colour,
     // but various termcaps may disagree
     if (fg & COLFLAG_CURSES_BRIGHTEN);
-        //~ flags |= A_BOLD;
+        flags |= A_BOLD;
 
     // curses typically uses A_BLINK to give bright background colour,
     // but various termcaps may disagree
     if (bg & COLFLAG_CURSES_BRIGHTEN);
-        //~ flags |= A_BLINK;
+        flags |= A_BLINK;
 
     // Strip out all the bits above the raw 3-bit colour definition
     fg &= 0x0007;
@@ -758,87 +619,66 @@ static int curs_bg_attr(int col)
     // figure out which colour pair we want
     const int pair = (fg == 0 && bg == 0) ? 63 : (bg * 8 + fg);
 	return flags;
-    //~ return (COLOR_PAIR(pair) | flags);
+    return (COLOR_PAIR(pair) | flags);
 }
 
 void textbackground(int col)
 {
-    //~ (void)attrset(Current_Colour = curs_bg_attr(col));
-
-
-	//printf("\nChanging textbackground to : %i\n", col);
-	env->CallVoidMethod(thiz, CrawlAppActivity_logd, env->NewStringUTF("Changing textbackground to"));
-	char * x = new char[1];
-	sprintf(x,"%i", col);
-	env->CallVoidMethod(thiz, CrawlAppActivity_logd, env->NewStringUTF(x));
-//~ #ifdef USE_TILE_WEB
-    //~ tiles.textbackground(col);
-//~ #endif
+    (void)attrset(Current_Colour = curs_bg_attr(col));
 }
 
 
 void gotoxy_sys(int x, int y)
 {	
-	env->CallVoidMethod(thiz, CrawlAppActivity_logd, env->NewStringUTF("Go to"));
-	char * xc = new char[1];
-	char * yc = new char[1];
-	sprintf(xc,"%i", x);
-	y = sprintf(yc,"%i", y);
-	env->CallVoidMethod(thiz, CrawlAppActivity_logd, env->NewStringUTF(xc));
-	env->CallVoidMethod(thiz, CrawlAppActivity_logd, env->NewStringUTF(yc));
-	//printf("\nGo to x: %i y: %i \n", x, y);
-	myXPos = x;
-	myYPos = y;
-    //~ move(y - 1, x - 1);
+    move(y - 1, x - 1);
 }
 
-//~ typedef cchar_t char_info;
-//~ inline bool operator == (const cchar_t &a, const cchar_t &b)
-//~ {
-    //~ return (a.attr == b.attr && *a.chars == *b.chars);
-//~ }
+typedef cchar_t char_info;
+inline bool operator == (const cchar_t &a, const cchar_t &b)
+{
+    return (a.attr == b.attr && *a.chars == *b.chars);
+}
 //~ inline char_info character_at(int y, int x)
 //~ {
     //~ cchar_t c;
     //~ // (void) is to hush an incorrect clang warning.
-    //~ (void)mvin_wch(y, x, &c);
+    //~ (void)mvin_wch(y, x, &c); //ANDROID: Dunno what to do about this method :S
     //~ return (c);
 //~ }
-//~ inline bool valid_char(const cchar_t &c)
-//~ {
-    //~ return *c.chars;
-//~ }
-//~ inline void write_char_at(int y, int x, const cchar_t &ch)
-//~ {
-    //~ move(y, x);
-    //~ add_wchnstr(&ch, 1); apparently curses
-//~ }
-//~ static void flip_colour(cchar_t &ch)
-//~ {
-    //~ const unsigned colour = (ch.attr & A_COLOR);
-    //~ const int pair        = PAIR_NUMBER(colour);
-//~ 
-    //~ int fg     = pair & 7;
-    //~ int bg     = (pair >> 3) & 7;
-//~ 
-    //~ if (pair == 63)
-    //~ {
-        //~ fg    = WHITE;//COLOR_WHITE;
-        //~ bg    = BLACK;//COLOR_BLACK;
-    //~ }
-//~ 
-    //~ const int newpair = (fg * 8 + bg);
-    //~ ch.attr = COLOR_PAIR(newpair);
-//~ }
+inline bool valid_char(const cchar_t &c)
+{
+    return *c.chars;
+}
+inline void write_char_at(int y, int x, const cchar_t &ch)
+{
+    move(y, x);
+    //add_wchnstr(&ch, 1); //ANDROID WHAT DO I DO HERE?
+}
+static void flip_colour(cchar_t &ch)
+{
+    const unsigned colour = (ch.attr & A_COLOR);
+    const int pair = PAIR_NUMBER(colour);
 
-//~ static char_info oldch, oldmangledch;
+    int fg     = pair & 7;
+    int bg     = (pair >> 3) & 7;
+
+    if (pair == 63)
+    {
+        fg    = COLOR_WHITE;
+        bg    = COLOR_BLACK;
+    }
+
+    const int newpair = (fg * 8 + bg);
+    ch.attr = COLOR_PAIR(newpair);
+}
+
+static char_info oldch, oldmangledch;
 static int faked_x = -1, faked_y;
 
 // What does this do???
 void fakecursorxy(int x, int y)
 {
-	env->CallVoidMethod(thiz, CrawlAppActivity_logd, env->NewStringUTF("fakecursorxy called. beh"));
-	//printf("\nfakecursorxy(%i,%i)\n", x, y);
+	//~ //printf("\nfakecursorxy(%i,%i)\n", x, y);
     //~ if (valid_char(oldch) && faked_x != -1
         //~ && character_at(faked_y, faked_x) == oldmangledch)
     //~ {
@@ -859,47 +699,40 @@ void fakecursorxy(int x, int y)
 
 int wherex()
 {
-    return myXPos;//getcurx(stdscr) + 1;
+    getcurx(stdscr) + 1;
 }
 
 
 int wherey()
 {
-    return myYPos;//getcury(stdscr) + 1;
+    getcury(stdscr) + 1;
 }
 
 void delay(unsigned int time)
 {
-	env->CallVoidMethod(thiz, CrawlAppActivity_logd, env->NewStringUTF("delay called"));
-	//~ printf("\ndelay (%i) called\n", time);
     if (crawl_state.disables[DIS_DELAY])
         return;
 
-//~ #ifdef USE_TILE_WEB
-    //~ tiles.redraw();
-    //~ tiles.send_message("{msg:'delay',t:%d}", time);
-//~ #endif
-
-    //~ refresh();
+    refresh();
     if (time)
         usleep(time * 1000);
 }
 
 /* This is Juho Snellman's modified kbhit, to work with macros */
-bool kbhit()
+bool kbhit() //ANDROID: what does this do?
 {
-    if (pending)
-        return true;
-
-    wint_t c;
-#ifndef USE_TILE_WEB
-    int i;
-
+    //~ if (pending)
+        //~ return true;
+//~ 
+    //~ wint_t c;
+//~ #ifndef USE_TILE_WEB
+    //~ int i;
+//~ 
     //~ nodelay(stdscr, TRUE);
     //~ timeout(0);  // apparently some need this to guarantee non-blocking -- bwr
     //~ i = get_wch(&c);
     //~ nodelay(stdscr, FALSE);
-
+//~ 
     //~ switch (i)
     //~ {
     //~ case OK:
@@ -911,13 +744,14 @@ bool kbhit()
     //~ default:
         //~ return false;
     //~ }
-#else
-    bool result = tiles.await_input(c, false);
-
-    if (result && (c != 0))
-        pending = c;
-
-    return result;
-#endif
+//~ #else
+    //~ bool result = tiles.await_input(c, false);
+//~ 
+    //~ if (result && (c != 0))
+        //~ pending = c;
+//~ 
+    //~ return result;
+//~ #endif
+	return true;
 }
 

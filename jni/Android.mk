@@ -63,7 +63,7 @@ LOCAL_CPP_EXTENSION=.cc
 # Need to include the rtiles folder, sqlite, lua and curses
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/rltiles \
 $(LOCAL_PATH)/rltiles/tool \
-$(LOCAL_PATH)/prebulit \
+$(LOCAL_PATH)/prebuilt \
 $(LOCAL_PATH)/$(SQLITE_DIR) \
 $(LOCAL_PATH)/$(LUA_DIR) \
 $(LOCAL_PATH)/curses
