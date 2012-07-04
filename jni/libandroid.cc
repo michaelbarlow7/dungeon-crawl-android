@@ -69,18 +69,12 @@ static bool cursor_is_enabled = true;
 //ANDROID STUFF BEGINS HERE
 extern "C" 
 {
-	void Java_com_crawlmb_CrawlAppActivity_initGame( JNIEnv* env1, jobject thiz , jstring jInitLocation);
+	void Java_com_crawlmb_NativeWrapper_initGame( JNIEnv* env, jobject object , jstring jInitLocation);
 };
-static jmethodID CrawlAppActivity_logd;
-static JNIEnv *env;
-static jobject thiz;
 
-void Java_com_crawlmb_CrawlAppActivity_initGame( JNIEnv* env1, jobject thiz1 , jstring jInitLocation)
+void Java_com_crawlmb_NativeWrapper_initGame( JNIEnv* env, jobject object , jstring jInitLocation)
 {
-	env = env1;
-	thiz = thiz1;
-	CrawlAppActivity_logd = env->GetMethodID(env->GetObjectClass(thiz), "logd", "(Ljava/lang/String;)V");
-	//~ env->CallVoidMethod(thiz, CrawlAppActivity_logd, env->NewStringUTF("Starting game oMG"));
+	init_curses(env, object);
 	const char *constInitLocation = env->GetStringUTFChars(jInitLocation, NULL);
 	char *initLocation = new char[strlen(constInitLocation) + 1];
 	strncpy (initLocation, constInitLocation, strlen(constInitLocation));

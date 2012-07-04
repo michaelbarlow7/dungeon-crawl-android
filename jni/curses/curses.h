@@ -175,6 +175,8 @@ int noise(void);
 void crawl_quit(const char*);
 void crawl_warn(const char*);
 
+void init_curses(JNIEnv* env1, jobject obj1 );
+
 #ifdef USE_MY_STR
 size_t my_strcpy(char *, const char *, size_t);
 size_t my_strcat(char *, const char *, size_t);

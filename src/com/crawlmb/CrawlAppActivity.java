@@ -27,17 +27,29 @@ public class CrawlAppActivity extends Activity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        nativeWrapper = new NativeWrapper();
         
         button = (Button) findViewById(R.id.button);
         
         
     }
     	
+    boolean installed = false;
+	private NativeWrapper nativeWrapper;
 	public void onInitClick(View v)
 	{
-		makeFiles();
-		String initFileLocation = getFilesDir().getAbsolutePath().toString() + "/init.txt";
-        initGame(initFileLocation);
+		if (!installed)
+		{
+			makeFiles();
+//			nativeWrapper.gameStart(0, null);
+			installed = true;
+			button.setText("Start");
+		}
+		else
+		{
+			String initFileLocation = getFilesDir().getAbsolutePath().toString() + "/init.txt";
+			nativeWrapper.initGame(initFileLocation);
+		}
 	}
     
 	/**
@@ -150,12 +162,11 @@ public class CrawlAppActivity extends Activity
 	}
 
 
-    public native String initGame(String initFileLocation);
 
-    static 
-    {
-        System.loadLibrary("crawl");
-    }
+//    static 
+//    {
+//        System.loadLibrary("crawl");
+//    }
     
 	private void chmod(String filename, int permissions)
 	{
