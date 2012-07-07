@@ -198,9 +198,11 @@ int getchk()
         return c;
     }
 
-    wint_t c;
+    //~ wint_t c;
 
-    //~ switch (get_wch(&c))
+    //switch (get_wch(&c))
+    int c = crawl_getch(1);//TODO: This is where we handle input. Need to ensure this works as expected
+    //~ switch (c)
     //~ {
     //~ case ERR:
         //~ // getch() returns -1 on EOF, convert that into an Escape. Evil hack,

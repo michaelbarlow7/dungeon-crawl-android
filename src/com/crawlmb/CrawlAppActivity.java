@@ -9,6 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,28 +28,26 @@ public class CrawlAppActivity extends Activity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        nativeWrapper = new NativeWrapper();
-        
         button = (Button) findViewById(R.id.button);
         
         
     }
     	
     boolean installed = false;
-	private NativeWrapper nativeWrapper;
 	public void onInitClick(View v)
 	{
 		if (!installed)
 		{
 			makeFiles();
-//			nativeWrapper.gameStart(0, null);
 			installed = true;
 			button.setText("Start");
 		}
 		else
 		{
-			String initFileLocation = getFilesDir().getAbsolutePath().toString() + "/init.txt";
-			nativeWrapper.initGame(initFileLocation);
+			Intent intent = new Intent(this, GameActivity.class);
+			startActivity(intent);
+//			String initFileLocation = getFilesDir().getAbsolutePath().toString() + "/init.txt";
+//			nativeWrapper.initGame(initFileLocation);
 		}
 	}
     
