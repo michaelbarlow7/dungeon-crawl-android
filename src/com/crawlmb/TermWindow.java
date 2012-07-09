@@ -203,7 +203,7 @@ public class TermWindow {
 
 	public void addnstr(int n, byte[] cp) {
 		String foo = new String(cp);
-//		Log.d("Angband","addnstr ("+row+","+col+") ["+foo+"]");
+		Log.d("Crawl","addnstr ("+row+","+col+") ["+foo+"]");
 
 		String str;
 		try {
@@ -219,11 +219,11 @@ public class TermWindow {
 
 	public void addch(char c) {
 		
-		/*
+		
 		Formatter fmt = new Formatter();
 		fmt.format("color: %x", cur_color);
-		Log.d("Angband","TermWindow.addch ("+row+","+col+") "+fmt+" '"+c+"'");
-		*/
+		Log.d("Crawl","TermWindow.addch ("+row+","+col+") "+fmt+" '"+c+"'");
+		
 
 		if (col>-1 && col<cols && row>-1 && row<rows) {
 			if (c > 19) {
@@ -240,8 +240,15 @@ public class TermWindow {
 				if (ss==0) ss=8;
 				for(int i=0;i<ss;i++) addch(' ');
 			}
+			else if (c == '\n')
+			{
+				Log.d("Crawl","ZOMG NEWLINE");
+				// On a newline character, clear to the end of the line and advance a row
+				clrtoeol();
+				advanceRow();
+			}
 			else {
-				//Log.d("Angband","TermWindow.addch - invalid character: "+(int)c);
+				Log.d("Crawl","TermWindow.addch - invalid character: "+(int)c);
 				advance();
 			}
 		}
@@ -250,13 +257,24 @@ public class TermWindow {
 		}	
 	}
 
+	private void advanceRow()
+	{
+		row++;
+		if (row >= rows)
+		{
+			row = rows-1;
+		}
+		col = 0;
+	}
+
 	private void advance() {
 		col++;
 		if (col >= cols) {
 			row++;
 			col = 0;
 		}
-		if (row >= rows) {
+		if (row >= rows) 
+		{
 			row = rows-1;
 		}
 	}

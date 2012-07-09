@@ -123,15 +123,12 @@ public class StateManager {
 			this.keyBuffer.add(k);
 	}
 	public int getKey(int v) {
-		System.out.println("getkey: " + v);
 		if (this.keyBuffer != null)
 		{
-			System.out.println("keybuffer is not null");
 			return keyBuffer.get(v);
 		}
 		else
 		{
-			System.out.println("keybuffer was null");
 			return 0;
 		}
 	}

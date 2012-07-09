@@ -290,7 +290,8 @@ public class GameActivity extends Activity //implements OnScoreSubmitObserver {
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_MENU)
 		{
-			state.nativew.resize();
+//			state.nativew.resize();
+			handler.sendEmptyMessage(AngbandDialog.Action.StartGame.ordinal());
 			return true;
 		}
 		if (!state.onKeyDown(keyCode,event) || keyCode == KeyEvent.KEYCODE_BACK) {

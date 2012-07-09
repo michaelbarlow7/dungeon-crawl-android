@@ -136,18 +136,16 @@ public class KeyBuffer {
 			System.out.println("special key is : " + check);
 			if (check >= 0) {
 				key = check;
-				System.out.println("##### key is: " + key);
 				// we have a key, so we're done.
 			}
 			else if (keybuffer.peek() != null) {
 				//peek before wait -- fix issue #3 keybuffer loss
 				key = keybuffer.poll();
-				Log.w("Crawl", "process key = " + key);
+//				Log.w("Crawl", "process key = " + key);
 			}		
 			else if (v == 1) {
 				// running a macro?
 				if (keymacro.peek() != null) {
-					System.out.println("##### polling keymacro");
 					key = keymacro.poll();
 				}
 				else { // otherwise wait for key press
@@ -155,7 +153,6 @@ public class KeyBuffer {
 						//Log.d("Angband", "Wait keypress BEFORE");
 						wait = true;
 						//keybuffer.clear(); //not necessary
-						System.out.println("##### we're gonna have to wait");
 						keybuffer.wait();
 						wait = false;
 						//Log.d("Angband", "Wait keypress AFTER");
@@ -166,13 +163,11 @@ public class KeyBuffer {
 					// return key after wait, if there is one
 					if (keybuffer.peek() != null) {
 						key = keybuffer.poll();
-						System.out.println("##### polling keybuffer");
 						//Log.w("Angband", "process key = " + key);
 					}
 				}		
 			}
 		}
-		System.out.println("##### returning key: " + key);
 		return key;
 	}
 
