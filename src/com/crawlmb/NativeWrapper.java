@@ -1,5 +1,6 @@
 package com.crawlmb;
 
+import java.util.Formatter;
 import java.util.HashMap;
 
 import android.graphics.Color;
@@ -23,7 +24,7 @@ public class NativeWrapper
 //	native void gameStart(int argc, String[] argv);
 	public void gameStart(String pluginPath, int argc, String[] argv )
 	{
-		String initFilePath = "/data/data/com.crawlmb/files/init.txt";//TODO: Generate this path properly
+		String initFilePath = "/data/data/com.crawlmb/files/init.txt";//TODO: Generate this path properly, ie from filesdir
 		initGame(initFilePath);
 		
 	}
@@ -210,29 +211,32 @@ public class NativeWrapper
 		final int A_STANDOUT = 0x200;
 		final int A_BOLD = 0x400;
 		final int A_UNDERLINE = 0x800;
-		// #define A_BLINK 0x1000
-		// #define A_DIM = 0x2000;
+		final int A_BLINK = 0x1000;
+		final int A_DIM = 0x2000;
 		// #define A_ALTCHARSET 0x4000
 
 		int color = p.Color & 0xFF;
+		Log.d("Crawl", "integer color is: " + color);
 
 		boolean standout =
 				((p.Color & A_STANDOUT) != 0) || ((p.Color & A_BOLD) != 0) || ((p.Color & A_UNDERLINE) != 0);
 
 		boolean reverse = ((p.Color & A_REVERSE) != 0);
 
-		if (standout)
-			color += (color < 8 ? 8 : -8);
 
 		TermWindow.ColorPair cp = TermWindow.pairs.get(color);
 		if (cp == null)
 			cp = TermWindow.defaultColor;
+		
+		if (standout)
+			color += (color < 8 ? 8 : -8);
+		Log.d("Crawl", "integer color is: " + color);
 
-		/*
-		 * if (p.Char != ' ') { Formatter fmt = new Formatter();
-		 * fmt.format("fcolor:%x bcolor:%x", cp.fColor, cp.bColor);
-		 * Log.d("Angband","frosh '"+p.Char+"' "+fmt); }
-		 */
+		  if (p.Char != ' ') { Formatter fmt = new Formatter();
+//		  fmt.format("fcolor:%x bcolor:%x original:%x", cp.fColor, cp.bColor, p.Color);
+		  fmt.format("fcolor:%x bcolor:%x original:%x", color, cp.bColor, p.Color);
+		  Log.d("Angband","frosh '"+p.Char+"' "+fmt); }
+		
 
 		if (reverse)
 			term.drawPoint(r, c, p.Char, cp.bColor, cp.fColor, extendErase);

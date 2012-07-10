@@ -9,7 +9,7 @@ WINDOW _win[WIN_MAX];
 WINDOW* stdscr = &_win[0];
 
 #define LOGC(...) 
-//#define LOGC(...) __android_log_print(ANDROID_LOG_DEBUG  , "CrawlNDK", __VA_ARGS__)
+//~ #define LOGC(...) __android_log_print(ANDROID_LOG_DEBUG  , "CrawlNDK", __VA_ARGS__)
 
 static jmp_buf jbuf;
 
@@ -63,7 +63,7 @@ int attrset(int attrs) {
 	return wattrset(stdscr, attrs);
 }
 int wattrset(WINDOW* w, int attrs) {
-	LOGC("curses.wattrset %d %d",w->w,attrs);
+	LOGC("curses.wattrset %d %x",w->w,attrs);
 	JAVA_CALL(NativeWrapper_wattrset, w->w, attrs);
 	return 0;
 }
@@ -256,8 +256,6 @@ int start_color() {
 	int i;
 	for(i=0; i<colors; i++)
 		init_color(i, color_table[i]);
-	for(i=0; i<colors; i++)
-		init_pair(i, i, 0);
 
 	return 0;
 }

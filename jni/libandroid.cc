@@ -58,7 +58,7 @@ extern "C" {
 // Globals holding current text/backg. colors
 static short FG_COL = WHITE;
 static short BG_COL = BLACK;
-static int   Current_Colour;// = COLOR_PAIR(BG_COL * 8 + FG_COL); ANDROID
+static int   Current_Colour = COLOR_PAIR(BG_COL * 8 + FG_COL);// ANDROID
 
 static int curs_fg_attr(int col);
 static int curs_bg_attr(int col);
@@ -106,7 +106,7 @@ static inline short macro_colour(short col)
 // Translate DOS colors to curses.
 static short translate_colour(short col)
 {
-    switch (col)
+	switch (col)
     {
     case BLACK:
         return COLOR_BLACK;
@@ -124,22 +124,22 @@ static short translate_colour(short col)
         return COLOR_YELLOW;
     case LIGHTGREY:
         return COLOR_WHITE;
-    case DARKGREY: 
-        return COLOR_GRAY;
+    case DARKGREY:
+        return COLOR_BLACK + COLFLAG_CURSES_BRIGHTEN;
     case LIGHTBLUE:
-        return COLOR_LIGHT_BLUE;
+        return COLOR_BLUE + COLFLAG_CURSES_BRIGHTEN;
     case LIGHTGREEN:
-        return COLOR_LIGHT_GREEN;
+        return COLOR_GREEN + COLFLAG_CURSES_BRIGHTEN;
     case LIGHTCYAN:
-        return COLOR_LIGHT_CYAN;
+        return COLOR_CYAN + COLFLAG_CURSES_BRIGHTEN;
     case LIGHTRED:
-        return COLOR_LIGHT_RED;
+        return COLOR_RED + COLFLAG_CURSES_BRIGHTEN;
     case LIGHTMAGENTA:
-        return COLOR_LIGHT_MAGENTA;
+        return COLOR_MAGENTA + COLFLAG_CURSES_BRIGHTEN;
     case YELLOW:
-        return COLOR_LIGHT_YELLOW;
+        return COLOR_YELLOW + COLFLAG_CURSES_BRIGHTEN;
     case WHITE:
-        return COLOR_LIGHT_WHITE;
+        return COLOR_WHITE + COLFLAG_CURSES_BRIGHTEN;
     default:
         return COLOR_GREEN;
     }
@@ -152,7 +152,7 @@ static void setup_colour_pairs(void)
     for (i = 0; i < 8; i++)
         for (j = 0; j < 8; j++)
         {
-            if ((i > 0) || (j > 0));
+            if ((i > 0) || (j > 0))
                 init_pair(i * 8 + j, j, i);
         }
 
@@ -407,7 +407,7 @@ void putwch(ucs_t chr)
 	sprintf(printstr, "%c", chr);
         
     // TODO: recognize unsupported characters and try to transliterate
-    //~ addnwstr(&c, 1); ANDROID: Not sure how to replace this D:
+    //~ addnwstr(&c, 1); 
     addnstr(1, printstr);
 }
 
@@ -533,7 +533,7 @@ static int curs_fg_attr(int col)
         // If we can't do a dark grey friend brand, then we'll
         // switch the colour to light grey.
         if (Options.no_dark_brand
-                && fg == (COLOR_LIGHT_BLACK)
+                && fg == (COLOR_BLACK | COLFLAG_CURSES_BRIGHTEN)
                 && bg == 0)
         {
             fg = COLOR_WHITE;
@@ -591,7 +591,7 @@ static int curs_bg_attr(int col)
         // If we can't do a dark grey friend brand, then we'll
         // switch the colour to light grey.
         if (Options.no_dark_brand
-                && fg == (COLOR_LIGHT_BLACK)
+                && fg == (COLOR_BLACK | COLFLAG_CURSES_BRIGHTEN)
                 && bg == 0)
         {
             fg = COLOR_WHITE;
@@ -614,7 +614,6 @@ static int curs_bg_attr(int col)
 
     // figure out which colour pair we want
     const int pair = (fg == 0 && bg == 0) ? 63 : (bg * 8 + fg);
-	return flags;
     return (COLOR_PAIR(pair) | flags);
 }
 
