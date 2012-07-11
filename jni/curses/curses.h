@@ -47,7 +47,8 @@
 #define LOGW(...) __android_log_print(ANDROID_LOG_WARN   , "Crawl", __VA_ARGS__)
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR  , "Crawl", __VA_ARGS__) 
 #define LOG(...) __android_log_print(ANDROID_LOG_DEBUG  , "Crawl", __VA_ARGS__)
-// Adding stuff for ANDROID
+// Adding stuff for ANDROID TODO: Probably a redundant conversion, since it gets converted later on, 
+// but it's here for now to keep the curses interface consistent
 #define KEY_HOME	0406		/* home key */
 #define KEY_END		0550		/* end key */
 #define KEY_DOWN	0402		/* down-arrow key */
@@ -66,6 +67,8 @@
 #define KEY_SLEFT	0611		/* shifted left-arrow key */
 #define KEY_SRIGHT	0622		/* shifted right-arrow key */
 #define KEY_BTAB	0541		/* back-tab key */
+#define KEY_BACKSPACE	0407   /* backspace key */
+#define KEY_DC		0512		/* delete-character key */
 
 #define NCURSES_ATTR_SHIFT       8
 #define NCURSES_BITS(mask,shift) ((mask) << ((shift) + NCURSES_ATTR_SHIFT))

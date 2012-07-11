@@ -54,6 +54,15 @@ public class TermView extends View implements OnGestureListener {
 
 	//	int row = 0;
 	//  int col = 0;
+	static final int KEY_A1	= 0534;		/* upper left of keypad */
+	static final int KEY_A3	= 0535;		/* upper right of keypad */
+	static final int KEY_B2	= 0536;		/* center of keypad */ //CURRENTLY NOT USED
+	static final int KEY_C1	= 0537;		/* lower left of keypad */
+	static final int KEY_C3	= 0540;		/* lower right of keypad */
+	static final int KEY_DOWN= 0402;		/* down-arrow key */
+	static final int KEY_UP	= 0403;		/* up-arrow key */
+	static final int KEY_LEFT= 0404;		/* left-arrow key */
+	static final int KEY_RIGHT= 0405;		/* right-arrow key */
 
 	public int canvas_width = 0;
 	public int canvas_height = 0;
@@ -311,7 +320,20 @@ public class TermView extends View implements OnGestureListener {
 		c = (x * 3) / getWidth();
 		r = (y * 3) / getHeight();
 
-		int key = (2 - r) * 3 + c + '1';
+		int key = (2 - r) * 3 + c + 1;
+		
+		switch(key) {
+		case 1: key = KEY_C1; break;
+		case 2: key = KEY_DOWN; break;
+		case 3: key = KEY_C3; break;
+		case 4: key = KEY_LEFT; break;
+		//case '5': key = ' '; break; // now configurable below
+		case 6: key = KEY_RIGHT; break;
+		case 7: key = KEY_A1; break;
+		case 8: key = KEY_UP; break;
+		case 9: key = KEY_A3; break;
+		default: break;
+		}
 
 		state.addDirectionKey(key);
 			

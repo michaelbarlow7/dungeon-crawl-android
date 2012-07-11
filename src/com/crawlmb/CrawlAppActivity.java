@@ -38,6 +38,7 @@ public class CrawlAppActivity extends Activity
 	{
 		if (!installed)
 		{
+			button.setText("Installing files, please wait...");
 			makeFiles();
 			installed = true;
 			button.setText("Start");
@@ -86,7 +87,7 @@ public class CrawlAppActivity extends Activity
 			copyFileOrDir("dat");
 		}
 		
-		Toast.makeText(this, "FILES COPIED", Toast.LENGTH_LONG).show();
+		Toast.makeText(this, "FILES COPIED", Toast.LENGTH_SHORT).show();
 	}
 
 	private void mkdir(String relativePath)

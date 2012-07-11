@@ -50,10 +50,11 @@ static struct termios game_term;
 #endif
 
 #include <time.h>
-
+//~#include <android/log.h> //ANDROID: Turn this off when we're not using it!!
 extern "C" {
    #include "curses/curses.h" //ANDROID: We have our own curses file
  }
+
 
 // Globals holding current text/backg. colors
 static short FG_COL = WHITE;
@@ -214,7 +215,6 @@ int getchk()
         //~ return c;
     //~ }
 //~ 
-    //~ return -c;
     return c;
 }
 
@@ -236,22 +236,20 @@ int getch_ck() //ANDROID: Input
     int c = m_getch();
     switch (c)
     {
-    // [dshaligram] MacOS ncurses returns 127 for backspace.
-    case 127:
-    /*
-     * ANDROID: Not sure what this does, seems to get a character from curses
-     * and translates it to a key defined in cio.h in the enum
-     */
-    //~ case -KEY_BACKSPACE: return CK_BKSP;
-    //~ case -KEY_DC:    return CK_DELETE;
-    //~ case -KEY_HOME:  return CK_HOME;
-    //~ case -KEY_PPAGE: return CK_PGUP;
-    //~ case -KEY_END:   return CK_END;
-    //~ case -KEY_NPAGE: return CK_PGDN;
-    //~ case -KEY_UP:    return CK_UP;
-    //~ case -KEY_DOWN:  return CK_DOWN;
-    //~ case -KEY_LEFT:  return CK_LEFT;
-    //~ case -KEY_RIGHT: return CK_RIGHT;
+    // Android returns 159 for backspace and 156 for enter
+    case 159:
+    case KEY_BACKSPACE: return CK_BKSP;
+    case 156: return CK_ENTER;
+    case KEY_DC:    return CK_DELETE;
+    case KEY_HOME:  return CK_HOME;
+    case KEY_PPAGE: return CK_PGUP;
+    case KEY_END:   return CK_END;
+    case KEY_NPAGE: return CK_PGDN;
+    case KEY_UP:    return CK_UP;
+    case KEY_DOWN:  return CK_DOWN;
+    case KEY_LEFT:  return CK_LEFT;
+    case KEY_RIGHT: return CK_RIGHT;
+    
     default:         return c;
     }
 }

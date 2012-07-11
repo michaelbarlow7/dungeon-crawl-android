@@ -202,8 +202,8 @@ public class TermWindow {
 	}
 
 	public void addnstr(int n, byte[] cp) {
-		String foo = new String(cp);
-		Log.d("Crawl","addnstr ("+row+","+col+") ["+foo+"]");
+//		String foo = new String(cp);
+//		Log.d("Crawl","addnstr ("+row+","+col+") ["+foo+"]");
 
 		String str;
 		try {
@@ -220,9 +220,9 @@ public class TermWindow {
 	public void addch(char c) {
 		
 		
-		Formatter fmt = new Formatter();
-		fmt.format("color: %x", cur_color);
-		Log.d("Crawl","TermWindow.addch ("+row+","+col+") "+fmt+" '"+c+"'");
+//		Formatter fmt = new Formatter();
+//		fmt.format("color: %x", cur_color);
+//		Log.d("Crawl","TermWindow.addch ("+row+","+col+") "+fmt+" '"+c+"'");
 		
 
 		if (col>-1 && col<cols && row>-1 && row<rows) {
@@ -242,18 +242,17 @@ public class TermWindow {
 			}
 			else if (c == '\n')
 			{
-				Log.d("Crawl","ZOMG NEWLINE");
 				// On a newline character, clear to the end of the line and advance a row
 				clrtoeol();
 				advanceRow();
 			}
 			else {
-				Log.d("Crawl","TermWindow.addch - invalid character: "+(int)c);
+//				Log.d("Crawl","TermWindow.addch - invalid character: "+(int)c);
 				advance();
 			}
 		}
 		else {
-			Log.d("Angband","TermWindow.addch - point out of bounds: "+col+","+row);
+			Log.e("Angband","TermWindow.addch - point out of bounds: "+col+","+row);
 		}	
 	}
 

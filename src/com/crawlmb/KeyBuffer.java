@@ -76,13 +76,11 @@ public class KeyBuffer {
 			wakeUp();
 		}
 	}
-
 	public void addDirection(int key) {
-		//TODO: input function. We'll leave it for now
 //		boolean rogueLike = (nativew.gameQueryInt(1,new String[]{"rl"})==1);
-//		boolean alwaysRun = Preferences.getAlwaysRun();
-//
-//		if (rogueLike) {
+		boolean alwaysRun = Preferences.getAlwaysRun();
+
+//		if (rogueLike) { //Directions should work via numpad for CRAWL
 //			switch(key) {
 //			case '1': key = 'b'; break;
 //			case '2': key = 'j'; break;
@@ -96,28 +94,28 @@ public class KeyBuffer {
 //			default: break;
 //			}
 //		}
-//		
-//		if (key == '5') { // center tap
-//			KeyAction act = Preferences.getKeyMapper().getCenterScreenTapAction();
-//
-//			performActionKeyDown(act, 0, null);
-//			performActionKeyUp(act);
-//		}
-//		else { // directional tap
+		System.out.println("Original key: " + key);
+		
+		if (key == '5') { // center tap
+			KeyAction act = Preferences.getKeyMapper().getCenterScreenTapAction();// Might change this
+
+			performActionKeyDown(act, 0, null);
+			performActionKeyUp(act);
+		}
+		else { // directional tap
 //			if (alwaysRun && !ctrl_mod) { // let ctrl influence directionals, even with alwaysRun on
 //				if (shift_mod) {  // shift temporarily overrides always run
 //					eat_shift = true;
 //				}
-//				else if (rogueLike) {
-//					key = Character.toUpperCase(key);
-//				}
+////				else if (rogueLike) {
+////					key = Character.toUpperCase(key);
+////				}
 //				else {
-//					add(46); // '.' command
+//					add(46); // '.' command DO WE NEED THIS?
 //				}
 //			}
-//		
-//			add(key);
-//		}
+			add(key);
+		}
 	}
 
 	public void clear() {
@@ -130,10 +128,8 @@ public class KeyBuffer {
 		int key = 0;
 		
 		synchronized (keybuffer) {
-			System.out.println("synchronized part");
 
 			int check = getSpecialKey();
-			System.out.println("special key is : " + check);
 			if (check >= 0) {
 				key = check;
 				// we have a key, so we're done.
@@ -163,7 +159,7 @@ public class KeyBuffer {
 					// return key after wait, if there is one
 					if (keybuffer.peek() != null) {
 						key = keybuffer.poll();
-						//Log.w("Angband", "process key = " + key);
+//						Log.w("Angband", "process key = " + key);
 					}
 				}		
 			}
@@ -347,11 +343,13 @@ public class KeyBuffer {
 	}
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		//Log.d("Angband", "onKeyDown("+keyCode+","+event+")");
+//		Log.d("Angband", "onKeyDown("+keyCode+","+event+")");
 
 		KeyMap map = getKeyMapFromKeyCode(keyCode, event);
 		if (map == null)
+		{
 			return false;
+		}
 		else 
 			return performActionKeyDown(map.getKeyAction(), map.getCharacter(), event);
 	}

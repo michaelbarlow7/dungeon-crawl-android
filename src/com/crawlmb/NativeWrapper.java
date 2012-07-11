@@ -117,8 +117,8 @@ public class NativeWrapper
 
 	public void warn(String msg)
 	{
-		Log.d(TAG, "warn("+msg+")");
-//		synchronized (display_lock)
+//		Log.d(TAG, "warn("+msg+")");
+		synchronized (display_lock)
 		{
 			state.warnMessage = msg;
 			state.warnError = true;
@@ -216,7 +216,6 @@ public class NativeWrapper
 		// #define A_ALTCHARSET 0x4000
 
 		int color = p.Color & 0xFF;
-		Log.d("Crawl", "integer color is: " + color);
 
 		boolean standout =
 				((p.Color & A_STANDOUT) != 0) || ((p.Color & A_BOLD) != 0) || ((p.Color & A_UNDERLINE) != 0);
@@ -230,12 +229,10 @@ public class NativeWrapper
 		
 		if (standout)
 			color += (color < 8 ? 8 : -8);
-		Log.d("Crawl", "integer color is: " + color);
 
-		  if (p.Char != ' ') { Formatter fmt = new Formatter();
-//		  fmt.format("fcolor:%x bcolor:%x original:%x", cp.fColor, cp.bColor, p.Color);
-		  fmt.format("fcolor:%x bcolor:%x original:%x", color, cp.bColor, p.Color);
-		  Log.d("Angband","frosh '"+p.Char+"' "+fmt); }
+//		  if (p.Char != ' ') { Formatter fmt = new Formatter();
+//		  fmt.format("fcolor:%x bcolor:%x original:%x", color, cp.bColor, p.Color);
+//		  Log.d("Angband","frosh '"+p.Char+"' "+fmt); }
 		
 
 		if (reverse)

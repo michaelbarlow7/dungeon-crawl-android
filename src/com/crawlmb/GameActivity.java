@@ -31,6 +31,7 @@ import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 import android.os.Handler;
 import android.os.Message;
 
@@ -100,6 +101,7 @@ public class GameActivity extends Activity //implements OnScoreSubmitObserver {
 			}
 		};
 
+		Toast.makeText(this, "Press MENU to start", Toast.LENGTH_LONG).show();
 //		startFlurry();
 
 		rebuildViews();
