@@ -217,8 +217,8 @@ public class NativeWrapper
 
 		int color = p.Color & 0xFF;
 
-		boolean standout =
-				((p.Color & A_STANDOUT) != 0) || ((p.Color & A_BOLD) != 0) || ((p.Color & A_UNDERLINE) != 0);
+//		boolean standout =
+//				((p.Color & A_STANDOUT) != 0) || ((p.Color & A_BOLD) != 0) || ((p.Color & A_UNDERLINE) != 0);
 
 		boolean reverse = ((p.Color & A_REVERSE) != 0);
 
@@ -227,8 +227,8 @@ public class NativeWrapper
 		if (cp == null)
 			cp = TermWindow.defaultColor;
 		
-		if (standout)
-			color += (color < 8 ? 8 : -8);
+//		if (standout)
+//			color += (color < 8 ? 8 : -8);
 
 //		  if (p.Char != ' ') { Formatter fmt = new Formatter();
 //		  fmt.format("fcolor:%x bcolor:%x original:%x", color, cp.bColor, p.Color);
@@ -340,7 +340,10 @@ public class NativeWrapper
 		{
 			TermWindow t = state.getWin(w);
 			if (t != null)
+			{
 				t.clear();
+				t.move(0,0);
+			}
 		}
 	}
 
