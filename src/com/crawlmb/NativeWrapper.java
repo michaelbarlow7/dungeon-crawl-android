@@ -224,7 +224,7 @@ public class NativeWrapper
 
 
 		TermWindow.ColorPair cp = TermWindow.pairs.get(color);
-		if (cp == null)
+		if (cp == null || cp.fColor == cp.bColor)
 			cp = TermWindow.defaultColor;
 		
 //		if (standout)
@@ -458,9 +458,15 @@ public class NativeWrapper
 //		Log.d(TAG, "getCury" + w);
 		TermWindow t = state.getWin(w);
 		if (t != null)
+		{
+			Log.d(TAG, "t not null, returning " + t.getcury());
 			return t.getcury();
+		}
 		else
+		{
+			Log.d(TAG, "t was NULL, returning 0");
 			return 0;
+		}
 	}
 
 	int getcurx(final int w)
