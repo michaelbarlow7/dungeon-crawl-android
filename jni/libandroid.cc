@@ -712,39 +712,9 @@ void delay(unsigned int time)
 }
 
 /* This is Juho Snellman's modified kbhit, to work with macros */
-bool kbhit() //ANDROID: what does this do?
+bool kbhit()
 {
-    //~ if (pending)
-        //~ return true;
-//~ 
-    //~ wint_t c;
-//~ #ifndef USE_TILE_WEB
-    //~ int i;
-//~ 
-    //~ nodelay(stdscr, TRUE);
-    //~ timeout(0);  // apparently some need this to guarantee non-blocking -- bwr
-    //~ i = get_wch(&c);
-    //~ nodelay(stdscr, FALSE);
-//~ 
-    //~ switch (i)
-    //~ {
-    //~ case OK:
-        //~ pending = c;
-        //~ return true;
-    //~ case KEY_CODE_YES:
-        //~ pending = -c;
-        //~ return true;
-    //~ default:
-        //~ return false;
-    //~ }
-//~ #else
-    //~ bool result = tiles.await_input(c, false);
-//~ 
-    //~ if (result && (c != 0))
-        //~ pending = c;
-//~ 
-    //~ return result;
-//~ #endif
-	return true;
+	// I don't think we need this in android, buffering is handled by java code
+	return false;
 }
 
