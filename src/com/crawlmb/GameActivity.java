@@ -296,7 +296,7 @@ public class GameActivity extends Activity //implements OnScoreSubmitObserver {
 			handler.sendEmptyMessage(AngbandDialog.Action.StartGame.ordinal());
 			return true;
 		}
-		if (!state.onKeyDown(keyCode,event) || keyCode == KeyEvent.KEYCODE_BACK) {
+		if (!state.onKeyDown(keyCode,event)){
 			return super.onKeyDown(keyCode,event);
 		}
 		else {

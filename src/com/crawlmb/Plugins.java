@@ -90,7 +90,7 @@ final public class Plugins {
 
 	public static int getKeyEsc(Plugin p) {
 		switch (p) {
-		case Angband: return 0xE000;
+//		case Angband: return 0xE000;//SEems to be returning this
 		default: return 0x1B;
 		}
 	}
