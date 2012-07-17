@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="hello">Click to start</string>
     <string name="app_name">Dungeon Crawl: Stone Soup for Android</string>
     <string name="menu_preferences">Preferences</string>
     <string name="menu_help">Help</string>
     <string name="menu_quit">Quit</string>
+    <string name="install_dialog_title">Installing Dungeon Crawl: Stone Soup</string>
     
     <!-- We should get rid of these ASAP -->
     <string-array name="gamePluginDescriptions">

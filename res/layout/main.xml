@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/background"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:onClick="onInitClick"
-        android:text="@string/hello" />
-
-</LinearLayout>
+    android:scaleType="centerInside"
+    android:background="@android:color/black">
+</ImageView>

@@ -353,7 +353,7 @@ public class TermView extends View implements OnGestureListener {
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 		//Log.d("Angband", "onSizeChanged");
 		super.onSizeChanged(w, h, oldw, oldh);
-//		handler.sendEmptyMessage(AngbandDialog.Action.StartGame.ordinal());
+		handler.sendEmptyMessage(AngbandDialog.Action.StartGame.ordinal());
   	}
 
 	public boolean onGameStart() {
