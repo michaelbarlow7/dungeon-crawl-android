@@ -323,24 +323,24 @@ public class TermView extends View implements OnGestureListener {
 		int key = (2 - r) * 3 + c + 1;
 		
 		switch(key) {
-//		case 1: key = KEY_C1; break;
-//		case 2: key = KEY_DOWN; break;
-//		case 3: key = KEY_C3; break;
-//		case 4: key = KEY_LEFT; break;
-//		//case '5': key = ' '; break; // now configurable below
-//		case 6: key = KEY_RIGHT; break;
-//		case 7: key = KEY_A1; break;
-//		case 8: key = KEY_UP; break;
-//		case 9: key = KEY_A3; break;
-		case 1: key = '1'; break;
-		case 2: key = '2'; break;
-		case 3: key = '3'; break;
-		case 4: key = '4'; break;
-		case 5: key = '5'; break; // now configurable below
-		case 6: key = '6'; break;
-		case 7: key = '7'; break;
-		case 8: key = '8'; break;
-		case 9: key = '9'; break;
+		case 1: key = KEY_C1; break;
+		case 2: key = KEY_DOWN; break;
+		case 3: key = KEY_C3; break;
+		case 4: key = KEY_LEFT; break;
+		//case '5': key = ' '; break; // now configurable below
+		case 6: key = KEY_RIGHT; break;
+		case 7: key = KEY_A1; break;
+		case 8: key = KEY_UP; break;
+		case 9: key = KEY_A3; break;
+//		case 1: key = '1'; break;
+//		case 2: key = '2'; break;
+//		case 3: key = '3'; break;
+//		case 4: key = '4'; break;
+//		case 5: key = '5'; break; // now configurable below
+//		case 6: key = '6'; break;
+//		case 7: key = '7'; break;
+//		case 8: key = '8'; break;
+//		case 9: key = '9'; break;
 		default: break;
 		}
 
@@ -431,6 +431,6 @@ public class TermView extends View implements OnGestureListener {
 		//Log.d("Angband","Termview.onPause()");
 		// this is the only guaranteed safe place to save state 
 		// according to SDK docs
-		state.gameThread.send(GameThread.Request.SaveGame);
+//		state.gameThread.send(GameThread.Request.SaveGame);
 	}
 }

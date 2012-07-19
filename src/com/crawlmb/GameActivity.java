@@ -31,7 +31,6 @@ import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 import android.os.Handler;
 import android.os.Message;
 
@@ -173,9 +172,9 @@ public class GameActivity extends Activity //implements OnScoreSubmitObserver {
 //				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 //				break;
 //			}
-			// Orientation can be set in preference, but for now we just want landscape
+			// Orientation can be set in preference, but for now we just want sensor
 
-			if (screenLayout != null) screenLayout.removeAllViews();//Makes a new layout every onStart(). Probably removing all views here for safety
+			if (screenLayout != null) screenLayout.removeAllViews();
 			screenLayout = new LinearLayout(this);
 
 			term = new TermView(this);
@@ -191,14 +190,18 @@ public class GameActivity extends Activity //implements OnScoreSubmitObserver {
 			screenLayout.setOrientation(LinearLayout.VERTICAL);
 			screenLayout.addView(term);
 
-			// Handles getting the virtual keyboard. Could be very handy in the future, but we're using the hardware keyboard for now.
-//			Boolean kb = false;
-//			if(Preferences.isScreenPortraitOrientation())
-//				kb = Preferences.getPortraitKeyboard();
-//			else		
-//				kb = Preferences.getLandscapeKeyboard();
-////
-//			if (kb) {
+			Boolean kb = false;
+			if(Preferences.isScreenPortraitOrientation())
+				kb = Preferences.getPortraitKeyboard();
+			else		
+				kb = Preferences.getLandscapeKeyboard();
+			
+			if (kb) {
+				CrawlKeyboard virtualKeyboard = new CrawlKeyboard(this);
+				screenLayout.addView(virtualKeyboard.virtualKeyboardView);
+			}
+//			if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+//			{
 //				AngbandKeyboard virtualKeyboard = new AngbandKeyboard(this);
 //				screenLayout.addView(virtualKeyboard.virtualKeyboardView);
 //			}
