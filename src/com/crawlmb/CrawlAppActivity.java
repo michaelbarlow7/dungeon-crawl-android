@@ -217,8 +217,9 @@ public class CrawlAppActivity extends Activity
 		@Override
 		protected Void doInBackground(Void... params)
 		{
-			totalFiles = 6; //Number of files, apart from dat, that need creating
+			totalFiles = 6; //Number of files, apart from dat/ and docs/, that need creating
 			findTotalAssets("dat");
+			findTotalAssets("docs");
 			if (installDialog != null)
 			{
 				installDialog.setIndeterminate(false);
@@ -235,15 +236,11 @@ public class CrawlAppActivity extends Activity
 			publishProgress(++installedFiles);
 			mkdir("/morgue");
 			publishProgress(++installedFiles);
-			boolean dataNeedsTransferring = dataDirectory.mkdirs();
-			publishProgress(++installedFiles);
 			writeInitFile();
 			publishProgress(++installedFiles);
 
-			if (dataNeedsTransferring)
-			{
-				copyFileOrDir("dat");
-			}
+			copyFileOrDir("dat");
+			copyFileOrDir("docs");
 			return null;
 		}
 

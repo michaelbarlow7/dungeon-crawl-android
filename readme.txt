@@ -49,10 +49,18 @@ So ideally, to build from the checked out code, one would:
 
 To actually get the app to run, we also needed to:
 8. Symlink source/dat to <android-root>/assets/dat
+9. Symlink the docs folder to <android-root>/assets/docs
 9. Add the root folder as an android project in eclipse.
 10. Run from eclipse
 
 I will eventually put the above stuff in a shell script :)
+==================================
+====LIST OF SYMLINKS =============
+==================================
+- Symlink source/ to <android-root>/jni
+- Symlink source/dat to <android-root>/assets/dat
+- Symlink docs/ to <android-root>/assets/dat (don't need pdfs though)
+- Symlink text files in root directoy into docs/
 
 ==================================
 ========LICENSE AND CREDITS=======
