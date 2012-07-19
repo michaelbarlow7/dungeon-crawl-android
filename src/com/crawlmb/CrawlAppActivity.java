@@ -86,33 +86,6 @@ public class CrawlAppActivity extends Activity
 
 	}
 
-	private void copyFile(String fileName)
-	{
-		AssetManager assetManager = getAssets();
-		String destname = getFilesDir().toString() + "/" + fileName;
-		Log.d(TAG, "Copying: " + fileName + " to " + destname);
-		File newasset = new File(destname);
-		try
-		{
-			newasset.createNewFile();
-			BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(newasset));
-			BufferedInputStream in = new BufferedInputStream(assetManager.open(fileName));
-			int b;
-			while ((b = in.read()) != -1)
-			{
-				out.write(b);
-			}
-			out.flush();
-			out.close();
-			in.close();
-		}
-		catch (IOException ex)
-		{
-			Log.e(TAG, "Exception occured copying " + fileName + ": " + ex);
-		}
-		chmod(destname, 0666);
-	}
-
 	private void chmod(String filename, int permissions)
 	{
 		// Using undocumented method, as per Nethack app
@@ -217,7 +190,7 @@ public class CrawlAppActivity extends Activity
 		@Override
 		protected Void doInBackground(Void... params)
 		{
-			totalFiles = 6; //Number of files, apart from dat/ and docs/, that need creating
+			totalFiles = 7; //Number of files, apart from dat/ and docs/, that need creating
 			findTotalAssets("dat");
 			findTotalAssets("docs");
 			if (installDialog != null)
@@ -239,6 +212,7 @@ public class CrawlAppActivity extends Activity
 			writeInitFile();
 			publishProgress(++installedFiles);
 
+			copyFile("README.txt");
 			copyFileOrDir("dat");
 			copyFileOrDir("docs");
 			return null;
@@ -305,6 +279,34 @@ public class CrawlAppActivity extends Activity
 			{
 				Log.e(TAG, "IOException: " + ex);
 			}
+		}
+		
+
+		private void copyFile(String fileName)
+		{
+			AssetManager assetManager = getAssets();
+			String destname = getFilesDir().toString() + "/" + fileName;
+			Log.d(TAG, "Copying: " + fileName + " to " + destname);
+			File newasset = new File(destname);
+			try
+			{
+				newasset.createNewFile();
+				BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(newasset));
+				BufferedInputStream in = new BufferedInputStream(assetManager.open(fileName));
+				int b;
+				while ((b = in.read()) != -1)
+				{
+					out.write(b);
+				}
+				out.flush();
+				out.close();
+				in.close();
+			}
+			catch (IOException ex)
+			{
+				Log.e(TAG, "Exception occured copying " + fileName + ": " + ex);
+			}
+			chmod(destname, 0666);
 		}
 		
 		@Override
