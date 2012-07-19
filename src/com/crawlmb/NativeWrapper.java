@@ -1,10 +1,7 @@
 package com.crawlmb;
 
-import java.util.Formatter;
 import java.util.HashMap;
 
-import android.graphics.Color;
-import android.location.Address;
 import android.util.Log;
 
 public class NativeWrapper
@@ -24,9 +21,18 @@ public class NativeWrapper
 //	native void gameStart(int argc, String[] argv);
 	public void gameStart(String pluginPath, int argc, String[] argv )
 	{
-		String initFilePath = "/data/data/com.crawlmb/files/init.txt";//TODO: Generate this path properly, ie from filesdir
+		showLoadingMessage();
+		
+		String initFilePath = term.getContext().getFilesDir() + "/init.txt";
 		initGame(initFilePath);
 		
+	}
+	private void showLoadingMessage()
+	{
+		int window = 0;
+		String launchingGame = term.getResources().getString(R.string.launching_game);
+		waddnstr(window, launchingGame.length(), launchingGame.getBytes());
+		wrefresh(window);
 	}
     public native String initGame(String initFileLocation);
 
