@@ -7,22 +7,85 @@
     <string name="menu_quit">Quit</string>
     <string name="install_dialog_title">Installing Dungeon Crawl: Stone Soup</string>
     <string name="launching_game">Launching game, please wait...</string>
-    
+
     <!-- We should get rid of these ASAP -->
     <string-array name="gamePluginDescriptions">
-      <item>Vanilla 3.3.2</item> 
-      <item>Vanilla 3.0.6 +squelch,borg</item>
-      <item>Vanilla 2.4.Frog-knows</item>
+        <item>Vanilla 3.3.2</item>
+        <item>Vanilla 3.0.6 +squelch,borg</item>
+        <item>Vanilla 2.4.Frog-knows</item>
     </string-array>
     <string-array name="gamePluginNames">
-      <item>angband</item> 
-      <item>angband306</item>
-      <item>frogknows</item>
+        <item>angband</item>
+        <item>angband306</item>
+        <item>frogknows</item>
     </string-array>
     <string-array name="gamePlugins">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string name="preferences_vibrate_title">Vibrate</string>
+    <string name="preferences_vibrate_summary">Enable or disable vibration in game</string>
+    <string name="preferences_fullscreen_title">Full screen</string>
+    <string name="preferences_fullscreen_summary">Enable or disable game in full screen</string>
+    <string name="preferences_orientation_title">Orientation</string>
+    <string name="preferences_orientation_summary">Select screen orientation</string>
+    <string name="preferences_gameplugin_title">Selected variant</string>
+    <string name="preferences_gameplugin_summary">Note that these Game settings stick to the active profile</string>
+    <string name="preferences_enablevkey_title">Enable virtual keyboard</string>
+    <string name="preferences_enablevkey_summary">Display virtual keyboard (forces portrait orientation)</string>
+    <string name="preferences_portraitkb_title">Portrait keyboard</string>
+    <string name="preferences_portraitkb_summary">Display virtual keyboard in portrait orientation</string>
+    <string name="preferences_landscapekb_title">Landscape keyboard</string>
+    <string name="preferences_landscapekb_summary">Display virtual keyboard in landscape orientation</string>
+    <string name="preferences_enablevolkeyfontsize_title">Volume key font sizing</string>
+    <string name="preferences_enablevolkeyfontsize_summary">Font size changed by volume up &amp; down keys</string>
+    <string name="preferences_enabletouch_title">Enable touch directionals</string>
+    <string name="preferences_enabletouch_summary">Turn on touchscreen directional controls</string>
+    <string name="preferences_alwaysrun_title">Always run</string>
+    <string name="preferences_alwaysrun_summary">Always run when using touch directional commands</string>
+    <string name="preferences_skipwelcome_title">Skip welcome screen</string>
+    <string name="preferences_skipwelcome_summary">Automatically skip the Angband welcome screen at startup</string>
+    <string name="preferences_autostartborg_title">Auto-start borg</string>
+    <string name="preferences_autostartborg_summary">Automatically starts your borg (Vanilla 3.x only)</string>
+
+    <string name="display_category">Display</string>
+    <string name="control_category">Control</string>
+    <string name="game_category">Game</string>
+    <string-array name="virtKeyActionDescriptions">
+        <item>None</item>
+        <item>Ctrl Key</item>
+        <item>Enter Key</item>
+        <item>Esc Key</item>
+        <item>Period</item>
+        <item>Shift Key</item>
+        <item>Space</item>
+        <item>Virtual Keyboard</item>
+        <item>Zoom In</item>
+        <item>Zoom Out</item>
+    </string-array>
+    <string-array name="virtKeyActions">
+        <item>None</item>
+        <item>CtrlKey</item>
+        <item>EnterKey</item>
+        <item>EscKey</item>
+        <item>Period</item>
+        <item>ShiftKey</item>
+        <item>Space</item>
+        <item>VirtualKeyboard</item>
+        <item>ZoomIn</item>
+        <item>ZoomOut</item>
+    </string-array>
+    <string-array name="orientationDescriptions">
+      <item>Sensor</item>
+      <item>Portrait</item>
+      <item>Landscape</item>
+    </string-array>
+    <string-array name="orientations">
       <item>0</item>
       <item>1</item>
-      <item>2</item> 
+      <item>2</item>
     </string-array>
 
 </resources>

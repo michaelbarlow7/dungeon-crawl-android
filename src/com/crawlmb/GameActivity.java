@@ -128,8 +128,8 @@ public class GameActivity extends Activity //implements OnScoreSubmitObserver {
 //			startActivity(intent);
 			break;
 		case '2':
-//			intent = new Intent(this, PreferencesActivity.class);
-//			startActivity(intent);
+			intent = new Intent(this, PreferencesActivity.class);
+			startActivity(intent);
 			break;
 		case '3':
 //			intent = new Intent(this, EntryScreenActivity.class);
@@ -292,12 +292,6 @@ public class GameActivity extends Activity //implements OnScoreSubmitObserver {
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-//		if (keyCode == KeyEvent.KEYCODE_MENU)
-//		{
-////			state.nativew.resize();
-//			handler.sendEmptyMessage(AngbandDialog.Action.StartGame.ordinal());
-//			return true;
-//		}
 		if (!state.onKeyDown(keyCode,event)){
 			return super.onKeyDown(keyCode,event);
 		}

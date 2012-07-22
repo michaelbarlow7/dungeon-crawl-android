@@ -23,9 +23,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PaintFlagsDrawFilter;
 import android.graphics.Typeface;
-import android.graphics.Rect;
 import android.os.Vibrator;
 import android.os.Handler;
 import android.util.AttributeSet;
@@ -34,12 +32,7 @@ import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.GestureDetector;
-import android.view.ContextMenu;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.WindowManager;
-import android.view.ContextMenu.ContextMenuInfo;
-import android.view.View.OnCreateContextMenuListener;
 import android.view.GestureDetector.OnGestureListener;
 
 public class TermView extends View implements OnGestureListener {
@@ -306,7 +299,7 @@ public class TermView extends View implements OnGestureListener {
 		return true;
 	}
 	public void onLongPress(MotionEvent e) {
-		handler.sendEmptyMessage(AngbandDialog.Action.OpenContextMenu.ordinal());
+//		handler.sendEmptyMessage(AngbandDialog.Action.OpenContextMenu.ordinal());
 	}
 	public void onShowPress(MotionEvent e) {
 	}
