@@ -631,25 +631,25 @@ inline bool operator == (const cchar_t &a, const cchar_t &b)
 {
     return (a.attr == b.attr && *a.chars == *b.chars);
 }
-//~ inline char_info character_at(int y, int x)
-//~ {
-    //~ cchar_t c;
-    //~ // (void) is to hush an incorrect clang warning.
+inline int character_at(int y, int x)
+{
+    int c;
+    // (void) is to hush an incorrect clang warning.
     //~ (void)mvin_wch(y, x, &c); //ANDROID: Dunno what to do about this method :S
-    //~ return (c);
-//~ }
-inline bool valid_char(const cchar_t &c)
-{
-    return *c.chars;
+    c = mvinch(y, x);
+    return (c);
 }
-inline void write_char_at(int y, int x, const cchar_t &ch)
+inline bool valid_char(int c)
 {
-    move(y, x);
-    //add_wchnstr(&ch, 1); //ANDROID WHAT DO I DO HERE?
+    return c != 0;
 }
-static void flip_colour(cchar_t &ch)
+inline void write_char_at(int y, int x, int ch)
 {
-    const unsigned colour = (ch.attr & A_COLOR);
+	mvaddch(y, x, ch);
+}
+static void flip_colour(int ch)
+{
+    const unsigned colour = (ch & A_COLOR);
     const int pair = PAIR_NUMBER(colour);
 
     int fg     = pair & 7;
@@ -662,32 +662,30 @@ static void flip_colour(cchar_t &ch)
     }
 
     const int newpair = (fg * 8 + bg);
-    ch.attr = COLOR_PAIR(newpair);
+    ch = COLOR_PAIR(newpair);
 }
 
-static char_info oldch, oldmangledch;
+static int oldch, oldmangledch;
 static int faked_x = -1, faked_y;
 
-// What does this do???
 void fakecursorxy(int x, int y)
 {
-	//~ //printf("\nfakecursorxy(%i,%i)\n", x, y);
-    //~ if (valid_char(oldch) && faked_x != -1
-        //~ && character_at(faked_y, faked_x) == oldmangledch)
-    //~ {
-        //~ if (faked_x != x - 1 || faked_y != y - 1)
-            //~ write_char_at(faked_y, faked_x, oldch);
-        //~ else
-            //~ return;
-    //~ }
-//~ 
-    //~ char_info c = 'a';//character_at(y - 1, x - 1);
-    //~ oldch   = c;
-    //~ faked_x = x - 1;
-    //~ faked_y = y - 1;
-    //~ flip_colour(c);
-    //~ write_char_at(y - 1, x - 1, oldmangledch = c);
-    //~ move(y - 1, x - 1);
+    if (valid_char(oldch) && faked_x != -1
+        && character_at(faked_y, faked_x) == oldmangledch)
+    {
+        if (faked_x != x - 1 || faked_y != y - 1)
+            write_char_at(faked_y, faked_x, oldch);
+        else
+            return;
+    }
+
+    int c = character_at(y - 1, x - 1);
+    oldch   = c;
+    faked_x = x - 1;
+    faked_y = y - 1;
+    flip_colour(c);
+    write_char_at(y - 1, x - 1, oldmangledch = c);
+    move(y - 1, x - 1);
 }
 
 int wherex()
