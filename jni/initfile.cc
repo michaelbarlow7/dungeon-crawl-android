@@ -1632,6 +1632,11 @@ void game_options::fixup_options()
     // Validate save_dir
     if (!check_mkdir("Save directory", &save_dir))
         end(1);
+#if defined(SHARED_DIR_PATH)
+		shared_dir = _resolve_dir(SHARED_DIR_PATH, "");
+#else
+		shared_dir = save_dir;
+#endif
 
     if (!SysEnv.morgue_dir.empty())
         morgue_dir = SysEnv.morgue_dir;
