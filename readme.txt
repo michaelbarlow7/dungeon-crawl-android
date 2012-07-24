@@ -45,7 +45,7 @@ So ideally, to build from the checked out code, one would:
 4. Run 'make' in jni/rltiles // Works for me, I'm running Xubuntu 12.04 32bit. You might need to cross compile
 5. Run 'jni/util/gen_ver.pl build.h'
 6. Run 'jni/util/gen-cflg.pl compflag.h none armeabi android android'
-7. Then run $NDK/ndk-build from inside the project directory (assuming you have the NDK. We're using r8 atm).
+7. Then run $NDK/ndk-build from inside the project directory (We're using CrystaX's modified toolchain, r7, due to its support for wide characters).
 
 To actually get the app to run, we also needed to:
 8. Symlink source/dat to <android-root>/assets/dat
