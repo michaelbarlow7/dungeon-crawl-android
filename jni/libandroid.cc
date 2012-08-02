@@ -598,12 +598,12 @@ static int curs_bg_attr(int col)
 
     // curses typically uses A_BOLD to give bright foreground colour,
     // but various termcaps may disagree
-    if (fg & COLFLAG_CURSES_BRIGHTEN);
+    if (fg & COLFLAG_CURSES_BRIGHTEN)
         flags |= A_BOLD;
 
     // curses typically uses A_BLINK to give bright background colour,
     // but various termcaps may disagree
-    if (bg & COLFLAG_CURSES_BRIGHTEN);
+    if (bg & COLFLAG_CURSES_BRIGHTEN)
         flags |= A_BLINK;
 
     // Strip out all the bits above the raw 3-bit colour definition
@@ -612,6 +612,7 @@ static int curs_bg_attr(int col)
 
     // figure out which colour pair we want
     const int pair = (fg == 0 && bg == 0) ? 63 : (bg * 8 + fg);
+
     return (COLOR_PAIR(pair) | flags);
 }
 

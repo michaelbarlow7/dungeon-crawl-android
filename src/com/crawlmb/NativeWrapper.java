@@ -223,8 +223,8 @@ public class NativeWrapper
 
 		int color = p.Color & 0xFF;
 
-//		boolean standout =
-//				((p.Color & A_STANDOUT) != 0) || ((p.Color & A_BOLD) != 0) || ((p.Color & A_UNDERLINE) != 0);
+		boolean standout =
+				((p.Color & A_STANDOUT) != 0) || ((p.Color & A_BOLD) != 0) || ((p.Color & A_UNDERLINE) != 0);
 
 		boolean reverse = ((p.Color & A_REVERSE) != 0);
 
@@ -233,18 +233,23 @@ public class NativeWrapper
 		if (cp == null || cp.fColor == cp.bColor)
 			cp = TermWindow.defaultColor;
 		
-//		if (standout)
-//			color += (color < 8 ? 8 : -8);
+		int fColor = cp.fColor;
+		if (standout)
+		{
+			int fColorInt = color % 8;
+			fColorInt += (fColor < 8 ? 8 : -8);
+			fColor = TermWindow.color_table.get(fColorInt);
+		}
 
 //		  if (p.Char != ' ') { Formatter fmt = new Formatter();
-//		  fmt.format("fcolor:%x bcolor:%x original:%x", color, cp.bColor, p.Color);
+//		  fmt.format("fcolor:%x bcolor:%x original:%x", fColor, cp.bColor, p.Color);
 //		  Log.d("Angband","frosh '"+p.Char+"' "+fmt); }
 		
 
 		if (reverse)
-			term.drawPoint(r, c, p.Char, cp.bColor, cp.fColor, extendErase);
+			term.drawPoint(r, c, p.Char, cp.bColor, fColor, extendErase);
 		else
-			term.drawPoint(r, c, p.Char, cp.fColor, cp.bColor, extendErase);
+			term.drawPoint(r, c, p.Char, fColor, cp.bColor, extendErase);
 
 		p.isDirty = false;
 		p.isUgly = false;
