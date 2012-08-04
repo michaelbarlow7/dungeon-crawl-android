@@ -190,7 +190,7 @@ public class CrawlAppActivity extends Activity
 		@Override
 		protected Void doInBackground(Void... params)
 		{
-			totalFiles = 7; //Number of files, apart from dat/ and docs/, that need creating
+			totalFiles = 5; //Number of files, apart from dat/ and docs/, that need creating
 			findTotalAssets("dat");
 			findTotalAssets("docs");
 			if (installDialog != null)
