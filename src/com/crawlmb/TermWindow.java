@@ -204,16 +204,9 @@ public class TermWindow {
 	public void addnstr(int n, byte[] cp) {
 //		String foo = new String(cp);
 //		Log.d("Crawl","addnstr ("+row+","+col+") ["+foo+"]");
-
-		String str;
-		try {
-			str = new String(cp, "ISO-8859-1");
-		} catch(java.io.UnsupportedEncodingException e) {
-			str = "";
-		}
-		
-		for (int i = 0; i < n; i++) {
-		    addch(str.charAt(i));
+		for (int i = 0 ; i < cp.length; i++)
+		{
+			addch((char) cp[i]);
 		}
 	}
 

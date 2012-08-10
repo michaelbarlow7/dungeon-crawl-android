@@ -432,7 +432,7 @@ void puttext(int x1, int y1, const crawl_view_buffer &vbuf)
 // C++ string class.  -- bwr
 void update_screen(void)
 {
-    refresh();
+    //ANDROID: We don't really need this I don't think
 
 #ifdef USE_TILE_WEB
     tiles.set_need_redraw();
