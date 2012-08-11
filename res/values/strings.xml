@@ -92,7 +92,7 @@
     <string name="error_reading_file">Error while reading file</string>
     <string name="menu_revert">Revert</string>
     <string name="menu_save">Save</string>
-    <string name="config_saved">Config saved</string>
+    <string name="config_saved">Config saved. Restart to apply changes</string>
     <string name="error_writing_file">Error while writing file</string>
     <string name="warning_unsaved_changes_title">Text modified</string>
     <string name="warning_unsaved_changes_message">Do you want to save the changes?</string>
