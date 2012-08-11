@@ -18,14 +18,17 @@
 
 package com.crawlmb;
 
+import java.io.File;
+
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceScreen;
 import android.preference.Preference;
 import android.view.WindowManager;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.util.Log;
 import android.preference.PreferenceCategory;
 
 public class PreferencesActivity
@@ -39,6 +42,19 @@ public class PreferencesActivity
 
 		// Load the preferences from an XML resource
 		addPreferencesFromResource(R.xml.preferences);
+		
+		setConfigOptionsPreferenceIntent();
+	}
+	
+	private void setConfigOptionsPreferenceIntent()
+	{
+		Preference configOptions = findPreference("editConfig");
+		File file = new File(getFilesDir() + "/init.txt");//TODO: This file location should be in the one place
+		Uri uri = Uri.fromFile(file);
+		Intent editConfigIntent = new Intent(Intent.ACTION_VIEW ,uri);
+		editConfigIntent.setDataAndType(uri, "text/plain"); 
+		editConfigIntent.setClass(this, ConfigEditor.class);
+		configOptions.setIntent(editConfigIntent);
 	}
 
 	@Override

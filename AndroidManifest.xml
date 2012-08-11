@@ -27,6 +27,12 @@
             android:launchMode="singleTask" 
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
         </activity>
+        <activity
+            android:name=".ConfigEditor"
+            android:theme="@android:style/Theme.Light"
+            android:windowSoftInputMode="stateHidden"
+            android:label="Config Editor">
+        </activity>
         <activity android:name=".PreferencesActivity" android:label="@string/app_name">
             <intent-filter>
                 <action android:name="org.angdroid.angband.PREF" />
