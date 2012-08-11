@@ -109,6 +109,7 @@
 		<com.crawlmb.KeyMapModPreference android:key="angband.raltkey" android:title="Right Alt/Fn Key"/>
 		<com.crawlmb.KeyMapModPreference android:key="angband.rshiftkey" android:title="Right Shift Key"/>
 		<com.crawlmb.KeyMapPreference android:key="angband.spacekey" android:title="Space"/>
+		<com.crawlmb.KeyMapPreference android:key="angband.tabkey" android:title="Tab"/>
 	  </PreferenceScreen>
 	  <PreferenceScreen
 		 android:title="Symbols"

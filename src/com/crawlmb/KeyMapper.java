@@ -24,6 +24,7 @@ public class KeyMapper {
 	String KEY_RSHIFTKEY = "angband.rshiftkey";
 	String KEY_ENTERKEY = "angband.enterkey";
 	String KEY_SPACEKEY = "angband.spacekey";
+	String KEY_TABKEY = "angband.tabkey";
 	String KEY_BKSPACEKEY = "angband.bkspacekey";
 	String KEY_UPKEY = "angband.upkey";
 	String KEY_DOWNKEY = "angband.downkey";
@@ -118,6 +119,7 @@ public class KeyMapper {
 			Period,
 			ShiftKey,
 			Space,
+			Tab,
 			VirtualKeyboard,
 			ZoomIn,
 			ZoomOut,
@@ -212,7 +214,8 @@ public class KeyMapper {
 			initKeyMap(KEY_LSHIFTKEY, KeyAction.ShiftKey);
 			initKeyMap(KEY_RSHIFTKEY, KeyAction.ShiftKey);
 			initKeyMap(KEY_SPACEKEY, KeyAction.Space);
-
+			initKeyMap(KEY_TABKEY, KeyAction.Tab);
+			
 			initKeyMap(KEY_AMPKEY, '&');
 			initKeyMap(KEY_ASTKEY, '*');
 			initKeyMap(KEY_ATKEY, '@');
@@ -309,6 +312,7 @@ public class KeyMapper {
 			assignKeyMap(KEY_ESCKEY, KeyEvent.KEYCODE_BACK);
 			assignKeyMap(KEY_ENTERKEY, KeyEvent.KEYCODE_ENTER);
 			assignKeyMap(KEY_SPACEKEY, KeyEvent.KEYCODE_SPACE);
+			assignKeyMap(KEY_TABKEY, KeyEvent.KEYCODE_TAB);
 			assignKeyMap(KEY_DOWNKEY, KeyEvent.KEYCODE_DPAD_DOWN);
 			assignKeyMap(KEY_LEFTKEY, KeyEvent.KEYCODE_DPAD_LEFT);
 			assignKeyMap(KEY_RIGHTKEY, KeyEvent.KEYCODE_DPAD_RIGHT);
