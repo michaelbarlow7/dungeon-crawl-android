@@ -384,14 +384,17 @@ void cprintf(const char *format, ...)
     va_start(argp, format);
     vsnprintf(buffer, sizeof(buffer), format, argp);
     va_end(argp);
-
+    
     ucs_t c;
     char *bp = buffer;
+    int i = 0;
     while (int s = utf8towc(&c, bp))
     {
+		i++;
         bp += s;
-        putwch(c);
+        //~ putwch(c);
     }
+    addnstr(i, buffer);
 }
 
 void putwch(ucs_t chr)
