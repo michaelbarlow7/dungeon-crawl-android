@@ -258,6 +258,9 @@ public class KeyBuffer {
 		case Space:
 			add(' ');
 			break;
+		case Tab:
+			add(state.getKeyTab());
+			break;
 		case Period:
 			add('.');
 			break;
@@ -351,7 +354,9 @@ public class KeyBuffer {
 			return false;
 		}
 		else 
+		{
 			return performActionKeyDown(map.getKeyAction(), map.getCharacter(), event);
+		}
 	}
 
 	public boolean onKeyUp(int keyCode, KeyEvent event) {

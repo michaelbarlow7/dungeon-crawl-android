@@ -77,10 +77,7 @@ final public class Plugins {
 	}
 
 	public static int getKeyTab(Plugin p) {
-		switch (p) {
-		case Angband: return 0x9D;
-		default: return '\t';
-		}
+		return '\t';
 	}
 
 	public static int getKeyDelete(Plugin p) {
