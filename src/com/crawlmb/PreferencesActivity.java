@@ -49,7 +49,7 @@ public class PreferencesActivity
 	private void setConfigOptionsPreferenceIntent()
 	{
 		Preference configOptions = findPreference("editConfig");
-		File file = new File(getFilesDir() + "/init.txt");//TODO: This file location should be in the one place
+		File file = new File(getFilesDir() + "/settings/init.txt");//TODO: This file location should be in the one place
 		Uri uri = Uri.fromFile(file);
 		Intent editConfigIntent = new Intent(Intent.ACTION_VIEW ,uri);
 		editConfigIntent.setDataAndType(uri, "text/plain"); 

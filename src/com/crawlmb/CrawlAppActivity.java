@@ -229,10 +229,12 @@ public class CrawlAppActivity extends Activity
 				String crawlDirSpecification = "crawl_dir = " + getFilesDir() + "\n";
 				String saveDirSpecification = "save_dir = " + getFilesDir() + "/saves\n";
 				String morgueDirSpecification = "morgue_dir = " + getFilesDir() + "/morgue\n";
+				String macroDirSpecification = "macro_dir = " + getFilesDir() + "/settings\n";
 				bufferedOutputStream.write("\n".getBytes());
 				bufferedOutputStream.write(crawlDirSpecification.getBytes());
 				bufferedOutputStream.write(saveDirSpecification.getBytes());
 				bufferedOutputStream.write(morgueDirSpecification.getBytes());
+				bufferedOutputStream.write(macroDirSpecification.getBytes());
 				bufferedOutputStream.flush();
 				bufferedOutputStream.close();
 			}
