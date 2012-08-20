@@ -190,8 +190,9 @@ public class CrawlAppActivity extends Activity
 		@Override
 		protected Void doInBackground(Void... params)
 		{
-			totalFiles = 5; //Number of files, apart from dat/ and docs/, that need creating
+			totalFiles = 5; //Number of files, apart from dat/, settings/ and docs/, that need creating
 			findTotalAssets("dat");
+			findTotalAssets("settings");
 			findTotalAssets("docs");
 			if (installDialog != null)
 			{
@@ -214,6 +215,7 @@ public class CrawlAppActivity extends Activity
 
 			copyFile("README.txt");
 			copyFileOrDir("dat");
+			copyFileOrDir("settings");
 			copyFileOrDir("docs");
 			return null;
 		}

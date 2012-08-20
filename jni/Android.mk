@@ -73,7 +73,7 @@ LOCAL_STATIC_LIBRARIES:=libsqlite3 liblua
 LOCAL_LDLIBS := -lz -llog
 
 # Need this because we're using dynamic cast in spl-miscast.h:101,106
-LOCAL_CFLAGS += -frtti -fexceptions
+LOCAL_CFLAGS += -frtti -fexceptions -DCLUA_BINDINGS
 
 # This is basically all the .cc files in the 'source' folder
 CRAWLSRC = abl-show.cc abyss.cc acquire.cc act-iter.cc actor.cc actor-los.cc \

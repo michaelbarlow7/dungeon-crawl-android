@@ -61,6 +61,7 @@ I will eventually put the above stuff in a shell script :)
 - Symlink source/dat to <android-root>/assets/dat
 - Symlink docs/ to <android-root>/assets/dat (don't need pdfs though)
 - Symlink text files in root directoy into docs/, except for README.txt, which goes in assets/
+- Symlink settings/ to <android-root>/assets/settings (though we don't needs all the text files at the moment)
 
 ==================================
 ========LICENSE AND CREDITS=======
