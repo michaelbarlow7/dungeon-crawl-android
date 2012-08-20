@@ -210,12 +210,11 @@ public class CrawlAppActivity extends Activity
 			publishProgress(++installedFiles);
 			mkdir("/morgue");
 			publishProgress(++installedFiles);
-			writeInitFile();
-			publishProgress(++installedFiles);
 
 			copyFile("README.txt");
 			copyFileOrDir("dat");
 			copyFileOrDir("settings");
+			writeInitFile();
 			copyFileOrDir("docs");
 			return null;
 		}
@@ -225,11 +224,12 @@ public class CrawlAppActivity extends Activity
 			FileOutputStream fileOutputStream;
 			try
 			{
-				fileOutputStream = openFileOutput("init.txt", MODE_WORLD_WRITEABLE);
+				fileOutputStream = new FileOutputStream(getFilesDir() + "/settings/init.txt",true);
 				BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
 				String crawlDirSpecification = "crawl_dir = " + getFilesDir() + "\n";
 				String saveDirSpecification = "save_dir = " + getFilesDir() + "/saves\n";
 				String morgueDirSpecification = "morgue_dir = " + getFilesDir() + "/morgue\n";
+				bufferedOutputStream.write("\n".getBytes());
 				bufferedOutputStream.write(crawlDirSpecification.getBytes());
 				bufferedOutputStream.write(saveDirSpecification.getBytes());
 				bufferedOutputStream.write(morgueDirSpecification.getBytes());
@@ -240,8 +240,7 @@ public class CrawlAppActivity extends Activity
 			{
 				e.printStackTrace();
 			}
-		}
-
+		} 
 		private void mkdir(String relativePath)
 		{
 			// FIXME: making files using this method, because we can't seem to
