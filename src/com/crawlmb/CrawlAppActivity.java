@@ -159,41 +159,12 @@ public class CrawlAppActivity extends Activity
 		{
 			showDialog(INSTALL_DIALOG_ID);
 		}
-
-		private void findTotalAssets(String path)
-		{
-			AssetManager assetManager = getAssets();
-			String assets[] = null;
-			try
-			{
-				totalFiles++;
-				assets = assetManager.list(path);
-				if (assets.length == 0) // then we know it's a file, not a
-										// directory
-				{
-					return;
-				}
-				else
-				{
-					for (int i = 0; i < assets.length; i++)
-					{
-						findTotalAssets(path + "/" + assets[i]);
-					}
-				}
-				}
-				catch (IOException ex)
-				{
-					Log.e(TAG, "IOException: " + ex);
-				}
-		}
 		
 		@Override
 		protected Void doInBackground(Void... params)
 		{
-			totalFiles = 5; //Number of files, apart from dat/, settings/ and docs/, that need creating
-			findTotalAssets("dat");
-			findTotalAssets("settings");
-			findTotalAssets("docs");
+			totalFiles = 284; //Number of files that need creating. Hard-coded I know, but
+							  // counting them dynamically took a surprising amount of time
 			if (installDialog != null)
 			{
 				installDialog.setIndeterminate(false);
