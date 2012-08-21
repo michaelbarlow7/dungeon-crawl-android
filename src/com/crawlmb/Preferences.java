@@ -128,20 +128,21 @@ final public class Preferences {
 		return pref.getBoolean(Preferences.KEY_VIBRATE, false);
 	}
 
-	public static boolean getPortraitKeyboard() {
-		return pref.getBoolean(Preferences.KEY_PORTRAITKB, true);
+	public static String getPortraitKeyboard() 
+	{
+		return pref.getString(Preferences.KEY_PORTRAITKB, resources.getString(R.string.portraitkb_default));
 	}
-	public static void setPortraitKeyboard(boolean value) {
+	public static void setPortraitKeyboard(String value) {
 		SharedPreferences.Editor ed = pref.edit();
-		ed.putBoolean(Preferences.KEY_PORTRAITKB, value);
+		ed.putString(Preferences.KEY_PORTRAITKB, value);
 		ed.commit();			
 	}
-	public static boolean getLandscapeKeyboard() {
-		return pref.getBoolean(Preferences.KEY_LANDSCAPEKB, false);
+	public static String getLandscapeKeyboard() {
+		return pref.getString(Preferences.KEY_LANDSCAPEKB, resources.getString(R.string.landscapekb_default));
 	}
-	public static void setLandscapeKeyboard(boolean value) {
+	public static void setLandscapeKeyboard(String value) {
 		SharedPreferences.Editor ed = pref.edit();
-		ed.putBoolean(Preferences.KEY_LANDSCAPEKB, value);
+		ed.putString(Preferences.KEY_LANDSCAPEKB, value);
 		ed.commit();			
 	}
 

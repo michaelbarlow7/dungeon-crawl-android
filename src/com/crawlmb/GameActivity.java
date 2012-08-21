@@ -190,13 +190,16 @@ public class GameActivity extends Activity //implements OnScoreSubmitObserver {
 			screenLayout.setOrientation(LinearLayout.VERTICAL);
 			screenLayout.addView(term);
 
-			Boolean kb = false;
+			String kb;
 			if(Preferences.isScreenPortraitOrientation())
 				kb = Preferences.getPortraitKeyboard();
 			else		
 				kb = Preferences.getLandscapeKeyboard();
 			
-			if (kb) {
+			String[] keyboards = getResources().getStringArray(R.array.virtualKeyboardValues);
+			
+			//TODO: Specify between system and nethack keyboards
+			if (!kb.equals(keyboards[0])) {
 				CrawlKeyboard virtualKeyboard = new CrawlKeyboard(this);
 				screenLayout.addView(virtualKeyboard.virtualKeyboardView);
 			}
@@ -266,10 +269,21 @@ public class GameActivity extends Activity //implements OnScoreSubmitObserver {
 	}
 
 	public void toggleKeyboard() {
+		//TODO: Should just hide and show, not change what keyboard is being shown right now.
 		if(Preferences.isScreenPortraitOrientation())
-			Preferences.setPortraitKeyboard(!Preferences.getPortraitKeyboard());
+		{
+			int currentKeyboard = Integer.parseInt(Preferences.getPortraitKeyboard());
+			currentKeyboard++;
+			currentKeyboard %= 3;
+			Preferences.setPortraitKeyboard(String.valueOf(currentKeyboard));
+		}
 		else		
-			Preferences.setLandscapeKeyboard(!Preferences.getLandscapeKeyboard());
+		{
+			int currentKeyboard = Integer.parseInt(Preferences.getLandscapeKeyboard());
+			currentKeyboard++;
+			currentKeyboard %= 3;
+			Preferences.setLandscapeKeyboard(String.valueOf(currentKeyboard));
+		}
 		rebuildViews();
 	}
 

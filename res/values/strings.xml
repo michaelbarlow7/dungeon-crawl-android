@@ -36,9 +36,9 @@
     <string name="preferences_enablevkey_title">Enable virtual keyboard</string>
     <string name="preferences_enablevkey_summary">Display virtual keyboard (forces portrait orientation)</string>
     <string name="preferences_portraitkb_title">Portrait keyboard</string>
-    <string name="preferences_portraitkb_summary">Display virtual keyboard in portrait orientation</string>
+    <string name="preferences_portraitkb_summary">Choose which virtual keyboard to display in portrait orientation</string>
     <string name="preferences_landscapekb_title">Landscape keyboard</string>
-    <string name="preferences_landscapekb_summary">Display virtual keyboard in landscape orientation</string>
+    <string name="preferences_landscapekb_summary">Choose which virtual keyboard to display in landscape orientation</string>
     <string name="preferences_enablevolkeyfontsize_title">Volume key font sizing</string>
     <string name="preferences_enablevolkeyfontsize_summary">Font size changed by volume up &amp; down keys</string>
     <string name="preferences_enabletouch_title">Enable touch directionals</string>
@@ -87,6 +87,19 @@
       <item>1</item>
       <item>2</item>
     </string-array>
+    <string-array name="virtualKeyboardValues">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="virtualKeyboards">
+        <item>None</item>
+        <item>Crawl Keyboard</item>
+        <item>System Keyboard</item>
+    </string-array>
+    <string name="portraitkb.default">1</string>
+    <string name="landscapekb.default">0</string>
+    
     <!-- Config editor -->
     <string name="file_not_found">File not found</string>
     <string name="error_reading_file">Error while reading file</string>

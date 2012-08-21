@@ -157,16 +157,20 @@
 		 android:title="Reset all hardware keys"
 		 android:summary="Restores all key mappings back to the default configuration"/> 
 	</PreferenceScreen>
-	<CheckBoxPreference 
+	<ListPreference 
 	   android:key="angband.portraitkb"
 	   android:title="@string/preferences_portraitkb_title"
 	   android:summary="@string/preferences_portraitkb_summary"
-	   android:defaultValue="true"/>
-	<CheckBoxPreference 
+	   android:entries="@array/virtualKeyboards"
+	   android:entryValues="@array/virtualKeyboardValues"
+	   android:defaultValue="@string/portraitkb.default"/>
+	<ListPreference 
 	   android:key="angband.landscapekb"
 	   android:title="@string/preferences_landscapekb_title"
 	   android:summary="@string/preferences_landscapekb_summary"
-	   android:defaultValue="false"/>
+	   android:entries="@array/virtualKeyboards"
+	   android:entryValues="@array/virtualKeyboardValues"
+	   android:defaultValue="@string/landscapekb.default"/>
 	<CheckBoxPreference 
 	   android:key="angband.enabletouch"
 	   android:defaultValue="true" 
