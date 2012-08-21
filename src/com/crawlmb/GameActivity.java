@@ -276,22 +276,39 @@ public class GameActivity extends Activity //implements OnScoreSubmitObserver {
 		return false;
 	}
 
-	public void toggleKeyboard() {
-		//TODO: Fuck this shit right off. Seriously, why??
-//		int currentKeyboard;
-//		if(Preferences.isScreenPortraitOrientation())
-//		{
-//			currentKeyboard = Integer.parseInt(Preferences.getPortraitKeyboard());
-//			Preferences.setPortraitKeyboard(String.valueOf(currentKeyboard));
-//		}
-//		else		
-//		{
-//			currentKeyboard = Integer.parseInt(Preferences.getLandscapeKeyboard());
-//			Preferences.setLandscapeKeyboard(String.valueOf(currentKeyboard));
-//		}
-//		String[] keyboards = getResources().getStringArray(R.id.vjj)
-//		if (currentKeyboard == )
-//		rebuildViews();
+	public void toggleKeyboard() 
+	{
+		int currentKeyboard;
+		if(Preferences.isScreenPortraitOrientation())
+		{
+			currentKeyboard = Integer.parseInt(Preferences.getPortraitKeyboard());
+			if (currentKeyboard == 2) // System keyboard
+			{
+				toggleSystemKeyboard();
+				return;
+			}
+			currentKeyboard = currentKeyboard == 0 ? 1 : 0;
+			Preferences.setPortraitKeyboard(String.valueOf(currentKeyboard));
+		}
+		else		
+		{
+			currentKeyboard = Integer.parseInt(Preferences.getLandscapeKeyboard());
+			if (currentKeyboard == 2) // System keyboard
+			{
+				toggleSystemKeyboard();
+				return;
+			}
+			currentKeyboard = currentKeyboard == 0 ? 1 : 0;
+			Preferences.setLandscapeKeyboard(String.valueOf(currentKeyboard));
+		}
+
+		rebuildViews();
+	}
+
+	private void toggleSystemKeyboard()
+	{
+		InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 	}
 
 	@Override
