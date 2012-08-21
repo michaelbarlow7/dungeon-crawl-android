@@ -94,7 +94,6 @@ public class KeyBuffer {
 //			default: break;
 //			}
 //		}
-		System.out.println("Original key: " + key);
 		
 		if (key == '5') { // center tap
 			KeyAction act = Preferences.getKeyMapper().getCenterScreenTapAction();// Might change this

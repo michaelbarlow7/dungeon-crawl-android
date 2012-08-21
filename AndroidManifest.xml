@@ -33,7 +33,7 @@
             android:windowSoftInputMode="stateHidden"
             android:label="Config Editor">
         </activity>
-        <activity android:name=".PreferencesActivity" android:label="@string/app_name">
+        <activity android:name=".PreferencesActivity" android:label="@string/app_name" android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="org.angdroid.angband.PREF" />
                 <category android:name="android.intent.category.DEFAULT" />

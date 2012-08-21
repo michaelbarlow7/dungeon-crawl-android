@@ -19,6 +19,7 @@
 package com.crawlmb;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -30,6 +31,7 @@ import android.view.WindowManager;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.ViewGroup.LayoutParams;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.os.Handler;
 import android.os.Message;
@@ -198,16 +200,22 @@ public class GameActivity extends Activity //implements OnScoreSubmitObserver {
 			
 			String[] keyboards = getResources().getStringArray(R.array.virtualKeyboardValues);
 			
-			//TODO: Specify between system and nethack keyboards
-			if (!kb.equals(keyboards[0])) {
+			if (kb.equals(keyboards[1])) //Crawl Keyboard
+			{
 				CrawlKeyboard virtualKeyboard = new CrawlKeyboard(this);
 				screenLayout.addView(virtualKeyboard.virtualKeyboardView);
+				getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 			}
-//			if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
-//			{
-//				AngbandKeyboard virtualKeyboard = new AngbandKeyboard(this);
-//				screenLayout.addView(virtualKeyboard.virtualKeyboardView);
-//			}
+			else if (kb.equals(keyboards[2])) //System Keyboard
+			{
+				InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+				getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+				inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+			}
+			else
+			{
+				getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+			}
 
 			setContentView(screenLayout);
 			dialog.restoreDialog();
@@ -269,22 +277,21 @@ public class GameActivity extends Activity //implements OnScoreSubmitObserver {
 	}
 
 	public void toggleKeyboard() {
-		//TODO: Should just hide and show, not change what keyboard is being shown right now.
-		if(Preferences.isScreenPortraitOrientation())
-		{
-			int currentKeyboard = Integer.parseInt(Preferences.getPortraitKeyboard());
-			currentKeyboard++;
-			currentKeyboard %= 3;
-			Preferences.setPortraitKeyboard(String.valueOf(currentKeyboard));
-		}
-		else		
-		{
-			int currentKeyboard = Integer.parseInt(Preferences.getLandscapeKeyboard());
-			currentKeyboard++;
-			currentKeyboard %= 3;
-			Preferences.setLandscapeKeyboard(String.valueOf(currentKeyboard));
-		}
-		rebuildViews();
+		//TODO: Fuck this shit right off. Seriously, why??
+//		int currentKeyboard;
+//		if(Preferences.isScreenPortraitOrientation())
+//		{
+//			currentKeyboard = Integer.parseInt(Preferences.getPortraitKeyboard());
+//			Preferences.setPortraitKeyboard(String.valueOf(currentKeyboard));
+//		}
+//		else		
+//		{
+//			currentKeyboard = Integer.parseInt(Preferences.getLandscapeKeyboard());
+//			Preferences.setLandscapeKeyboard(String.valueOf(currentKeyboard));
+//		}
+//		String[] keyboards = getResources().getStringArray(R.id.vjj)
+//		if (currentKeyboard == )
+//		rebuildViews();
 	}
 
 	@Override
