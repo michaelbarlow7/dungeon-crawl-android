@@ -47,6 +47,7 @@ static jmethodID NativeWrapper_curs_set;
 static jmethodID NativeWrapper_flushinp;
 static jmethodID NativeWrapper_getcury;
 static jmethodID NativeWrapper_getcurx;
+static jmethodID NativeWrapper_fakecursorxy;
 // #ifdef ANGDROID_NIGHTLY
 static jmethodID NativeWrapper_wctomb;
 static jmethodID NativeWrapper_mbstowcs;
@@ -377,6 +378,12 @@ int noise() {
 	return 0;
 }
 
+void curses_fakecursorxy(int x, int y)
+{
+	LOGC("curses.curses_fakecursorxy %d %d %d", x, y, stdscr->w);
+	JAVA_CALL(NativeWrapper_fakecursorxy, x, y, stdscr->w);
+}
+
 void crawl_quit(const char* msg) {
 	if (msg) {
 		LOGE(msg);
@@ -534,6 +541,7 @@ void init_curses( JNIEnv* env1, jobject obj1 )
 	NativeWrapper_mvwinch = JAVA_METHOD("mvwinch", "(III)I");
 	NativeWrapper_curs_set = JAVA_METHOD("curs_set", "(I)V");
 	NativeWrapper_flushinp = JAVA_METHOD("flushinp", "()V");
+	NativeWrapper_fakecursorxy = JAVA_METHOD("fakecursorxy","(III)V");
 // #ifdef ANGDROID_NIGHTLY
 	NativeWrapper_wctomb = JAVA_METHOD("wctomb", "([BB)I");
 	NativeWrapper_mbstowcs = JAVA_METHOD("mbstowcs", "([B[BI)I");

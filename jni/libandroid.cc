@@ -651,45 +651,10 @@ inline void write_char_at(int y, int x, int ch)
 {
 	mvaddch(y, x, ch);
 }
-static void flip_colour(int ch)
-{
-    const unsigned colour = (ch & A_COLOR);
-    const int pair = PAIR_NUMBER(colour);
-
-    int fg     = pair & 7;
-    int bg     = (pair >> 3) & 7;
-
-    if (pair == 63)
-    {
-        fg    = COLOR_WHITE;
-        bg    = COLOR_BLACK;
-    }
-
-    const int newpair = (fg * 8 + bg);
-    ch = COLOR_PAIR(newpair);
-}
-
-static int oldch, oldmangledch;
-static int faked_x = -1, faked_y;
 
 void fakecursorxy(int x, int y)
 {
-    if (valid_char(oldch) && faked_x != -1
-        && character_at(faked_y, faked_x) == oldmangledch)
-    {
-        if (faked_x != x - 1 || faked_y != y - 1)
-            write_char_at(faked_y, faked_x, oldch);
-        else
-            return;
-    }
-
-    int c = character_at(y - 1, x - 1);
-    oldch   = c;
-    faked_x = x - 1;
-    faked_y = y - 1;
-    flip_colour(c);
-    write_char_at(y - 1, x - 1, oldmangledch = c);
-    move(y - 1, x - 1);
+	curses_fakecursorxy(x, y);
 }
 
 int wherex()

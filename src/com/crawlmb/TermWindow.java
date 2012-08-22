@@ -283,4 +283,27 @@ public class TermWindow {
 			}
 		}
 	}
+	
+	private int fakedX = -1;
+	private int fakedY = -1;
+	private int oldColor = -1;
+
+	public void fakecursorxy(int x, int y)
+	{
+		if (fakedX >= 0 && fakedY >= 0)
+		{
+			TermPoint p = buffer[fakedY][fakedX];
+			if (oldColor >= 0)
+			{
+				p.Color = oldColor;
+			}
+			p.isDirty = true; // Force a redraw of where the cursor was previously
+		}
+		fakedX = x;
+		fakedY = y;
+		TermPoint p = buffer[y][x];
+		oldColor = p.Color;
+		p.Color ^= NativeWrapper.A_REVERSE;
+		p.isDirty = true;
+	}
 }

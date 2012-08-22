@@ -16,6 +16,14 @@ public class NativeWrapper
 
 	private String display_lock = "lock";
 	private static final String TAG = NativeWrapper.class.getCanonicalName();
+	public static final int A_NORMAL = 0;
+	public static final int A_REVERSE = 0x100;
+	public static final int A_STANDOUT = 0x200;
+	public static final int A_BOLD = 0x400;
+	public static final int A_UNDERLINE = 0x800;
+	public static final int A_BLINK = 0x1000;
+	public static final int A_DIM = 0x2000;
+	// #define A_ALTCHARSET 0x4000
 
 	// Call native methods from library
 //	native void gameStart(int argc, String[] argv);
@@ -212,14 +220,6 @@ public class NativeWrapper
 
 	private void drawPoint(int r, int c, TermWindow.TermPoint p, boolean extendErase)
 	{
-		final int A_NORMAL = 0;
-		final int A_REVERSE = 0x100;
-		final int A_STANDOUT = 0x200;
-		final int A_BOLD = 0x400;
-		final int A_UNDERLINE = 0x800;
-		final int A_BLINK = 0x1000;
-		final int A_DIM = 0x2000;
-		// #define A_ALTCHARSET 0x4000
 
 		int color = p.Color & 0xFF;
 
@@ -620,6 +620,18 @@ public class NativeWrapper
 		catch (java.io.UnsupportedEncodingException e)
 		{
 			Log.d("Angband", "score: " + e);
+		}
+	}
+	
+	public void fakecursorxy(int x, int y, int w)
+	{
+		synchronized (display_lock)
+		{
+			TermWindow t = state.getWin(w);
+			if (t != null)
+			{
+				t.fakecursorxy(x, y);
+			}
 		}
 	}
 }

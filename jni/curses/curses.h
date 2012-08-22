@@ -175,6 +175,7 @@ int crawl_getch(int v);
 int flushinp(void);
 int noise(void);
 
+void curses_fakecursorxy(int x, int y);
 void crawl_quit(const char*);
 void crawl_warn(const char*);
 
