@@ -43,18 +43,26 @@ public class PreferencesActivity
 		// Load the preferences from an XML resource
 		addPreferencesFromResource(R.xml.preferences);
 		
-		setConfigOptionsPreferenceIntent();
+		setConfigFilePreferences();
 	}
 	
-	private void setConfigOptionsPreferenceIntent()
+	private void setConfigFilePreferences()
 	{
-		Preference configOptions = findPreference("editConfig");
-		File file = new File(getFilesDir() + "/settings/init.txt");//TODO: This file location should be in the one place
-		Uri uri = Uri.fromFile(file);
-		Intent editConfigIntent = new Intent(Intent.ACTION_VIEW ,uri);
-		editConfigIntent.setDataAndType(uri, "text/plain"); 
-		editConfigIntent.setClass(this, ConfigEditor.class);
-		configOptions.setIntent(editConfigIntent);
+		PreferenceCategory configFilePreferences = (PreferenceCategory) findPreference("configFiles");
+		String[] configFiles = getResources().getStringArray(R.array.config_files);
+		for (int i = 0; i < configFiles.length; i++)
+		{
+			EditConfigFilePreference editConfigFilePreference = new EditConfigFilePreference(this, configFiles[i]);
+			configFilePreferences.addPreference(editConfigFilePreference);
+		}
+		
+		// The macro file is a special case. We should only show this setting if the file exists
+		File macroFile = new File(getFilesDir() + "/settings/macro.txt");
+		if (macroFile.exists())
+		{
+			EditConfigFilePreference editConfigFilePreference = new EditConfigFilePreference(this, "macro");
+			configFilePreferences.addPreference(editConfigFilePreference);
+		}
 	}
 
 	@Override

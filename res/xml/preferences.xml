@@ -191,9 +191,6 @@
 	   android:entries="@array/virtKeyActionDescriptions"
 	   android:entryValues="@array/virtKeyActions"/>
   </PreferenceCategory>
-      <PreferenceCategory android:title="Crawl Config File" >
-        <Preference
-            android:key="editConfig"
-            android:title="Edit Config" />
+    <PreferenceCategory android:key="configFiles" android:title="Config Files" >
     </PreferenceCategory>
 </PreferenceScreen>
