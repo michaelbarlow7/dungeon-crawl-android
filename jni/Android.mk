@@ -72,8 +72,8 @@ LOCAL_STATIC_LIBRARIES:=libsqlite3 liblua
 # loading zlib and logging functions
 LOCAL_LDLIBS := -lz -llog
 
-# Need this because we're using dynamic cast in spl-miscast.h:101,106
-LOCAL_CFLAGS += -frtti -fexceptions -DCLUA_BINDINGS
+# These flags are on by default in the original Makefile
+LOCAL_CFLAGS += -DCLUA_BINDINGS -DWIZARD
 
 # This is basically all the .cc files in the 'source' folder
 CRAWLSRC = abl-show.cc abyss.cc acquire.cc act-iter.cc actor.cc actor-los.cc \
