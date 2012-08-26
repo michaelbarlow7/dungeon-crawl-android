@@ -19,10 +19,7 @@ public class GameThread implements Runnable {
 	/* game thread state */	
 	private Thread thread = null;
 	private boolean game_thread_running = false;
-	private boolean game_fully_initialized = false;
 	private boolean game_restart = false;
-	private String running_plugin = null;
-	private String running_profile = null;
 	private boolean plugin_change = false;
 	private NativeWrapper nativew = null;
 	private StateManager state = null;
@@ -64,23 +61,7 @@ public class GameThread implements Runnable {
 			Log.d("Angband","start.fatalError is set");
 		}
 		else if (game_thread_running) {
-
-			/* this is an onResume event */
-			if (game_fully_initialized &&
-				running_plugin != null && 
-				( running_plugin.compareTo(Preferences.getActivePluginName())!=0 ||
-				  running_profile.compareTo(Preferences.getActiveProfile().getName())!=0 ) ) {
-			
-				/* plugin or profile has been changed */
-
-				Log.d("Angband","start.plugin changed");
-				plugin_change = true;
-				stop();
-			}
-			else {
-				//Log.d("Angband","startBand.redrawing");
-				state.nativew.resize();
-			}			
+			state.nativew.resize();
 		}
 		else {
 			
@@ -149,7 +130,6 @@ public class GameThread implements Runnable {
 			
 		Log.d("Angband","GameThread.onGameExit()");
 		game_thread_running = false;
-		game_fully_initialized = false;
 
 		// if game exited normally, restart!
 		local_restart 
@@ -165,7 +145,6 @@ public class GameThread implements Runnable {
 		//if (!game_fully_initialized) 
 		//	Log.d("Angband","game is fully initialized");
 
-		game_fully_initialized = true;		
 	}
 
 	public void run() {		
@@ -186,20 +165,7 @@ public class GameThread implements Runnable {
 
 		Log.d("Angband","GameThread.run");
 
-		running_plugin = Preferences.getActivePluginName();
-		running_profile = Preferences.getActiveProfile().getName();
-
-	    String pluginPath = Preferences.getActivityFilesDirectory()
-			+"/../lib/lib"+running_plugin+".so";
-
 		/* game is not running, so start it up */
-		nativew.gameStart(
-				  pluginPath, 
-				  2, 
-				  new String[]{
-					  Preferences.getAngbandFilesDirectory(),
-					  Preferences.getActiveProfile().getSaveFile()
-				  }
-		);
+		nativew.gameStart();
 	}
 }

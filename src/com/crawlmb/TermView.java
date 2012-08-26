@@ -365,7 +365,6 @@ public class TermView extends View implements OnGestureListener {
 		  )); // this seems to have no effect, why?
 		*/		
 
-		state.currentPlugin = Plugins.Plugin.convert(Preferences.getActiveProfile().getPlugin());
    		return true;
 	}
 

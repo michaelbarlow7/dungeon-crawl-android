@@ -20,7 +20,6 @@ public class StateManager {
 	public boolean warnError = false;
 	public String fatalMessage = "";
 	public String warnMessage = "";
-	public Plugins.Plugin currentPlugin;
 
 	/* progress dialog state */
 	public static String progress_lock = "lock";
@@ -84,31 +83,31 @@ public class StateManager {
 	}
 
 	public int getKeyUp() {
-		return Plugins.getKeyUp(currentPlugin);
+		return Plugins.getKeyUp();
 	}
 	public int getKeyDown() {
-	    return Plugins.getKeyDown(currentPlugin);
+	    return Plugins.getKeyDown();
 	}
 	public int getKeyLeft() {
-		return Plugins.getKeyLeft(currentPlugin);
+		return Plugins.getKeyLeft();
 	}
 	public int getKeyRight() {
-		return Plugins.getKeyRight(currentPlugin);
+		return Plugins.getKeyRight();
 	}
 	public int getKeyEnter() {
-		return Plugins.getKeyEnter(currentPlugin);
+		return Plugins.getKeyEnter();
 	}
 	public int getKeyEsc() {
-		return Plugins.getKeyEsc(currentPlugin);
+		return Plugins.getKeyEsc();
 	}
 	public int getKeyTab() {
-		return Plugins.getKeyTab(currentPlugin);
+		return Plugins.getKeyTab();
 	}
 	public int getKeyBackspace() {
-		return Plugins.getKeyBackspace(currentPlugin);
+		return Plugins.getKeyBackspace();
 	}
 	public int getKeyDelete() {
-		return Plugins.getKeyDelete(currentPlugin);
+		return Plugins.getKeyDelete();
 	}
 
 	public void clearKeys() {

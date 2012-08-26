@@ -20,9 +20,7 @@ package com.crawlmb;
 
 import java.io.File;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceScreen;
@@ -128,9 +126,6 @@ public class PreferencesActivity
 //		} 
 		else if (pref instanceof PreferenceScreen) {
 			setSummaryAll((PreferenceScreen) pref); 
-		} 
-		else if (key.compareTo(Preferences.KEY_GAMEPROFILE)==0) {
-			pref.setSummary(Preferences.getActiveProfile().getName());
 		} 
 	}
 

@@ -36,13 +36,6 @@ import android.widget.LinearLayout;
 import android.os.Handler;
 import android.os.Message;
 
-//import com.flurry.android.FlurryAgent;
-//import com.scoreloop.client.android.ui.EntryScreenActivity;
-//import com.scoreloop.client.android.ui.LeaderboardsScreenActivity;
-//import com.scoreloop.client.android.ui.ShowResultOverlayActivity;
-//import com.scoreloop.client.android.ui.OnScoreSubmitObserver;
-//import com.scoreloop.client.android.ui.ScoreloopManagerSingleton;
-
 public class GameActivity extends Activity //implements OnScoreSubmitObserver {
 {
 
@@ -65,19 +58,9 @@ public class GameActivity extends Activity //implements OnScoreSubmitObserver {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-//		String version = "unknown";
-//		try {
-//			ComponentName comp = new ComponentName(this, AngbandActivity.class);
-//			PackageInfo pinfo = this.getPackageManager().getPackageInfo(comp.getPackageName(), 0);
-//			version = pinfo.versionName;
-//		} catch (Exception e) {}
-//
 	    Preferences.init ( 
-			getFilesDir(),
-			getResources(), 
-			getSharedPreferences(Preferences.NAME, MODE_PRIVATE),
-			"VERSION XXX"
+			getResources(),
+			getSharedPreferences(Preferences.NAME, MODE_PRIVATE)
 		);
 
 		//Log.d("Angband", "onCreate");		
@@ -85,8 +68,6 @@ public class GameActivity extends Activity //implements OnScoreSubmitObserver {
 		if (state == null) {
 			state = new StateManager();
 		}
-
-//		ScoreloopManagerSingleton.get().setOnScoreSubmitObserver(this);
 	}
 
 	@Override

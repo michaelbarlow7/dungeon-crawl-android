@@ -27,7 +27,7 @@ public class NativeWrapper
 
 	// Call native methods from library
 //	native void gameStart(int argc, String[] argv);
-	public void gameStart(String pluginPath, int argc, String[] argv )
+	public void gameStart()
 	{
 		showLoadingMessage();
 		

@@ -36,15 +36,6 @@ public class KeyBuffer {
 		this.state = state;
 		nativew = state.nativew;
 		clear();
-		if (Preferences.getAutoStartBorg()) {
-			String magic = Plugins.getStartBorgSequence();
-			for(int i = 0; i<magic.length(); i++) {
-				keymacro.offer((int)(magic.charAt(i)));
-			}
-		}
-		else if (Preferences.getSkipWelcome()) {
-			add(32); //space
-		}
 		quit_key_seq = 0;
 	}
 
@@ -78,7 +69,6 @@ public class KeyBuffer {
 	}
 	public void addDirection(int key) {
 //		boolean rogueLike = (nativew.gameQueryInt(1,new String[]{"rl"})==1);
-		boolean alwaysRun = Preferences.getAlwaysRun();
 
 //		if (rogueLike) { //Directions should work via numpad for CRAWL
 //			switch(key) {

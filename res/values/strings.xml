@@ -8,23 +8,6 @@
     <string name="install_dialog_title">Installing Dungeon Crawl: Stone Soup</string>
     <string name="launching_game">Launching game. If this is the first time running Dungeon Crawl,\nthis might take a while. Please wait...</string>
 
-    <!-- We should get rid of these ASAP -->
-    <string-array name="gamePluginDescriptions">
-        <item>Vanilla 3.3.2</item>
-        <item>Vanilla 3.0.6 +squelch,borg</item>
-        <item>Vanilla 2.4.Frog-knows</item>
-    </string-array>
-    <string-array name="gamePluginNames">
-        <item>angband</item>
-        <item>angband306</item>
-        <item>frogknows</item>
-    </string-array>
-    <string-array name="gamePlugins">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-    </string-array>
-
     <string name="preferences_vibrate_title">Vibrate</string>
     <string name="preferences_vibrate_summary">Enable or disable vibration in game</string>
     <string name="preferences_fullscreen_title">Full screen</string>
@@ -46,9 +29,7 @@
     <string name="preferences_alwaysrun_title">Always run</string>
     <string name="preferences_alwaysrun_summary">Always run when using touch directional commands</string>
     <string name="preferences_skipwelcome_title">Skip welcome screen</string>
-    <string name="preferences_skipwelcome_summary">Automatically skip the Angband welcome screen at startup</string>
-    <string name="preferences_autostartborg_title">Auto-start borg</string>
-    <string name="preferences_autostartborg_summary">Automatically starts your borg (Vanilla 3.x only)</string>
+    <string name="preferences_skipwelcome_summary">Automatically skip the Crawl splash screen at startup</string>
 
     <string name="display_category">Display</string>
     <string name="control_category">Control</string>

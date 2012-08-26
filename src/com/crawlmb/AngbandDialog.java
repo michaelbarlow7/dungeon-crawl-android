@@ -7,13 +7,10 @@ import android.app.AlertDialog;
 import android.util.Log;
 import android.widget.Toast;
 import android.content.pm.PackageManager;
-//import com.scoreloop.client.android.ui.ScoreloopManagerSingleton;
-//import com.scoreloop.client.android.core.model.Score;
 
 public class AngbandDialog {
 	private GameActivity activity;
 	private StateManager state;
-	private ProgressDialog progressDialog = null;
 
 	public enum Action {
 			OpenContextMenu
@@ -37,7 +34,6 @@ public class AngbandDialog {
 	}
 
 	public void HandleMessage(Message msg) {
-		//Log.d("Angband","handleMessage: "+msg.what);		
 
 		switch (Action.convert(msg.what)) {
 		case OpenContextMenu: // display context menu

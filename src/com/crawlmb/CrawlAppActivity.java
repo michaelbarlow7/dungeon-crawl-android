@@ -219,9 +219,9 @@ public class CrawlAppActivity extends Activity
 		{
 			// FIXME: making files using this method, because we can't seem to
 			// make files using the native code for some reason
-			File saveDir = new File(getFilesDir() + relativePath);
-			saveDir.mkdirs();
-			chmod(saveDir.getAbsolutePath(), 0777);
+			File dir = new File(getFilesDir() + relativePath);
+			dir.mkdirs();
+			chmod(dir.getAbsolutePath(), 0777);
 		}
 
 		private void copyFileOrDir(String path)
