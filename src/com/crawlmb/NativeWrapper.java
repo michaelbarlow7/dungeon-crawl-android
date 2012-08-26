@@ -630,7 +630,7 @@ public class NativeWrapper
 			TermWindow t = state.getWin(w);
 			if (t != null)
 			{
-				t.fakecursorxy(x, y);
+				t.fakecursorxy(x -1 , y -1 );
 			}
 		}
 	}
