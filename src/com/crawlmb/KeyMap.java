@@ -1,12 +1,11 @@
 package com.crawlmb;
 
-
 import com.crawlmb.KeyMapper.KeyAction;
 
 import android.view.KeyEvent;
 
-
-public class KeyMap {
+public class KeyMap
+{
 
 	protected String pref_key = "";
 	protected char character;
@@ -16,80 +15,94 @@ public class KeyMap {
 	protected boolean alt_mod = false;
 	protected boolean char_mod = false;
 
-	public KeyMap(String pref_key, char character) {
+	public KeyMap(String pref_key, char character)
+	{
 		this.pref_key = pref_key;
 		this.character = character;
 		this.key_action = KeyAction.CharacterKey;
 		loadFromPref();
 	}
 
-	public KeyMap(String pref_key, KeyAction action) {
+	public KeyMap(String pref_key, KeyAction action)
+	{
 		this.pref_key = pref_key;
 		this.key_action = action;
 		loadFromPref();
 	}
 
-	public void loadFromPref() {
+	public void loadFromPref()
+	{
 		String pref_val = Preferences.getString(pref_key);
-		if (pref_val != null && pref_val.length()>0) {
+		if (pref_val != null && pref_val.length() > 0)
+		{
 			alt_mod = false;
 			char_mod = false;
-			if (pref_val.startsWith("C")) {
+			if (pref_val.startsWith("C"))
+			{
 				key_code = pref_val.charAt(1);
 				char_mod = true;
 			}
-			else {
+			else
+			{
 				alt_mod = pref_val.startsWith("0");
 				key_code = Integer.parseInt(pref_val);
 			}
 		}
 	}
 
-	public void assign(int key_code, boolean alt_mod, boolean char_mod) {
+	public void assign(int key_code, boolean alt_mod, boolean char_mod)
+	{
 		this.key_code = key_code;
 		this.alt_mod = alt_mod;
 		this.char_mod = char_mod;
 	}
 
-	public void clear() {
+	public void clear()
+	{
 		this.key_code = 0;
 		this.alt_mod = false;
 		this.char_mod = false;
 	}
 
-	public String getPrefValue() {
-		return stringValue(key_code, alt_mod,char_mod);
+	public String getPrefValue()
+	{
+		return stringValue(key_code, alt_mod, char_mod);
 	}
-	public String getPrefKey() {
+
+	public String getPrefKey()
+	{
 		return pref_key;
 	}
 
-	public boolean isAssigned() {
+	public boolean isAssigned()
+	{
 		return key_code != 0;
 	}
 
-	public KeyAction getKeyAction() {
+	public KeyAction getKeyAction()
+	{
 		return key_action;
 	}
 
-	public char getCharacter() {
+	public char getCharacter()
+	{
 		return character;
 	}
 
-	public static String stringValue(int key_code, boolean alt_mod, boolean char_mod) {
-		if (key_code == 0) 
+	public static String stringValue(int key_code, boolean alt_mod, boolean char_mod)
+	{
+		if (key_code == 0)
 			return "";
 
-		else if (char_mod) 
-			return "C"+(char)key_code;
+		else if (char_mod)
+			return "C" + (char) key_code;
 
 		// ignore alt modifier for these...
-		else if (key_code == KeyEvent.KEYCODE_ALT_LEFT 
-				 || key_code == KeyEvent.KEYCODE_ALT_RIGHT
-				 || key_code == KeyEvent.KEYCODE_BACK)
-			return ""+key_code;
+		else if (key_code == KeyEvent.KEYCODE_ALT_LEFT || key_code == KeyEvent.KEYCODE_ALT_RIGHT
+				|| key_code == KeyEvent.KEYCODE_BACK)
+			return "" + key_code;
 
 		else
-			return (alt_mod?"0":"")+key_code;
+			return (alt_mod ? "0" : "") + key_code;
 	}
 }

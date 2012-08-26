@@ -58,14 +58,14 @@ public class GameThread implements Runnable {
 		if (state.fatalError) {
 
 			// don't bother restarting here, we are going down.
-			Log.d("Angband","start.fatalError is set");
+			Log.d("Crawl","start.fatalError is set");
 		}
 		else if (game_thread_running) {
 			state.nativew.resize();
 		}
 		else {
 			
-			/* time to start angband */
+			/* time to start crawl */
 
 			/* notify wrapper game is about to start */
 			nativew.onGameStart();
@@ -75,7 +75,7 @@ public class GameThread implements Runnable {
 
 			game_thread_running = true;
 
-			//Log.d("Angband","startBand().starting loader thread");
+			//Log.d("Crawl","startBand().starting loader thread");
 
 			thread = new Thread(this);
 			thread.start();
@@ -83,42 +83,42 @@ public class GameThread implements Runnable {
 	}
 
 	private void stop() {
-		// signal keybuffer to send quit command to angband 
+		// signal keybuffer to send quit command to crawl 
 		// (this is when the user chooses quit or the app is pausing)
 
-		//Log.d("Angband","GameThread.Stop()");
+		//Log.d("Crawl","GameThread.Stop()");
 
 		if (!game_thread_running) {
-			//Log.d("Angband","stop().no game running");
+			//Log.d("Crawl","stop().no game running");
 			return;
 		}
 		if (thread == null)  {
-			//Log.d("Angband","stop().no thread");
+			//Log.d("Crawl","stop().no thread");
 			return;
 		}
 
 		state.signalGameExit();
 
-		//Log.d("Angband","signalGameExit.waiting on thread.join()");
+		//Log.d("Crawl","signalGameExit.waiting on thread.join()");
 
 		try {
 			thread.join();
 		} catch (Exception e) {
-			Log.d("Angband",e.toString());
+			Log.d("Crawl",e.toString());
 		}
 
-		//Log.d("Angband","signalGameExit.after waiting for thread.join()");
+		//Log.d("Crawl","signalGameExit.after waiting for thread.join()");
 	}
 
 	private void save() {
-		//Log.d("Angband","saveBand()");
+		//Log.d("Crawl","saveBand()");
 
 		if (!game_thread_running) {
-			Log.d("Angband","save().no game running");
+			Log.d("Crawl","save().no game running");
 			return;
 		}
 		if (thread == null) {
-			Log.d("Angband","save().no thread");
+			Log.d("Crawl","save().no thread");
 			return;
 		}
 	 
@@ -128,7 +128,7 @@ public class GameThread implements Runnable {
 	private void onGameExit() {
 		boolean local_restart = false;
 			
-		Log.d("Angband","GameThread.onGameExit()");
+		Log.d("Crawl","GameThread.onGameExit()");
 		game_thread_running = false;
 
 		// if game exited normally, restart!
@@ -138,12 +138,12 @@ public class GameThread implements Runnable {
 			   && !state.fatalError);
 
 		if	(local_restart) 
-			state.handler.sendEmptyMessage(AngbandDialog.Action.StartGame.ordinal());
+			state.handler.sendEmptyMessage(CrawlDialog.Action.StartGame.ordinal());
 	}
 
 	public void setFullyInitialized() {
 		//if (!game_fully_initialized) 
-		//	Log.d("Angband","game is fully initialized");
+		//	Log.d("Crawl","game is fully initialized");
 
 	}
 
@@ -163,7 +163,7 @@ public class GameThread implements Runnable {
 			*/
 		}
 
-		Log.d("Angband","GameThread.run");
+		Log.d("Crawl","GameThread.run");
 
 		/* game is not running, so start it up */
 		nativew.gameStart();

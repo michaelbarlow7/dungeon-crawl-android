@@ -2,129 +2,116 @@ package com.crawlmb;
 
 import java.util.Iterator;
 import java.util.HashMap;
-import java.util.ArrayList;
-
-import android.util.Log;
 import android.view.KeyEvent;
 import android.content.SharedPreferences;
 
-public class KeyMapper {
+public class KeyMapper
+{
 
-	String KEY_KEYMAPVERSION = "angband.keymapversion";
+	String KEY_KEYMAPVERSION = "crawl.keymapversion";
 
-	String KEY_VIRTKEYKEY = "angband.virtkeykey";
-	String KEY_ZOOMINKEY = "angband.zoominkey";
-	String KEY_ZOOMOUTKEY = "angband.zoomoutkey";
+	String KEY_VIRTKEYKEY = "crawl.virtkeykey";
+	String KEY_ZOOMINKEY = "crawl.zoominkey";
+	String KEY_ZOOMOUTKEY = "crawl.zoomoutkey";
 
-	String KEY_CTRLKEY = "angband.ctrlkey";
-	String KEY_ESCKEY = "angband.esckey";
-	String KEY_LALTKEY = "angband.laltkey";
-	String KEY_RALTKEY = "angband.raltkey";
-	String KEY_LSHIFTKEY = "angband.lshiftkey";
-	String KEY_RSHIFTKEY = "angband.rshiftkey";
-	String KEY_ENTERKEY = "angband.enterkey";
-	String KEY_SPACEKEY = "angband.spacekey";
-	String KEY_TABKEY = "angband.tabkey";
-	String KEY_BKSPACEKEY = "angband.bkspacekey";
-	String KEY_UPKEY = "angband.upkey";
-	String KEY_DOWNKEY = "angband.downkey";
-	String KEY_LEFTKEY = "angband.leftkey";
-	String KEY_RIGHTKEY = "angband.rightkey";
+	String KEY_CTRLKEY = "crawl.ctrlkey";
+	String KEY_ESCKEY = "crawl.esckey";
+	String KEY_LALTKEY = "crawl.laltkey";
+	String KEY_RALTKEY = "crawl.raltkey";
+	String KEY_LSHIFTKEY = "crawl.lshiftkey";
+	String KEY_RSHIFTKEY = "crawl.rshiftkey";
+	String KEY_ENTERKEY = "crawl.enterkey";
+	String KEY_SPACEKEY = "crawl.spacekey";
+	String KEY_TABKEY = "crawl.tabkey";
+	String KEY_BKSPACEKEY = "crawl.bkspacekey";
+	String KEY_UPKEY = "crawl.upkey";
+	String KEY_DOWNKEY = "crawl.downkey";
+	String KEY_LEFTKEY = "crawl.leftkey";
+	String KEY_RIGHTKEY = "crawl.rightkey";
 
-	String KEY_AMPKEY = "angband.ampkey";
-	String KEY_ASTKEY = "angband.astkey";
-	String KEY_ATKEY = "angband.atkey";
-	String KEY_BSLASHKEY = "angband.bslashkey";
-	String KEY_COLONKEY = "angband.colonkey";
-	String KEY_COMMAKEY = "angband.commakey";
-	String KEY_DOLLARKEY = "angband.dollarkey";
-	String KEY_DQUOTEKEY = "angband.dquotekey";
-	String KEY_EQUALKEY = "angband.equalkey";
-	String KEY_EXCLKEY = "angband.exclkey";
-	String KEY_FSLASHKEY = "angband.fslashkey";
-	String KEY_GTKEY = "angband.gtkey";
-	String KEY_LBKEY = "angband.lbkey";
-	String KEY_LCKEY = "angband.lckey";
-	String KEY_LPKEY = "angband.lpkey";
-	String KEY_LTKEY = "angband.ltkey";
-	String KEY_MINUSKEY = "angband.minuskey";
-	String KEY_PERCENTKEY = "angband.percentkey";
-	String KEY_PERIODKEY = "angband.periodkey";
-	String KEY_PIPEKEY = "angband.pipekey";
-	String KEY_PLUSKEY = "angband.pluskey";
-	String KEY_POUNDKEY = "angband.poundkey";
-	String KEY_QUESTKEY = "angband.questkey";
-	String KEY_RBKEY = "angband.rbkey";
-	String KEY_RCKEY = "angband.rckey";
-	String KEY_RPKEY = "angband.rpkey";
-	String KEY_SCOLONKEY = "angband.scolonkey";
-	String KEY_SQUOTEKEY = "angband.squotekey";
-	String KEY_TILDEKEY = "angband.tildekey";
-	String KEY_UNDERKEY = "angband.underkey";
+	String KEY_AMPKEY = "crawl.ampkey";
+	String KEY_ASTKEY = "crawl.astkey";
+	String KEY_ATKEY = "crawl.atkey";
+	String KEY_BSLASHKEY = "crawl.bslashkey";
+	String KEY_COLONKEY = "crawl.colonkey";
+	String KEY_COMMAKEY = "crawl.commakey";
+	String KEY_DOLLARKEY = "crawl.dollarkey";
+	String KEY_DQUOTEKEY = "crawl.dquotekey";
+	String KEY_EQUALKEY = "crawl.equalkey";
+	String KEY_EXCLKEY = "crawl.exclkey";
+	String KEY_FSLASHKEY = "crawl.fslashkey";
+	String KEY_GTKEY = "crawl.gtkey";
+	String KEY_LBKEY = "crawl.lbkey";
+	String KEY_LCKEY = "crawl.lckey";
+	String KEY_LPKEY = "crawl.lpkey";
+	String KEY_LTKEY = "crawl.ltkey";
+	String KEY_MINUSKEY = "crawl.minuskey";
+	String KEY_PERCENTKEY = "crawl.percentkey";
+	String KEY_PERIODKEY = "crawl.periodkey";
+	String KEY_PIPEKEY = "crawl.pipekey";
+	String KEY_PLUSKEY = "crawl.pluskey";
+	String KEY_POUNDKEY = "crawl.poundkey";
+	String KEY_QUESTKEY = "crawl.questkey";
+	String KEY_RBKEY = "crawl.rbkey";
+	String KEY_RCKEY = "crawl.rckey";
+	String KEY_RPKEY = "crawl.rpkey";
+	String KEY_SCOLONKEY = "crawl.scolonkey";
+	String KEY_SQUOTEKEY = "crawl.squotekey";
+	String KEY_TILDEKEY = "crawl.tildekey";
+	String KEY_UNDERKEY = "crawl.underkey";
 
-	String KEY_AKEY = "angband.akey";
-	String KEY_BKEY = "angband.bkey";
-	String KEY_CKEY = "angband.ckey";
-	String KEY_DKEY = "angband.dkey";
-	String KEY_EKEY = "angband.ekey";
-	String KEY_FKEY = "angband.fkey";
-	String KEY_GKEY = "angband.gkey";
-	String KEY_HKEY = "angband.hkey";
-	String KEY_IKEY = "angband.ikey";
-	String KEY_JKEY = "angband.jkey";
-	String KEY_KKEY = "angband.kkey";
-	String KEY_LKEY = "angband.lkey";
-	String KEY_MKEY = "angband.mkey";
-	String KEY_NKEY = "angband.nkey";
-	String KEY_OKEY = "angband.okey";
-	String KEY_PKEY = "angband.pkey";
-	String KEY_QKEY = "angband.qkey";
-	String KEY_RKEY = "angband.rkey";
-	String KEY_SKEY = "angband.skey";
-	String KEY_TKEY = "angband.tkey";
-	String KEY_UKEY = "angband.ukey";
-	String KEY_VKEY = "angband.vkey";
-	String KEY_WKEY = "angband.wkey";
-	String KEY_XKEY = "angband.xkey";
-	String KEY_YKEY = "angband.ykey";
-	String KEY_ZKEY = "angband.zkey";
+	String KEY_AKEY = "crawl.akey";
+	String KEY_BKEY = "crawl.bkey";
+	String KEY_CKEY = "crawl.ckey";
+	String KEY_DKEY = "crawl.dkey";
+	String KEY_EKEY = "crawl.ekey";
+	String KEY_FKEY = "crawl.fkey";
+	String KEY_GKEY = "crawl.gkey";
+	String KEY_HKEY = "crawl.hkey";
+	String KEY_IKEY = "crawl.ikey";
+	String KEY_JKEY = "crawl.jkey";
+	String KEY_KKEY = "crawl.kkey";
+	String KEY_LKEY = "crawl.lkey";
+	String KEY_MKEY = "crawl.mkey";
+	String KEY_NKEY = "crawl.nkey";
+	String KEY_OKEY = "crawl.okey";
+	String KEY_PKEY = "crawl.pkey";
+	String KEY_QKEY = "crawl.qkey";
+	String KEY_RKEY = "crawl.rkey";
+	String KEY_SKEY = "crawl.skey";
+	String KEY_TKEY = "crawl.tkey";
+	String KEY_UKEY = "crawl.ukey";
+	String KEY_VKEY = "crawl.vkey";
+	String KEY_WKEY = "crawl.wkey";
+	String KEY_XKEY = "crawl.xkey";
+	String KEY_YKEY = "crawl.ykey";
+	String KEY_ZKEY = "crawl.zkey";
 
-	String KEY_0KEY = "angband.0key";
-	String KEY_1KEY = "angband.1key";
-	String KEY_2KEY = "angband.2key";
-	String KEY_3KEY = "angband.3key";
-	String KEY_4KEY = "angband.4key";
-	String KEY_5KEY = "angband.5key";
-	String KEY_6KEY = "angband.6key";
-	String KEY_7KEY = "angband.7key";
-	String KEY_8KEY = "angband.8key";
-	String KEY_9KEY = "angband.9key";
+	String KEY_0KEY = "crawl.0key";
+	String KEY_1KEY = "crawl.1key";
+	String KEY_2KEY = "crawl.2key";
+	String KEY_3KEY = "crawl.3key";
+	String KEY_4KEY = "crawl.4key";
+	String KEY_5KEY = "crawl.5key";
+	String KEY_6KEY = "crawl.6key";
+	String KEY_7KEY = "crawl.7key";
+	String KEY_8KEY = "crawl.8key";
+	String KEY_9KEY = "crawl.9key";
 
-	private HashMap<String,KeyMap> keymapAll = new HashMap<String,KeyMap>(); // indexed by pref key
-	private HashMap<String,KeyMap> keymapAssign = new HashMap<String,KeyMap>(); // indexed by key assignment
+	private HashMap<String, KeyMap> keymapAll = new HashMap<String, KeyMap>(); // indexed
+																				// by
+																				// pref
+																				// key
+	private HashMap<String, KeyMap> keymapAssign = new HashMap<String, KeyMap>(); // indexed
+																					// by
+																					// key
+																					// assignment
 	private SharedPreferences pref;
 
 	public enum KeyAction
 	{
-		None,
-			AltKey,
-			ArrowDownKey,
-			ArrowLeftKey,
-			ArrowRightKey,
-			ArrowUpKey,
-			CtrlKey,
-			CharacterKey,
-			EnterKey,
-			EscKey,
-			Period,
-			ShiftKey,
-			Space,
-			Tab,
-			VirtualKeyboard,
-			ZoomIn,
-			ZoomOut,
-			BackspaceKey,
-			DeleteKey;
+		None, AltKey, ArrowDownKey, ArrowLeftKey, ArrowRightKey, ArrowUpKey, CtrlKey, CharacterKey, EnterKey,
+		EscKey, Period, ShiftKey, Space, Tab, VirtualKeyboard, ZoomIn, ZoomOut, BackspaceKey, DeleteKey;
 
 		public static KeyAction convert(int value)
 		{
@@ -137,49 +124,65 @@ public class KeyMapper {
 		}
 	};
 
-	public KeyMapper(SharedPreferences pref) {
+	public KeyMapper(SharedPreferences pref)
+	{
 		this.pref = pref;
 		init(false);
 	}
 
-	public KeyMap findKeyMapByAssign(String pref_val) {
+	public KeyMap findKeyMapByAssign(String pref_val)
+	{
 		return keymapAssign.get(pref_val);
 	}
-	public KeyMap findKeyMapByPrefKey(String pref_key) {
+
+	public KeyMap findKeyMapByPrefKey(String pref_key)
+	{
 		return keymapAll.get(pref_key);
 	}
-	public void initKeyMap(String pref_key, KeyAction act) {
+
+	public void initKeyMap(String pref_key, KeyAction act)
+	{
 		KeyMap map = new KeyMap(pref_key, act);
 		keymapAll.put(map.getPrefKey(), map);
 	}
-	public void initKeyMap(String pref_key, char character) {
+
+	public void initKeyMap(String pref_key, char character)
+	{
 		KeyMap map = new KeyMap(pref_key, character);
 		keymapAll.put(map.getPrefKey(), map);
 	}
 
-	public KeyMap assignKeyMap(String pref_key, int key_code) {
+	public KeyMap assignKeyMap(String pref_key, int key_code)
+	{
 		return assignKeyMap(pref_key, key_code, false, false);
 	}
-	public KeyMap assignKeyMap(String pref_key, char char_code) {
+
+	public KeyMap assignKeyMap(String pref_key, char char_code)
+	{
 		return assignKeyMap(pref_key, char_code, false, true);
 	}
-	public KeyMap assignKeyMap(String pref_key, int key_code, boolean alt_mod, boolean char_mod) {
+
+	public KeyMap assignKeyMap(String pref_key, int key_code, boolean alt_mod, boolean char_mod)
+	{
 		KeyMap map = findKeyMapByPrefKey(pref_key);
 
-		if (map != null) {
+		if (map != null)
+		{
 
 			// assign new key map
 			map.assign(key_code, alt_mod, char_mod);
 
 			// remove old key assignment
-			String oldval = pref.getString(pref_key,"");
-			if (oldval != null && oldval.length()>0) { 
+			String oldval = pref.getString(pref_key, "");
+			if (oldval != null && oldval.length() > 0)
+			{
 				keymapAssign.remove(oldval);
 			}
 
-			// remove duplicate new key assignment 
-			KeyMap prevMap = keymapAssign.put(map.getPrefValue(), map);				
-			if (prevMap != null) {
+			// remove duplicate new key assignment
+			KeyMap prevMap = keymapAssign.put(map.getPrefValue(), map);
+			if (prevMap != null)
+			{
 				prevMap.clear();
 			}
 
@@ -188,15 +191,19 @@ public class KeyMapper {
 		return null;
 	}
 
-	public void clearKeyMap(String pref_val) {
+	public void clearKeyMap(String pref_val)
+	{
 		KeyMap map = keymapAssign.remove(pref_val);
-		if (map != null) map.clear();
+		if (map != null)
+			map.clear();
 	}
 
-	public void init(boolean forceReset) {
+	public void init(boolean forceReset)
+	{
 		KeyMap map;
 
-		if (keymapAll.size() == 0) {
+		if (keymapAll.size() == 0)
+		{
 
 			initKeyMap(KEY_VIRTKEYKEY, KeyAction.VirtualKeyboard);
 			initKeyMap(KEY_ZOOMINKEY, KeyAction.ZoomIn);
@@ -215,7 +222,7 @@ public class KeyMapper {
 			initKeyMap(KEY_RSHIFTKEY, KeyAction.ShiftKey);
 			initKeyMap(KEY_SPACEKEY, KeyAction.Space);
 			initKeyMap(KEY_TABKEY, KeyAction.Tab);
-			
+
 			initKeyMap(KEY_AMPKEY, '&');
 			initKeyMap(KEY_ASTKEY, '*');
 			initKeyMap(KEY_ATKEY, '@');
@@ -288,27 +295,29 @@ public class KeyMapper {
 
 		keymapAssign.clear();
 
-		int version = pref.getInt(KEY_KEYMAPVERSION,0);
-		if (version == 0 || forceReset) {
+		int version = pref.getInt(KEY_KEYMAPVERSION, 0);
+		if (version == 0 || forceReset)
+		{
 
 			SharedPreferences.Editor ed = pref.edit();
 
 			// zero all keymap prefs
-			for (Iterator iter = keymapAll.values().iterator(); iter.hasNext();) {
-				map = (KeyMap)iter.next();
-				ed.putString(map.getPrefKey(), "");				
+			for (Iterator iter = keymapAll.values().iterator(); iter.hasNext();)
+			{
+				map = (KeyMap) iter.next();
+				ed.putString(map.getPrefKey(), "");
 			}
-			
+
 			assignKeyMap(KEY_VIRTKEYKEY, KeyEvent.KEYCODE_CAMERA);
 			assignKeyMap(KEY_ZOOMINKEY, KeyEvent.KEYCODE_VOLUME_UP);
 			assignKeyMap(KEY_ZOOMOUTKEY, KeyEvent.KEYCODE_VOLUME_DOWN);
 
 			assignKeyMap(KEY_BKSPACEKEY, KeyEvent.KEYCODE_DEL);
 			assignKeyMap(KEY_CTRLKEY, KeyEvent.KEYCODE_DPAD_CENTER);
-			assignKeyMap(KEY_LSHIFTKEY, KeyEvent.KEYCODE_SHIFT_LEFT); 
-			assignKeyMap(KEY_RSHIFTKEY, KeyEvent.KEYCODE_SHIFT_RIGHT); 
-			assignKeyMap(KEY_LALTKEY, KeyEvent.KEYCODE_ALT_LEFT); 
-			assignKeyMap(KEY_RALTKEY, KeyEvent.KEYCODE_ALT_RIGHT); 
+			assignKeyMap(KEY_LSHIFTKEY, KeyEvent.KEYCODE_SHIFT_LEFT);
+			assignKeyMap(KEY_RSHIFTKEY, KeyEvent.KEYCODE_SHIFT_RIGHT);
+			assignKeyMap(KEY_LALTKEY, KeyEvent.KEYCODE_ALT_LEFT);
+			assignKeyMap(KEY_RALTKEY, KeyEvent.KEYCODE_ALT_RIGHT);
 			assignKeyMap(KEY_ESCKEY, KeyEvent.KEYCODE_BACK);
 			assignKeyMap(KEY_ENTERKEY, KeyEvent.KEYCODE_ENTER);
 			assignKeyMap(KEY_SPACEKEY, KeyEvent.KEYCODE_SPACE);
@@ -387,27 +396,34 @@ public class KeyMapper {
 			assignKeyMap(KEY_8KEY, '8');
 			assignKeyMap(KEY_9KEY, '9');
 
-			for (Iterator iter = keymapAssign.values().iterator(); iter.hasNext();) {
+			for (Iterator iter = keymapAssign.values().iterator(); iter.hasNext();)
+			{
 				map = (KeyMap) iter.next();
 				ed.putString(map.getPrefKey(), map.getPrefValue());
 			}
-			ed.putString("angband.ctrldoubletap", "EnterKey");
+			ed.putString("crawl.ctrldoubletap", "EnterKey");
 			ed.putInt(KEY_KEYMAPVERSION, 1);
 			ed.commit();
 		}
-		else {
-			for (Iterator iter = keymapAll.values().iterator(); iter.hasNext();) {
+		else
+		{
+			for (Iterator iter = keymapAll.values().iterator(); iter.hasNext();)
+			{
 				map = (KeyMap) iter.next();
 				map.loadFromPref();
-				if (map.isAssigned()) keymapAssign.put(map.getPrefValue(), map);				
+				if (map.isAssigned())
+					keymapAssign.put(map.getPrefValue(), map);
 			}
 		}
 	}
 
-	public KeyAction getCtrlDoubleTapAction() {
-		return KeyAction.convert(pref.getString("angband.ctrldoubletap", "EnterKey"));
+	public KeyAction getCtrlDoubleTapAction()
+	{
+		return KeyAction.convert(pref.getString("crawl.ctrldoubletap", "EnterKey"));
 	}
-	public KeyAction getCenterScreenTapAction() {
-		return KeyAction.convert(pref.getString("angband.centerscreentap", "Space"));
+
+	public KeyAction getCenterScreenTapAction()
+	{
+		return KeyAction.convert(pref.getString("crawl.centerscreentap", "Space"));
 	}
 }

@@ -1,41 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-  <!--PreferenceCategory android:title="@string/game_category">
-	< Preference android:title="Game Profile" 
-				android:key="angband.gameprofile">
-	  <intent android:action="com.crawlmb.PROFILES" />
-	</Preference-->
-	<!-- com.crawlmb.ProfileListPreference 
-	   android:title="@string/preferences_gameplugin_title"
-	   android:key="angband.gameplugin"
-	   android:summary="@string/preferences_gameplugin_summary"
-	   android:entries="@array/gamePluginDescriptions"
-	   android:entryValues="@array/gamePlugins" />
-	<com.crawlmb.ProfileCheckBoxPreference 
-	   android:title="@string/preferences_skipwelcome_title"
-	   android:key="angband.skipwelcome"
-	   android:defaultValue="false" 
-	   android:summary="@string/preferences_skipwelcome_summary" />
-	<com.crawlmb.ProfileCheckBoxPreference 
-	   android:title="@string/preferences_autostartborg_title"
-	   android:key="angband.autostartborg"
-	   android:defaultValue="false" 
-	   android:summary="@string/preferences_autostartborg_summary" />
-  </PreferenceCategory-->
   <PreferenceCategory android:title="@string/display_category">
 	<CheckBoxPreference 
-	   android:key="angband.vibrate"
+	   android:key="crawl.vibrate"
 	   android:defaultValue="false" 
 	   android:title="@string/preferences_vibrate_title"
 	   android:summary="@string/preferences_vibrate_summary" />
 	<CheckBoxPreference 
-	   android:key="angband.fullscreen"
+	   android:key="crawl.fullscreen"
 	   android:defaultValue="true" 
 	   android:title="@string/preferences_fullscreen_title"
 	   android:summary="@string/preferences_fullscreen_summary" />
 	<ListPreference 
-	   android:key="angband.orientation"
+	   android:key="crawl.orientation"
 	   android:defaultValue="0" 
 	   android:title="@string/preferences_orientation_title"
 	   android:summary="@string/preferences_orientation_summary" 
@@ -49,145 +27,145 @@
 	  <PreferenceScreen
 		 android:title="Display Functions"
 		 android:summary="Change display, font size, virtual keyboard">	  
-		<com.crawlmb.KeyMapPreference android:key="angband.virtkeykey" android:title="Toggle Virtual Keyboard"/> 
-		<com.crawlmb.KeyMapPreference android:key="angband.zoominkey" android:title="Zoom In"/> 
-		<com.crawlmb.KeyMapPreference android:key="angband.zoomoutkey" android:title="Zoom Out"/> 
+		<com.crawlmb.KeyMapPreference android:key="crawl.virtkeykey" android:title="Toggle Virtual Keyboard"/> 
+		<com.crawlmb.KeyMapPreference android:key="crawl.zoominkey" android:title="Zoom In"/> 
+		<com.crawlmb.KeyMapPreference android:key="crawl.zoomoutkey" android:title="Zoom Out"/> 
 	  </PreferenceScreen>
 	  <PreferenceScreen
 		 android:title="Letters and Numbers"
 		 android:summary="A-Z, 0-9">
-		<com.crawlmb.KeyMapPreference android:key="angband.akey" android:title="A"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.bkey" android:title="B"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.ckey" android:title="C"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.dkey" android:title="D"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.ekey" android:title="E"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.fkey" android:title="F"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.gkey" android:title="G"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.hkey" android:title="H"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.ikey" android:title="I"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.jkey" android:title="J"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.kkey" android:title="K"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.lkey" android:title="L"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.mkey" android:title="M"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.nkey" android:title="N"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.okey" android:title="O"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.pkey" android:title="P"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.qkey" android:title="Q"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.rkey" android:title="R"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.skey" android:title="S"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.tkey" android:title="T"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.ukey" android:title="U"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.vkey" android:title="V"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.wkey" android:title="W"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.xkey" android:title="X"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.ykey" android:title="Y"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.zkey" android:title="Z"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.0key" android:title="0"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.1key" android:title="1"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.2key" android:title="2"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.3key" android:title="3"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.4key" android:title="4"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.5key" android:title="5"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.6key" android:title="6"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.7key" android:title="7"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.8key" android:title="8"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.9key" android:title="9"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.akey" android:title="A"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.bkey" android:title="B"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.ckey" android:title="C"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.dkey" android:title="D"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.ekey" android:title="E"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.fkey" android:title="F"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.gkey" android:title="G"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.hkey" android:title="H"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.ikey" android:title="I"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.jkey" android:title="J"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.kkey" android:title="K"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.lkey" android:title="L"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.mkey" android:title="M"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.nkey" android:title="N"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.okey" android:title="O"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.pkey" android:title="P"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.qkey" android:title="Q"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.rkey" android:title="R"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.skey" android:title="S"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.tkey" android:title="T"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.ukey" android:title="U"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.vkey" android:title="V"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.wkey" android:title="W"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.xkey" android:title="X"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.ykey" android:title="Y"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.zkey" android:title="Z"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.0key" android:title="0"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.1key" android:title="1"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.2key" android:title="2"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.3key" android:title="3"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.4key" android:title="4"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.5key" android:title="5"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.6key" android:title="6"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.7key" android:title="7"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.8key" android:title="8"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.9key" android:title="9"/>
 	  </PreferenceScreen>
 	  <PreferenceScreen
 		 android:title="Modifiers and Movers"
 		 android:summary="Esc, Ctrl, Shift, Alt, Space, Enter, Directions">	  
-		<com.crawlmb.KeyMapPreference android:key="angband.downkey" android:title="Arrow Down"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.leftkey" android:title="Arrow Left"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.rightkey" android:title="Arrow Right"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.upkey" android:title="Arrow Up"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.bkspacekey" android:title="Backspace"/>
-		<com.crawlmb.KeyMapModPreference android:key="angband.ctrlkey" android:title="Control Key"/> 
-		<com.crawlmb.KeyMapPreference android:key="angband.enterkey" android:title="Enter Key"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.esckey" android:title="Esc Key"/> 
-		<com.crawlmb.KeyMapModPreference android:key="angband.laltkey" android:title="Left Alt/Fn Key"/>
-		<com.crawlmb.KeyMapModPreference android:key="angband.lshiftkey" android:title="Left Shift Key"/>
-		<com.crawlmb.KeyMapModPreference android:key="angband.raltkey" android:title="Right Alt/Fn Key"/>
-		<com.crawlmb.KeyMapModPreference android:key="angband.rshiftkey" android:title="Right Shift Key"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.spacekey" android:title="Space"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.tabkey" android:title="Tab"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.downkey" android:title="Arrow Down"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.leftkey" android:title="Arrow Left"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.rightkey" android:title="Arrow Right"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.upkey" android:title="Arrow Up"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.bkspacekey" android:title="Backspace"/>
+		<com.crawlmb.KeyMapModPreference android:key="crawl.ctrlkey" android:title="Control Key"/> 
+		<com.crawlmb.KeyMapPreference android:key="crawl.enterkey" android:title="Enter Key"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.esckey" android:title="Esc Key"/> 
+		<com.crawlmb.KeyMapModPreference android:key="crawl.laltkey" android:title="Left Alt/Fn Key"/>
+		<com.crawlmb.KeyMapModPreference android:key="crawl.lshiftkey" android:title="Left Shift Key"/>
+		<com.crawlmb.KeyMapModPreference android:key="crawl.raltkey" android:title="Right Alt/Fn Key"/>
+		<com.crawlmb.KeyMapModPreference android:key="crawl.rshiftkey" android:title="Right Shift Key"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.spacekey" android:title="Space"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.tabkey" android:title="Tab"/>
 	  </PreferenceScreen>
 	  <PreferenceScreen
 		 android:title="Symbols"
 		 android:summary="Punctuation and other non-alpha numeric keys">	  
-		<com.crawlmb.KeyMapPreference android:key="angband.ampkey" android:title="Ampersand &amp;"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.astkey" android:title="Asterisk *"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.atkey" android:title="At @"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.bslashkey" android:title="Back Slash \\"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.colonkey" android:title="Colon :"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.commakey" android:title="Comma ,"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.dollarkey" android:title="Dollar $"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.dquotekey" android:title="Double Quote &quot;"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.equalkey" android:title="Equals ="/>
-		<com.crawlmb.KeyMapPreference android:key="angband.exclkey" android:title="Exclamation !"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.fslashkey" android:title="Forward Slash /"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.gtkey" android:title="Greater Than &gt;"/> 
-		<com.crawlmb.KeyMapPreference android:key="angband.lbkey" android:title="Left Brace ["/>
-		<com.crawlmb.KeyMapPreference android:key="angband.lckey" android:title="Left Curly {"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.lpkey" android:title="Left Paren ("/>
-		<com.crawlmb.KeyMapPreference android:key="angband.ltkey" android:title="Less Than &lt;"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.minuskey" android:title="Minus -"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.percentkey" android:title="Percent %"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.periodkey" android:title="Period ."/>
-		<com.crawlmb.KeyMapPreference android:key="angband.pipekey" android:title="Pipe |"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.pluskey" android:title="Plus +"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.poundkey" android:title="Pound #"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.questkey" android:title="Question ?"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.rbkey" android:title="Right Brace ]"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.rckey" android:title="Right Curly }"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.rpkey" android:title="Right Paren )"/>	
-		<com.crawlmb.KeyMapPreference android:key="angband.scolonkey" android:title="Semicolon ;"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.squotekey" android:title="Single Quote '"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.tildekey" android:title="Tilde ~"/>
-		<com.crawlmb.KeyMapPreference android:key="angband.underkey" android:title="Underscore _"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.ampkey" android:title="Ampersand &amp;"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.astkey" android:title="Asterisk *"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.atkey" android:title="At @"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.bslashkey" android:title="Back Slash \\"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.colonkey" android:title="Colon :"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.commakey" android:title="Comma ,"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.dollarkey" android:title="Dollar $"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.dquotekey" android:title="Double Quote &quot;"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.equalkey" android:title="Equals ="/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.exclkey" android:title="Exclamation !"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.fslashkey" android:title="Forward Slash /"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.gtkey" android:title="Greater Than &gt;"/> 
+		<com.crawlmb.KeyMapPreference android:key="crawl.lbkey" android:title="Left Brace ["/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.lckey" android:title="Left Curly {"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.lpkey" android:title="Left Paren ("/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.ltkey" android:title="Less Than &lt;"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.minuskey" android:title="Minus -"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.percentkey" android:title="Percent %"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.periodkey" android:title="Period ."/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.pipekey" android:title="Pipe |"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.pluskey" android:title="Plus +"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.poundkey" android:title="Pound #"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.questkey" android:title="Question ?"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.rbkey" android:title="Right Brace ]"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.rckey" android:title="Right Curly }"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.rpkey" android:title="Right Paren )"/>	
+		<com.crawlmb.KeyMapPreference android:key="crawl.scolonkey" android:title="Semicolon ;"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.squotekey" android:title="Single Quote '"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.tildekey" android:title="Tilde ~"/>
+		<com.crawlmb.KeyMapPreference android:key="crawl.underkey" android:title="Underscore _"/>
 	  </PreferenceScreen>
 	  <ListPreference
 		 android:title="Ctrl Key Double-Tap"
 		 android:summary="Double tap function for hardware button mapped to the Ctrl Key function"
-		 android:key="angband.ctrldoubletap"
+		 android:key="crawl.ctrldoubletap"
 		 android:defaultValue="EnterKey"
 		 android:entries="@array/virtKeyActionDescriptions"
 		 android:entryValues="@array/virtKeyActions"/>
 	  <com.crawlmb.KeyMapResetPreference 
-		 android:key="angband.resetallkeys" 
+		 android:key="crawl.resetallkeys" 
 		 android:title="Reset all hardware keys"
 		 android:summary="Restores all key mappings back to the default configuration"/> 
 	</PreferenceScreen>
 	<ListPreference 
-	   android:key="angband.portraitkb"
+	   android:key="crawl.portraitkb"
 	   android:title="@string/preferences_portraitkb_title"
 	   android:summary="@string/preferences_portraitkb_summary"
 	   android:entries="@array/virtualKeyboards"
 	   android:entryValues="@array/virtualKeyboardValues"
 	   android:defaultValue="@string/portraitkb.default"/>
 	<ListPreference 
-	   android:key="angband.landscapekb"
+	   android:key="crawl.landscapekb"
 	   android:title="@string/preferences_landscapekb_title"
 	   android:summary="@string/preferences_landscapekb_summary"
 	   android:entries="@array/virtualKeyboards"
 	   android:entryValues="@array/virtualKeyboardValues"
 	   android:defaultValue="@string/landscapekb.default"/>
 	<CheckBoxPreference 
-	   android:key="angband.enabletouch"
+	   android:key="crawl.enabletouch"
 	   android:defaultValue="true" 
 	   android:title="@string/preferences_enabletouch_title"
 	   android:summary="@string/preferences_enabletouch_summary" />
 	<CheckBoxPreference 
-	   android:key="angband.alwaysrun"
+	   android:key="crawl.alwaysrun"
 	   android:defaultValue="true" 
 	   android:title="@string/preferences_alwaysrun_title"
 	   android:summary="@string/preferences_alwaysrun_summary" 
-	   android:dependency="angband.enabletouch" />
+	   android:dependency="crawl.enabletouch" />
 	<ListPreference
 	   android:title="Center screen tap"
 	   android:summary="Select functionality for center screen tap"
-	   android:key="angband.centerscreentap"
+	   android:key="crawl.centerscreentap"
 	   android:defaultValue="Space"
-	   android:dependency="angband.enabletouch"
+	   android:dependency="crawl.enabletouch"
 	   android:entries="@array/virtKeyActionDescriptions"
 	   android:entryValues="@array/virtKeyActions"/>
   </PreferenceCategory>

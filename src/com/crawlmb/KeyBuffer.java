@@ -4,12 +4,10 @@ import java.util.LinkedList;
 import java.util.Queue;
 import android.view.KeyEvent;
 import android.util.Log;
-import android.os.Handler;
-import android.os.Message;
-
 import com.crawlmb.KeyMapper.KeyAction;
-	
-public class KeyBuffer {
+
+public class KeyBuffer
+{
 
 	/* keyboard state */
 	private Queue<Integer> keybuffer = new LinkedList<Integer>();
@@ -32,27 +30,37 @@ public class KeyBuffer {
 	private boolean alt_key_pressed = false;
 	private boolean eat_shift = false;
 
-	public KeyBuffer(StateManager state) {
+	public KeyBuffer(StateManager state)
+	{
 		this.state = state;
 		nativew = state.nativew;
 		clear();
 		quit_key_seq = 0;
 	}
 
-	public void add(int key) {
-		//Log.d("Angband", "KebBuffer.add:"+key);
-		synchronized (keybuffer) {
+	public void add(int key)
+	{
+		// Log.d("Crawl", "KebBuffer.add:"+key);
+		synchronized (keybuffer)
+		{
 			ctrl_key_overload = false;
 
-			if (key <= 127) {
-				if (key >= 'a' && key <= 'z') {
-					if (ctrl_mod) {
+			if (key <= 127)
+			{
+				if (key >= 'a' && key <= 'z')
+				{
+					if (ctrl_mod)
+					{
 						key = key - 'a' + 1;
-						ctrl_mod = ctrl_down; // if held down, mod is still active
+						ctrl_mod = ctrl_down; // if held down, mod is still
+												// active
 					}
-					else if (shift_mod) {
-						if (!eat_shift) key = key - 'a'  + 'A';
-						shift_mod = shift_down; // if held down, mod is still active
+					else if (shift_mod)
+					{
+						if (!eat_shift)
+							key = key - 'a' + 'A';
+						shift_mod = shift_down; // if held down, mod is still
+												// active
 					}
 				}
 			}
@@ -67,129 +75,125 @@ public class KeyBuffer {
 			wakeUp();
 		}
 	}
-	public void addDirection(int key) {
-//		boolean rogueLike = (nativew.gameQueryInt(1,new String[]{"rl"})==1);
 
-//		if (rogueLike) { //Directions should work via numpad for CRAWL
-//			switch(key) {
-//			case '1': key = 'b'; break;
-//			case '2': key = 'j'; break;
-//			case '3': key = 'n'; break;
-//			case '4': key = 'h'; break;
-//			//case '5': key = ' '; break; // now configurable below
-//			case '6': key = 'l'; break;
-//			case '7': key = 'y'; break;
-//			case '8': key = 'k'; break;
-//			case '9': key = 'u'; break;
-//			default: break;
-//			}
-//		}
-		
-		if (key == '5') { // center tap
-			KeyAction act = Preferences.getKeyMapper().getCenterScreenTapAction();// Might change this
-
+	public void addDirection(int key)
+	{
+		if (key == '5')
+		{ // center tap
+			KeyAction act = Preferences.getKeyMapper().getCenterScreenTapAction();
 			performActionKeyDown(act, 0, null);
 			performActionKeyUp(act);
 		}
-		else { // directional tap
-//			if (alwaysRun && !ctrl_mod) { // let ctrl influence directionals, even with alwaysRun on
-//				if (shift_mod) {  // shift temporarily overrides always run
-//					eat_shift = true;
-//				}
-////				else if (rogueLike) {
-////					key = Character.toUpperCase(key);
-////				}
-//				else {
-//					add(46); // '.' command DO WE NEED THIS?
-//				}
-//			}
+		else
+		{ 
 			add(key);
 		}
 	}
 
-	public void clear() {
-		synchronized (keybuffer) {
+	public void clear()
+	{
+		synchronized (keybuffer)
+		{
 			keybuffer.clear();
 		}
 	}
 
-	public int get(int v) {
+	public int get(int v)
+	{
 		int key = 0;
-		
-		synchronized (keybuffer) {
+
+		synchronized (keybuffer)
+		{
 
 			int check = getSpecialKey();
-			if (check >= 0) {
+			if (check >= 0)
+			{
 				key = check;
 				// we have a key, so we're done.
 			}
-			else if (keybuffer.peek() != null) {
-				//peek before wait -- fix issue #3 keybuffer loss
+			else if (keybuffer.peek() != null)
+			{
 				key = keybuffer.poll();
-//				Log.w("Crawl", "process key = " + key);
-			}		
-			else if (v == 1) {
-				// running a macro?
-				if (keymacro.peek() != null) {
+			}
+			else if (v == 1)
+			{
+				if (keymacro.peek() != null)
+				{
 					key = keymacro.poll();
 				}
-				else { // otherwise wait for key press
-					try {
-						//Log.d("Angband", "Wait keypress BEFORE");
+				else
+				{ // otherwise wait for key press
+					try
+					{
 						wait = true;
-						//keybuffer.clear(); //not necessary
 						keybuffer.wait();
 						wait = false;
-						//Log.d("Angband", "Wait keypress AFTER");
-					} catch (Exception e) {
+					}
+					catch (Exception e)
+					{
 						Log.d("Crawl", "The getch() wait exception" + e);
 					}
 
 					// return key after wait, if there is one
-					if (keybuffer.peek() != null) {
+					if (keybuffer.peek() != null)
+					{
 						key = keybuffer.poll();
-//						Log.w("Angband", "process key = " + key);
 					}
-				}		
+				}
 			}
 		}
 		return key;
 	}
 
-	public void signalSave() {
-		//Log.d("Angband", "signalSave");
-		synchronized (keybuffer) {
+	public void signalSave()
+	{
+		// Log.d("Crawl", "signalSave");
+		synchronized (keybuffer)
+		{
 			keybuffer.clear();
 			keybuffer.offer(-1);
 			wakeUp();
-		}	
+		}
 	}
 
-	public void wakeUp() {
-		synchronized (keybuffer) {
-			if (wait) {
+	public void wakeUp()
+	{
+		synchronized (keybuffer)
+		{
+			if (wait)
+			{
 				keybuffer.notify();
 			}
 		}
 	}
 
-	public void signalGameExit() {
+	public void signalGameExit()
+	{
 		signal_game_exit = true;
 		wakeUp();
 	}
 
-	public boolean getSignalGameExit() {
+	public boolean getSignalGameExit()
+	{
 		return signal_game_exit;
 	}
 
-	public int getSpecialKey() {
-		if (signal_game_exit) {
-			//Log.d("Angband", "getch.exit game sequence");
-			switch((quit_key_seq++)%4) {
-			case 0: return 27; // Esc
-			case 1: return 0; 
-			case 2: return 24; // Ctrl-X (Quit)
-			case 3: return 0; 
+	public int getSpecialKey()
+	{
+		if (signal_game_exit)
+		{
+			// TODO: Get a good exit sequence here for Crawl
+			// Log.d("Crawl", "getch.exit game sequence");
+			switch ((quit_key_seq++) % 4)
+			{
+			case 0:
+				return 27; // Esc
+			case 1:
+				return 0;
+			case 2:
+				return 24; // Ctrl-X (Quit)
+			case 3:
+				return 0;
 			}
 		}
 		return -1;
@@ -197,8 +201,9 @@ public class KeyBuffer {
 
 	private KeyMap getKeyMapFromKeyCode(int keyCode, KeyEvent event)
 	{
-		int meta=0;
-		if(alt_mod) {
+		int meta = 0;
+		if (alt_mod)
+		{
 			meta |= KeyEvent.META_ALT_ON;
 			meta |= KeyEvent.META_ALT_LEFT_ON;
 			if (event.getAction() == KeyEvent.ACTION_UP)
@@ -206,32 +211,38 @@ public class KeyBuffer {
 		}
 		int ch = 0;
 		boolean char_mod = false;
-		if (event != null) {
+		if (event != null)
+		{
 			ch = event.getUnicodeChar(meta);
 			char_mod = (ch > 32 && ch < 127);
 		}
 		int key_code = char_mod ? ch : keyCode;
 
-		String keyAssign = KeyMap.stringValue(key_code, alt_mod, char_mod);		
+		String keyAssign = KeyMap.stringValue(key_code, alt_mod, char_mod);
 		KeyMap map = Preferences.getKeyMapper().findKeyMapByAssign(keyAssign);
 		return map;
 	}
 
-	private boolean performActionKeyDown(KeyAction act, int character, KeyEvent event) {
+	private boolean performActionKeyDown(KeyAction act, int character, KeyEvent event)
+	{
 		boolean res = true;
 
-		if (act == KeyAction.CtrlKey) {
-			if (event != null && event.getRepeatCount()>0) return true; // ignore repeat from modifiers
+		if (act == KeyAction.CtrlKey)
+		{
+			if (event != null && event.getRepeatCount() > 0)
+				return true; // ignore repeat from modifiers
 			ctrl_mod = !ctrl_mod;
 			ctrl_key_pressed = !ctrl_mod; // double tap, turn off mod
 			ctrl_down = true;
-			if (ctrl_key_overload) {
+			if (ctrl_key_overload)
+			{
 				// ctrl double tap, translate into appropriate action
 				act = Preferences.getKeyMapper().getCtrlDoubleTapAction();
 			}
 		}
 
-   		switch(act){
+		switch (act)
+		{
 		case CharacterKey:
 			add(character);
 			break;
@@ -269,13 +280,15 @@ public class KeyBuffer {
 			add(state.getKeyRight());
 			break;
 		case AltKey:
-			if (event != null && event.getRepeatCount()>0) return true; // ignore repeat from modifiers
+			if (event != null && event.getRepeatCount() > 0)
+				return true; // ignore repeat from modifiers
 			alt_mod = !alt_mod;
 			alt_key_pressed = !alt_mod; // double tap, turn off mod
 			alt_down = true;
 			break;
 		case ShiftKey:
-			if (event != null && event.getRepeatCount()>0) return true; // ignore repeat from modifiers
+			if (event != null && event.getRepeatCount() > 0)
+				return true; // ignore repeat from modifiers
 			shift_mod = !shift_mod;
 			shift_key_pressed = !shift_mod; // double tap, turn off mod
 			shift_down = true;
@@ -287,7 +300,7 @@ public class KeyBuffer {
 			nativew.decreaseFontSize();
 			break;
 		case CtrlKey:
-			//handled above
+			// handled above
 			break;
 		case VirtualKeyboard:
 			// handled on keyup
@@ -299,25 +312,30 @@ public class KeyBuffer {
 		return res;
 	}
 
-	private boolean performActionKeyUp(KeyAction act) {
+	private boolean performActionKeyUp(KeyAction act)
+	{
 		boolean res = true; // handled the key
 
-		switch(act){
+		switch (act)
+		{
 		case AltKey:
-			alt_down = false;		
-			alt_mod = !alt_key_pressed; // turn off mod only if used at least once		
+			alt_down = false;
+			alt_mod = !alt_key_pressed; // turn off mod only if used at least
+										// once
 			break;
 		case CtrlKey:
 			ctrl_down = false;
-			ctrl_mod = !ctrl_key_pressed; // turn off mod only if used at least once
+			ctrl_mod = !ctrl_key_pressed; // turn off mod only if used at least
+											// once
 			ctrl_key_overload = ctrl_mod;
 			break;
 		case ShiftKey:
 			shift_down = false;
-			shift_mod = !shift_key_pressed; // turn off mod only if used at least once
+			shift_mod = !shift_key_pressed; // turn off mod only if used at
+											// least once
 			break;
 		case VirtualKeyboard:
-			state.handler.sendEmptyMessage(AngbandDialog.Action.ToggleKeyboard.ordinal());
+			state.handler.sendEmptyMessage(CrawlDialog.Action.ToggleKeyboard.ordinal());
 			break;
 
 		// these are handled on keydown
@@ -328,33 +346,39 @@ public class KeyBuffer {
 			break;
 
 		default:
-			res = false;  // let the OS handle the key
+			res = false; // let the OS handle the key
 			break;
 		}
 		return res;
 	}
 
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-//		Log.d("Angband", "onKeyDown("+keyCode+","+event+")");
+	public boolean onKeyDown(int keyCode, KeyEvent event)
+	{
+		// Log.d("Crawl", "onKeyDown("+keyCode+","+event+")");
 
 		KeyMap map = getKeyMapFromKeyCode(keyCode, event);
 		if (map == null)
 		{
 			return false;
 		}
-		else 
+		else
 		{
 			return performActionKeyDown(map.getKeyAction(), map.getCharacter(), event);
 		}
 	}
 
-	public boolean onKeyUp(int keyCode, KeyEvent event) {
-		//Log.d("Angband", "onKeyUp("+keyCode+","+event+")");
+	public boolean onKeyUp(int keyCode, KeyEvent event)
+	{
+		// Log.d("Crawl", "onKeyUp("+keyCode+","+event+")");
 
-		KeyMap map =  getKeyMapFromKeyCode(keyCode, event);
+		KeyMap map = getKeyMapFromKeyCode(keyCode, event);
 		if (map == null)
+		{
 			return false;
-		else 
+		}
+		else
+		{
 			return performActionKeyUp(map.getKeyAction());
+		}
 	}
 }

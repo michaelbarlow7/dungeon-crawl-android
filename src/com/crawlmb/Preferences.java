@@ -64,15 +64,6 @@ final public class Preferences
 		return sharedPreferences.getString(key, "");
 	}
 
-	/*
-	 * no longer needed, replaced with crc logic public static String
-	 * getInstalledVersion() { return
-	 * pref.getString(Preferences.KEY_INSTALLEDVERSION, ""); } public static
-	 * void setInstalledVersion(String value) { SharedPreferences.Editor ed =
-	 * pref.edit(); ed.putString(Preferences.KEY_INSTALLEDVERSION, value);
-	 * ed.commit(); }
-	 */
-
 	public static boolean getFullScreen()
 	{
 		return sharedPreferences.getBoolean(Preferences.KEY_FULLSCREEN, true);

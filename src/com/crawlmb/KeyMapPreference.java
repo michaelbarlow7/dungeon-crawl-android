@@ -1,48 +1,44 @@
 package com.crawlmb;
 
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 import android.preference.DialogPreference;
 import android.content.DialogInterface;
 import android.app.AlertDialog;
 import android.view.KeyEvent;
 import android.os.Parcelable;
 
-public class KeyMapPreference
-	extends DialogPreference implements DialogInterface.OnClickListener {
+public class KeyMapPreference extends DialogPreference implements DialogInterface.OnClickListener
+{
 
-	protected Context context;
 	protected boolean alt_mod = false;
 	protected boolean char_mod = false;
-    protected int key_code = 0;
+	protected int key_code = 0;
 
-	public KeyMapPreference(Context context, AttributeSet attrs) {
+	public KeyMapPreference(Context context, AttributeSet attrs)
+	{
 		super(context, attrs);
-		this.context = context;
 		setDialogTitle("Press a hardware key...");
 		setPositiveButtonText("Clear");
 		setNegativeButtonText("Cancel");
 	}
+
 	@Override
-    protected void onPrepareDialogBuilder(AlertDialog.Builder builder) {
-		super.onPrepareDialogBuilder(builder);    
+	protected void onPrepareDialogBuilder(AlertDialog.Builder builder)
+	{
+		super.onPrepareDialogBuilder(builder);
 
 		alt_mod = false;
 		char_mod = false;
 		key_code = 0;
 
-		builder.setOnKeyListener(new DialogInterface.OnKeyListener() {
-			public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+		builder.setOnKeyListener(new DialogInterface.OnKeyListener()
+		{
+			public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event)
+			{
 
-				if (event.getAction() != KeyEvent.ACTION_DOWN
-					|| event.getRepeatCount()>0) 
+				if (event.getAction() != KeyEvent.ACTION_DOWN || event.getRepeatCount() > 0)
 					return true;
 
 				if (handleModifier(keyCode))
@@ -52,11 +48,13 @@ public class KeyMapPreference
 				dialog.dismiss();
 				return true;
 			}
-	   });
+		});
 	}
 
-	protected boolean handleModifier(int keyCode) {
-		switch(keyCode) {
+	protected boolean handleModifier(int keyCode)
+	{
+		switch (keyCode)
+		{
 		case KeyEvent.KEYCODE_FOCUS: // eat focus for now (light camera press)
 		case KeyEvent.KEYCODE_SHIFT_LEFT: // eat shift for now
 		case KeyEvent.KEYCODE_SHIFT_RIGHT:
@@ -70,13 +68,14 @@ public class KeyMapPreference
 		}
 	}
 
-	protected void saveKeyAssignment(int keyCode, KeyEvent event) {
-		String oldValue = getSharedPreferences().getString(getKey(),"");
+	protected void saveKeyAssignment(int keyCode, KeyEvent event)
+	{
+		if (event.isAltPressed())
+			alt_mod = true;
 
-		if (event.isAltPressed()) alt_mod = true;
-
-		int meta=0;
-		if(alt_mod) {
+		int meta = 0;
+		if (alt_mod)
+		{
 			meta |= KeyEvent.META_ALT_ON;
 			meta |= KeyEvent.META_ALT_LEFT_ON;
 		}
@@ -84,61 +83,70 @@ public class KeyMapPreference
 		char_mod = (ch > 32 && ch < 127);
 		key_code = char_mod ? ch : keyCode;
 
-		if (key_code == KeyEvent.KEYCODE_BACK){
-			new AlertDialog.Builder(context) 
-				.setTitle("Angband") 
-				.setMessage("Really assign the Back key?") 
-				.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int whichButton) {
+		if (key_code == KeyEvent.KEYCODE_BACK)
+		{
+			new AlertDialog.Builder(getContext()).setTitle("Crawl").setMessage("Really assign the Back key?")
+					.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+					{
+						public void onClick(DialogInterface dialog, int whichButton)
+						{
 						}
-					})
-				.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int whichButton) {
+					}).setPositiveButton("OK", new DialogInterface.OnClickListener()
+					{
+						public void onClick(DialogInterface dialog, int whichButton)
+						{
 							saveMap();
 						}
-					})
-				.show();
-		} else {			
+					}).show();
+		}
+		else
+		{
 			saveMap();
 		}
 	}
 
-	public void saveMap() {
-		KeyMap prevMap = Preferences.getKeyMapper()
-			.assignKeyMap(getKey(), key_code, alt_mod, char_mod);
+	public void saveMap()
+	{
+		KeyMap prevMap = Preferences.getKeyMapper().assignKeyMap(getKey(), key_code, alt_mod, char_mod);
 
 		SharedPreferences.Editor ed = getSharedPreferences().edit();
-		if (prevMap != null) ed.putString(prevMap.getPrefKey(), "");
+		if (prevMap != null)
+			ed.putString(prevMap.getPrefKey(), "");
 		ed.putString(getKey(), getValue());
 
 		ed.commit();
 	}
 
-	public String getValue() {
+	public String getValue()
+	{
 		if (key_code == 0)
 			return "";
 		else
-			return KeyMap.stringValue(key_code,alt_mod,char_mod);
+			return KeyMap.stringValue(key_code, alt_mod, char_mod);
 	}
 
-	public String getDescription() {
-		SharedPreferences settings =  getSharedPreferences(); 
-		String val = settings.getString(getKey(),"");
+	public String getDescription()
+	{
+		SharedPreferences settings = getSharedPreferences();
+		String val = settings.getString(getKey(), "");
 
 		String desc = "<none>";
-		
-		if (val != null && val.length()>0) {			
-			if (val.startsWith("C")) 
+
+		if (val != null && val.length() > 0)
+		{
+			if (val.startsWith("C"))
 				desc = val.substring(1).toUpperCase();
-			else 
-				desc = keyCodeDescription(Integer.parseInt(val),val.startsWith("0"));		
+			else
+				desc = keyCodeDescription(Integer.parseInt(val), val.startsWith("0"));
 		}
 
 		return desc;
 	}
 
-	protected String keyCodeDescription(int code, boolean alt) {
-		switch (code) {
+	protected String keyCodeDescription(int code, boolean alt)
+	{
+		switch (code)
+		{
 		case KeyEvent.KEYCODE_ALT_LEFT:
 			return "Left Alt";
 		case KeyEvent.KEYCODE_ALT_RIGHT:
@@ -181,10 +189,10 @@ public class KeyMapPreference
 			return "Sym";
 		case KeyEvent.KEYCODE_TAB:
 			return "Tab";
-//		case KeyEvent.KEYCODE_PAGE_DOWN:
-//			return "Page Down";
-//		case KeyEvent.KEYCODE_PAGE_UP:
-//			return "Page Up";
+			// case KeyEvent.KEYCODE_PAGE_DOWN:
+			// return "Page Down";
+			// case KeyEvent.KEYCODE_PAGE_UP:
+			// return "Page Up";
 		case KeyEvent.KEYCODE_NOTIFICATION:
 			return "Notification";
 		case KeyEvent.KEYCODE_MUTE:
@@ -195,49 +203,54 @@ public class KeyMapPreference
 			return "Call";
 		case KeyEvent.KEYCODE_CLEAR:
 			return "Clear";
-//		case KeyEvent.KEYCODE_BUTTON_L1:
-//			return "L1";
-//		case KeyEvent.KEYCODE_BUTTON_L2:
-//			return "L2";
-//		case KeyEvent.KEYCODE_BUTTON_MODE:			
-//			return "Mode";
-//		case KeyEvent.KEYCODE_BUTTON_R1:
-//			return "R1";
-//		case KeyEvent.KEYCODE_BUTTON_R2:
-//			return "R2";
-//		case KeyEvent.KEYCODE_BUTTON_SELECT:
-//			return "Select";
-//		case KeyEvent.KEYCODE_BUTTON_START:
-//			return "Start";
-//		case KeyEvent.KEYCODE_BUTTON_THUMBL:
-//			return "Left Thumb";
-//		case KeyEvent.KEYCODE_BUTTON_THUMBR:
-//			return "Right Thumb";
+			// case KeyEvent.KEYCODE_BUTTON_L1:
+			// return "L1";
+			// case KeyEvent.KEYCODE_BUTTON_L2:
+			// return "L2";
+			// case KeyEvent.KEYCODE_BUTTON_MODE:
+			// return "Mode";
+			// case KeyEvent.KEYCODE_BUTTON_R1:
+			// return "R1";
+			// case KeyEvent.KEYCODE_BUTTON_R2:
+			// return "R2";
+			// case KeyEvent.KEYCODE_BUTTON_SELECT:
+			// return "Select";
+			// case KeyEvent.KEYCODE_BUTTON_START:
+			// return "Start";
+			// case KeyEvent.KEYCODE_BUTTON_THUMBL:
+			// return "Left Thumb";
+			// case KeyEvent.KEYCODE_BUTTON_THUMBR:
+			// return "Right Thumb";
 		case KeyEvent.KEYCODE_ENTER:
 			return "Enter";
-		case 97: //Samsung Epic 4G
+		case 97: // Samsung Epic 4G
 			return "Emoticon";
 		default:
-			return (alt?"Alt+":"")+"Key "+code;
+			return (alt ? "Alt+" : "") + "Key " + code;
 		}
 	}
 
-	public void onClick(DialogInterface dialog, int which) {
-		if (which == -1) { //Clear
-			String oldValue = getSharedPreferences().getString(getKey(),"");
+	public void onClick(DialogInterface dialog, int which)
+	{
+		if (which == -1)
+		{ // Clear
+			String oldValue = getSharedPreferences().getString(getKey(), "");
 			Preferences.getKeyMapper().clearKeyMap(oldValue);
 
 			SharedPreferences.Editor ed = getSharedPreferences().edit();
 			ed.putString(getKey(), "");
 			ed.commit();
 		}
-		else {
-			//Toast.makeText(context, "Cancel was clicked", Toast.LENGTH_SHORT).show();
+		else
+		{
+			// Toast.makeText(context, "Cancel was clicked",
+			// Toast.LENGTH_SHORT).show();
 		}
-	} 
+	}
 
 	@Override
-	protected Parcelable onSaveInstanceState() {
+	protected Parcelable onSaveInstanceState()
+	{
 
 		// be free little dialog
 		onActivityDestroy();

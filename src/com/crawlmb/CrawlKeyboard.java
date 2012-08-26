@@ -1,12 +1,10 @@
 package com.crawlmb;
 
 import android.content.Context;
-import android.app.Activity;
 import android.view.LayoutInflater;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
 import android.inputmethodservice.KeyboardView.OnKeyboardActionListener;
-import android.util.Log;
 
 public class CrawlKeyboard implements OnKeyboardActionListener
 {
@@ -33,8 +31,6 @@ public class CrawlKeyboard implements OnKeyboardActionListener
 	private void handleShift()
 	{
 		Keyboard currentKeyboard = virtualKeyboardView.getKeyboard();
-//		checkToggleCapsLock();
-//		virtualKeyboardView.setShifted(mCapsLock || !mInputView.isShifted());
 
 		if(currentKeyboard == virtualKeyboardQwerty)
 		{
@@ -63,9 +59,7 @@ public class CrawlKeyboard implements OnKeyboardActionListener
 			}
 			else
 			{
-				//virtualKeyboardSymbols.setShifted(true);
 				virtualKeyboardView.setKeyboard(virtualKeyboardSymbolsShift);
-				//virtualKeyboardSymbolsShift.setShifted(true);
 			}
 		}
 		else if(primaryCode == Keyboard.KEYCODE_MODE_CHANGE)

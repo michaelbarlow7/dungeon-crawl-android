@@ -1,7 +1,5 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
    <!-- item android:title="@string/menu_help" android:numericShortcut="1" android:icon="@drawable/menu_help"/-->
    <item android:title="@string/menu_preferences" android:numericShortcut="2" android:icon="@drawable/menu_preferences"/>   
-   <!--item android:title="@string/menu_scoreloop" android:numericShortcut="3" android:icon="@drawable/sl_icon_scoreloop"/-->
-   <!-- item android:title="@string/menu_leaderboard" android:numericShortcut="4" android:icon="@drawable/sl_icon_scoreloop"/-->
    <!-- item android:title="@string/menu_quit" android:numericShortcut="5" android:icon="@drawable/menu_quit"/-->
 </menu>
