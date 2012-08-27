@@ -25,14 +25,18 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Vibrator;
 import android.os.Handler;
+import android.text.InputType;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.GestureDetector;
 import android.view.WindowManager;
 import android.view.GestureDetector.OnGestureListener;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputConnection;
 
 public class TermView extends View implements OnGestureListener
 {
@@ -73,6 +77,19 @@ public class TermView extends View implements OnGestureListener
 		initTermView(context);
 		handler = ((GameActivity) context).getHandler();
 		state = ((GameActivity) context).getStateManager();
+	}
+	
+	@Override
+	public boolean onCheckIsTextEditor()
+	{
+		return true;
+	}
+	
+	@Override
+	public InputConnection onCreateInputConnection(EditorInfo outAttrs)
+	{
+		outAttrs.inputType = InputType.TYPE_NULL;
+		return new CrawlInputConnection(this, false);
 	}
 
 	protected void initTermView(Context context)
@@ -134,6 +151,19 @@ public class TermView extends View implements OnGestureListener
 	{
 		back.setColor(a);
 	}
+	
+	public void addKey(int c)
+	{
+		state.addKey(c);
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event)
+	{
+		// We want to pass all KeyEvents to the activity
+		return false;
+	}
+
 
 	public void autoSizeFontByHeight(int maxHeight)
 	{

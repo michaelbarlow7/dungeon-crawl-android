@@ -142,7 +142,7 @@ public class GameActivity extends Activity // implements OnScoreSubmitObserver {
 			term = new TermView(this);
 			term.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,
 					LayoutParams.WRAP_CONTENT, 1.0f));
-			term.setFocusable(false);
+			term.setFocusable(true);
 			registerForContextMenu(term);
 			state.link(term, handler);
 

@@ -217,6 +217,13 @@ public class KeyBuffer
 			char_mod = (ch > 32 && ch < 127);
 		}
 		int key_code = char_mod ? ch : keyCode;
+		
+		// Ugly hack to get escape on soft keyboards to work
+		// I hate this keybinding system. It's awful. This might just motivate me enough to change it
+		if (key_code == 111)
+		{
+			key_code = 4;
+		}
 
 		String keyAssign = KeyMap.stringValue(key_code, alt_mod, char_mod);
 		KeyMap map = Preferences.getKeyMapper().findKeyMapByAssign(keyAssign);
