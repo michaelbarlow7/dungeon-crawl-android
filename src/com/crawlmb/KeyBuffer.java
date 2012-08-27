@@ -244,6 +244,42 @@ public class KeyBuffer
 		switch (act)
 		{
 		case CharacterKey:
+			if (shift_down) // System keyboards send symbols above numbers as shift <number>, so we need to check for that here
+			{
+				switch(character)
+				{
+				case 48:
+					character = ')';
+					break;
+				case 49:
+					character = '!';
+					break;
+				case 50:
+					character = '@';
+					break;
+				case 51:
+					character = '#';
+					break;
+				case 52:
+					character = '$';
+					break;
+				case 53:
+					character = '%';
+					break;
+				case 54:
+					character = '^';
+					break;
+				case 55:
+					character = '&';
+					break;
+				case 56:
+					character = '*';
+					break;
+				case 57:
+					character = '(';
+					break;
+				}
+			}
 			add(character);
 			break;
 		case EscKey:
@@ -288,7 +324,9 @@ public class KeyBuffer
 			break;
 		case ShiftKey:
 			if (event != null && event.getRepeatCount() > 0)
+			{
 				return true; // ignore repeat from modifiers
+			}
 			shift_mod = !shift_mod;
 			shift_key_pressed = !shift_mod; // double tap, turn off mod
 			shift_down = true;
