@@ -244,7 +244,7 @@ public class KeyBuffer
 		switch (act)
 		{
 		case CharacterKey:
-			if (shift_down) // System keyboards send symbols above numbers as shift <number>, so we need to check for that here
+			if (shift_down) // Certain symbols are sent as shift <character>, so we need to check for that here
 			{
 				switch(character)
 				{
@@ -278,7 +278,22 @@ public class KeyBuffer
 				case 57:
 					character = '(';
 					break;
+				case 71:
+					character = '{';
+					break;
+				case 72:
+					character = '}';
+					break;
+				case 73:
+					character = '|';
+					break;
 				}
+			}
+			switch(character)
+			{
+			case 43: // Make sure a + is sent as a numberpad +
+				character = 44;
+				break;
 			}
 			add(character);
 			break;
