@@ -119,8 +119,7 @@ $(RLTILES_DIR)/tiledef-gui.cc  $(RLTILES_DIR)/tiledef-icons.cc  $(RLTILES_DIR)/t
 $(RLTILES_DIR)/tiledef-player.cc  $(RLTILES_DIR)/tiledef-unrand.cc  $(RLTILES_DIR)/tiledef-wall.cc \
 \
 prebuilt/levcomp.lex.cc prebuilt/levcomp.tab.cc \
-\
-curses/curses.c
+
 #Removed from above
 # libunix.cc changed to libandroid.cc
 # tilecell.cc tiledgnbuf.cc

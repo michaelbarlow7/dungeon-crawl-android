@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief Functions for unix and curses support
+ * @brief Functions for android support
 **/
 
 /* Some replacement routines missing in gcc
@@ -50,16 +50,78 @@ static struct termios game_term;
 #endif
 
 #include <time.h>
+#include <jni.h>
+#include <setjmp.h>
+
+#define LINES 24
+#define COLS 80
+
+#define COLOR_BLACK 0
+#define COLOR_BLUE 1
+#define COLOR_GREEN 2
+#define COLOR_CYAN 3
+#define COLOR_RED 4
+#define COLOR_MAGENTA 5
+#define COLOR_YELLOW 6
+#define COLOR_WHITE 7
+
+#define COLOR_GRAY 8
+#define COLOR_LIGHT_BLACK 8
+#define COLOR_LIGHT_BLUE 9
+#define COLOR_LIGHT_GREEN 10
+#define COLOR_LIGHT_CYAN 11
+#define COLOR_LIGHT_RED 12
+#define COLOR_LIGHT_MAGENTA 13
+#define COLOR_LIGHT_YELLOW 14
+#define COLOR_LIGHT_WHITE 15
+
+#define A_NORMAL 0
+#define A_REVERSE 0x100
+#define A_STANDOUT 0x200
+#define A_BOLD 0x400
+#define A_UNDERLINE 0x800
+#define A_BLINK 0x1000
+#define A_DIM 0x2000
+
+// Adding stuff for ANDROID TODO: Probably a redundant conversion, since it gets converted later on, 
+// but it's here for now to keep the curses interface consistent
+#define KEY_HOME	0406		/* home key */
+#define KEY_END		0550		/* end key */
+#define KEY_DOWN	0402		/* down-arrow key */
+#define KEY_UP		0403		/* up-arrow key */
+#define KEY_LEFT	0404		/* left-arrow key */
+#define KEY_RIGHT	0405		/* right-arrow key */
+#define KEY_NPAGE	0522		/* next-page key */
+#define KEY_PPAGE	0523		/* previous-page key */
+#define KEY_A1		0534		/* upper left of keypad */
+#define KEY_A3		0535		/* upper right of keypad */
+#define KEY_B2		0536		/* center of keypad */
+#define KEY_C1		0537		/* lower left of keypad */
+#define KEY_C3		0540		/* lower right of keypad */
+#define KEY_SHOME	0607		/* shifted home key */
+#define KEY_SEND	0602		/* shifted end key */
+#define KEY_SLEFT	0611		/* shifted left-arrow key */
+#define KEY_SRIGHT	0622		/* shifted right-arrow key */
+#define KEY_BTAB	0541		/* back-tab key */
+#define KEY_BACKSPACE	0407   /* backspace key */
+#define KEY_DC		0512		/* delete-character key */
+
+#define JAVA_CALL(...) (env->CallVoidMethod(NativeWrapperObj, __VA_ARGS__))
+#define JAVA_CALL_INT(...) (env->CallIntMethod(NativeWrapperObj, __VA_ARGS__))
+#define JAVA_METHOD(m,s) (env->GetMethodID(NativeWrapperClass, m, s))
+
+void (*crawl_quit_hook)(void) = NULL;
+
 //~#include <android/log.h> //ANDROID: Turn this off when we're not using it!!
-extern "C" {
-   #include "curses/curses.h" //ANDROID: We have our own curses file
- }
+//~ extern "C" {
+   //~ #include "curses/curses.h" //ANDROID: We have our own curses file
+ //~ }
 
 
 // Globals holding current text/backg. colors
 static short FG_COL = WHITE;
 static short BG_COL = BLACK;
-static int   Current_Colour = COLOR_PAIR(BG_COL * 8 + FG_COL);// ANDROID
+static int   Current_Colour = BG_COL * 8 + FG_COL;// ANDROID
 
 static int curs_fg_attr(int col);
 static int curs_bg_attr(int col);
@@ -67,6 +129,117 @@ static int curs_bg_attr(int col);
 //~ static bool cursor_is_enabled = true;
 static bool cursor_is_enabled = true;
 
+static jmp_buf jbuf;
+/* JVM enviroment */
+static JavaVM *jvm;
+static JNIEnv *env;
+
+static jclass NativeWrapperClass;
+static jobject NativeWrapperObj;
+
+/* Java Methods */
+static jmethodID NativeWrapper_fatal;
+static jmethodID NativeWrapper_warn;
+static jmethodID NativeWrapper_waddnstr;
+static jmethodID NativeWrapper_wattrset;
+static jmethodID NativeWrapper_wattrget;
+static jmethodID NativeWrapper_overwrite;
+static jmethodID NativeWrapper_touchwin;
+static jmethodID NativeWrapper_whline;
+static jmethodID NativeWrapper_wclear;
+static jmethodID NativeWrapper_wclrtoeol;
+static jmethodID NativeWrapper_wclrtobot;
+static jmethodID NativeWrapper_noise;
+static jmethodID NativeWrapper_init_color;
+static jmethodID NativeWrapper_init_pair;
+static jmethodID NativeWrapper_initscr;
+static jmethodID NativeWrapper_newwin;
+static jmethodID NativeWrapper_delwin;
+static jmethodID NativeWrapper_scroll;
+static jmethodID NativeWrapper_wrefresh;
+static jmethodID NativeWrapper_getch;
+static jmethodID NativeWrapper_wmove;
+static jmethodID NativeWrapper_mvwinch;
+static jmethodID NativeWrapper_curs_set;
+static jmethodID NativeWrapper_flushinp;
+static jmethodID NativeWrapper_getcury;
+static jmethodID NativeWrapper_getcurx;
+static jmethodID NativeWrapper_fakecursorxy;
+// #ifdef ANGDROID_NIGHTLY
+static jmethodID NativeWrapper_wctomb;
+static jmethodID NativeWrapper_mbstowcs;
+static jmethodID NativeWrapper_wcstombs;
+// #endif
+static jmethodID NativeWrapper_score_start;
+static jmethodID NativeWrapper_score_detail;
+static jmethodID NativeWrapper_score_submit;
+
+void init_curses( JNIEnv* env1, jobject obj1 )
+{
+	env = env1;
+
+	/* Save objects */
+	NativeWrapperObj = obj1;
+
+	/* Get NativeWrapper class */
+	NativeWrapperClass = env->GetObjectClass(NativeWrapperObj);
+
+	/* NativeWrapper Methods */
+	NativeWrapper_fatal = JAVA_METHOD("fatal", "(Ljava/lang/String;)V");	
+	NativeWrapper_warn = JAVA_METHOD("warn", "(Ljava/lang/String;)V");
+	NativeWrapper_waddnstr = JAVA_METHOD("waddnstr", "(II[B)V");
+	NativeWrapper_wattrset = JAVA_METHOD("wattrset", "(II)V");
+	NativeWrapper_wattrget = JAVA_METHOD("wattrget", "(III)I");
+	NativeWrapper_overwrite = JAVA_METHOD("overwrite", "(II)V");
+	NativeWrapper_touchwin = JAVA_METHOD("touchwin", "(I)V");
+	NativeWrapper_whline = JAVA_METHOD("whline", "(IBI)V");
+	NativeWrapper_wclrtobot = JAVA_METHOD("wclrtobot", "(I)V");
+	NativeWrapper_wclrtoeol = JAVA_METHOD("wclrtoeol", "(I)V");
+	NativeWrapper_wclear = JAVA_METHOD("wclear", "(I)V");
+	NativeWrapper_noise = JAVA_METHOD("noise", "()V");
+	NativeWrapper_initscr = JAVA_METHOD("initscr", "()V");
+	NativeWrapper_wrefresh = JAVA_METHOD("wrefresh", "(I)V");
+	NativeWrapper_getch = JAVA_METHOD("getch", "(I)I");
+	NativeWrapper_getcury = JAVA_METHOD("getcury", "(I)I");
+	NativeWrapper_getcurx = JAVA_METHOD("getcurx", "(I)I");
+	NativeWrapper_init_color = JAVA_METHOD("init_color", "(II)V");
+	NativeWrapper_init_pair = JAVA_METHOD("init_pair", "(III)V");
+	NativeWrapper_newwin = JAVA_METHOD("newwin", "(IIII)I");
+	NativeWrapper_delwin = JAVA_METHOD("delwin", "(I)V");
+	NativeWrapper_scroll = JAVA_METHOD("scroll", "(I)V");
+	NativeWrapper_wmove = JAVA_METHOD("wmove", "(III)V");
+	NativeWrapper_mvwinch = JAVA_METHOD("mvwinch", "(III)I");
+	NativeWrapper_curs_set = JAVA_METHOD("curs_set", "(I)V");
+	NativeWrapper_flushinp = JAVA_METHOD("flushinp", "()V");
+	NativeWrapper_fakecursorxy = JAVA_METHOD("fakecursorxy","(III)V");
+// #ifdef ANGDROID_NIGHTLY
+	NativeWrapper_wctomb = JAVA_METHOD("wctomb", "([BB)I");
+	NativeWrapper_mbstowcs = JAVA_METHOD("mbstowcs", "([B[BI)I");
+	NativeWrapper_wcstombs = JAVA_METHOD("wcstombs", "([B[BI)I");
+// #endif
+	NativeWrapper_score_start = JAVA_METHOD("score_start", "()V");
+	NativeWrapper_score_detail = JAVA_METHOD("score_detail", "([B[B)V");
+	NativeWrapper_score_submit = JAVA_METHOD("score_submit", "([B[B)V");
+
+	// process argc/argv 
+	//~ jstring argv0 = NULL;
+	//~ int i;
+	//~ for(i = 0; i < argc; i++) {
+		//~ argv0 = (*env)->GetObjectArrayElement(env, argv, i);
+		//~ const char *copy_argv0 = (*env)->GetStringUTFChars(env, argv0, 0);
+//~ 
+		//~ LOGD("argv%d = %s",i,copy_argv0);
+		//~ //angdroid_process_argv(i,copy_argv0); ANGDROID STUFF
+//~ 
+		//~ (*env)->ReleaseStringUTFChars(env, argv0, copy_argv0);
+	//~ }
+//~ 
+	//~ if (!setjmp(jbuf))
+		//~ angdroid_main(); ANGDROID STUFF
+	//~ else
+		//~ ; //longjmp to here
+	//~ LOGD("Curses initialized");
+}
 //ANDROID STUFF BEGINS HERE
 extern "C" 
 {
@@ -154,10 +327,14 @@ static void setup_colour_pairs(void)
         for (j = 0; j < 8; j++)
         {
             if ((i > 0) || (j > 0))
-                init_pair(i * 8 + j, j, i);
+            {
+				//~ init_pair(i * 8 + j, j, i);
+				JAVA_CALL(NativeWrapper_init_pair, i * 8 + j, j, i);
+			}
         }
 
-    init_pair(63, COLOR_BLACK, Options.background_colour);
+    //~ init_pair(63, COLOR_BLACK, Options.background_colour);
+    JAVA_CALL(NativeWrapper_init_pair, 63, COLOR_BLACK, Options.background_colour);
 }
 
 static void unix_handle_terminal_resize();
@@ -202,7 +379,8 @@ int getchk()
     //~ wint_t c;
 
     //switch (get_wch(&c))
-    int c = crawl_getch(1);//TODO: This is where we handle input. Need to ensure this works as expected
+    //~ int c = crawl_getch(1);//TODO: This is where we handle input. Need to ensure this works as expected
+    int c = JAVA_CALL_INT(NativeWrapper_getch, 1);
     //~ switch (c)
     //~ {
     //~ case ERR:
@@ -273,8 +451,8 @@ static void unix_handle_terminal_resize()
     console_startup();
 }
 
-static void unixcurses_defkeys(void) //INPUT
-{
+//~ static void unixcurses_defkeys(void) //INPUT
+//~ {
 	//ANDROID: define_key is a curses thing. The precompiler might filter this out, but whatevs
 //~ #ifdef NCURSES_VERSION
     //~ // keypad 0-9 (only if the "application mode" was successfully initialised)
@@ -307,7 +485,7 @@ static void unixcurses_defkeys(void) //INPUT
     //~ define_key("\033[4~", 1034); // End
     //~ define_key("\033[E",  1040); // center arrow
 //~ #endif
-}
+//~ }
 
 int unixcurses_get_vi_key(int keyin) //INPUT
 {
@@ -344,23 +522,55 @@ int unixcurses_get_vi_key(int keyin) //INPUT
 #define KPADAPP "\033[?1051l\033[?1052l\033[?1060l\033[?1061h"
 #define KPADCUR "\033[?1051l\033[?1052l\033[?1060l\033[?1061l"
 
+int start_color() 
+{
+	int colors = 16;
+
+	int color_table[] = {
+		0xFF000000, //BLACK
+		0xFF0040FF, //BLUE
+		0xFF008040, //GREEN
+		0xFF00A0A0, //CYAN
+		0xFFFF4040, //RED
+		0xFF9020FF, //MAGENTA
+		0xFFA64800, //YELLOW 
+		0xFFC0C0C0, //WHITE
+		0xFF606060, //BRIGHT_BLACK (GRAY)
+		0xFF00FFFF, //BRIGHT_BLUE
+		0xFF00FF00, //BRIGHT_GREEN
+		0xFF20FFDC, //BRIGHT_CYAN
+		0xFFFF5050, //BRIGHT_RED
+		0xFFFA4FFD, //BRIGHT_MAGENTA
+		0xFFFFFF00, //BRIGHT_YELLOW
+		0xFFFFFFFF  //BRIGHT_WHITE
+	};
+
+	int i;
+	for(i=0; i<colors; i++)
+	{
+		//~ init_color(i, color_table[i]);
+		JAVA_CALL(NativeWrapper_init_color, i, color_table[i]);
+	}
+
+	return 0;
+}
 void console_startup(void)
 {
     termio_init();
 
-    initscr(); 
+    //~ initscr(); 
     // raw(); ANDROID WTF IS THIS? Maybe we don't need it?
-    noecho();
+    //~ noecho();
 
-    nonl();
-    intrflush(stdscr, FALSE);
+    //~ nonl();
+    //~ intrflush(stdscr, FALSE);
 
     //meta(stdscr, TRUE); ANDROID: Don't think we need this
-    unixcurses_defkeys(); //Looks like an input thing
+    //~ unixcurses_defkeys(); //Looks like an input thing
     start_color();
     setup_colour_pairs();
 
-    scrollok(stdscr, FALSE);
+    //~ scrollok(stdscr, FALSE);
 
     crawl_view.init_geometry();// might check this is getting the right sizes and stuff
 
@@ -370,9 +580,50 @@ void console_startup(void)
 void console_shutdown()
 {
     //resetty();
-    endwin();
+    //~ endwin();
 
     //~ tcsetattr(0, TCSAFLUSH, &def_term); //system
+}
+
+
+void crawl_quit(const char* msg) 
+{
+	if (msg) 
+	{
+		//~ LOGE(msg);
+		JAVA_CALL(NativeWrapper_fatal, env->NewStringUTF(msg));
+	}
+
+	if (crawl_quit_hook)
+	{
+		(*crawl_quit_hook)();
+	}
+
+	longjmp(jbuf,1);
+}
+
+//~ int addnstr(int n, const char *s) 
+//~ {
+	//~ waddnstr(stdscr, n, s);
+	//~ jbyteArray array = env->NewByteArray(n);
+	//~ if (array == NULL) crawl_quit("Error: Out of memory");
+	//~ env->SetByteArrayRegion(array, 0, n, s);
+	//~ LOGC("curses.waddnstr %d %d %c",w->w,n,s[0]);
+	//~ JAVA_CALL(NativeWrapper_waddnstr, 0, n, array);
+	//~ env->DeleteLocalRef(array);
+	//~ return 0;
+//~ }
+
+int addnstr(int n, const char *s) 
+{
+	jbyteArray array = env->NewByteArray(n);
+	if (array == NULL) crawl_quit("Error: Out of memory");
+	env->SetByteArrayRegion(array, 0, n, (const jbyte *) s);//TODO: Check this added cast works
+	//~ LOGC("curses.waddnstr %d %d %c",w->w,n,s[0]);
+	//~ JAVA_CALL(NativeWrapper_waddnstr, 0, n, array);
+	env->CallVoidMethod(NativeWrapperObj, NativeWrapper_waddnstr, 0, n, array);
+	env->DeleteLocalRef(array);
+	return 0;
 }
 
 void cprintf(const char *format, ...)
@@ -396,6 +647,7 @@ void cprintf(const char *format, ...)
     }
     addnstr(i, buffer);
 }
+
 
 void putwch(ucs_t chr)
 {
@@ -446,7 +698,8 @@ void clear_to_end_of_line(void)
 {
     textcolor(LIGHTGREY);
     textbackground(BLACK);
-    clrtoeol();
+    //~ clrtoeol();
+    JAVA_CALL(NativeWrapper_wclrtoeol, 0);
 
 #ifdef USE_TILE_WEB
     tiles.clear_to_end_of_line();
@@ -467,7 +720,8 @@ void clrscr()
 {
     textcolor(LIGHTGREY);
     textbackground(BLACK);
-    clear();
+    //~ clear();
+    JAVA_CALL(NativeWrapper_wclear, 0);
 #ifdef DGAMELAUNCH
     fflush(stdout);
 #endif
@@ -475,7 +729,8 @@ void clrscr()
 
 void set_cursor_enabled(bool enabled)
 {
-    curs_set(cursor_is_enabled = enabled);
+    //~ curs_set(cursor_is_enabled = enabled);
+    JAVA_CALL(NativeWrapper_curs_set, cursor_is_enabled = enabled);
 }
 
 bool is_cursor_enabled()
@@ -558,12 +813,13 @@ static int curs_fg_attr(int col)
     // figure out which colour pair we want
     const int pair = (fg == 0 && bg == 0) ? 63 : (bg * 8 + fg);
 
-    return (COLOR_PAIR(pair) | flags);
+    return (pair | flags);
 }
 
 void textcolor(int col)
 {
-    (void)attrset(Current_Colour = curs_fg_attr(col));
+    //~ (void)attrset(Current_Colour = curs_fg_attr(col));
+    JAVA_CALL(NativeWrapper_wattrset,0, Current_Colour = curs_fg_attr(col));
 }
 
 static int curs_bg_attr(int col)
@@ -616,20 +872,32 @@ static int curs_bg_attr(int col)
     // figure out which colour pair we want
     const int pair = (fg == 0 && bg == 0) ? 63 : (bg * 8 + fg);
 
-    return (COLOR_PAIR(pair) | flags);
+    return (pair | flags);
 }
 
 void textbackground(int col)
 {
-    (void)attrset(Current_Colour = curs_bg_attr(col));
+    //~ (void)attrset(Current_Colour = curs_bg_attr(col));
+    JAVA_CALL(NativeWrapper_wattrset,0, Current_Colour = curs_bg_attr(col));
 }
 
 
 void gotoxy_sys(int x, int y)
 {	
-    move(y - 1, x - 1);
+    //~ move(y - 1, x - 1);
+	JAVA_CALL(NativeWrapper_wmove, 0, y - 1, x - 1);
 }
 
+#define CCHARW_MAX	5
+
+typedef unsigned long chtype;
+typedef	chtype	attr_t;		/* ...must be at least as wide as chtype */
+typedef struct
+{
+    attr_t	attr;
+    wchar_t	chars[CCHARW_MAX];
+}
+cchar_t;
 typedef cchar_t char_info;
 inline bool operator == (const cchar_t &a, const cchar_t &b)
 {
@@ -640,7 +908,8 @@ inline int character_at(int y, int x)
     int c;
     // (void) is to hush an incorrect clang warning.
     //~ (void)mvin_wch(y, x, &c); //ANDROID: Dunno what to do about this method :S
-    c = mvinch(y, x);
+    //~ c = mvinch(y, x);
+    c = JAVA_CALL_INT(NativeWrapper_mvwinch, 0, y, x);
     return (c);
 }
 inline bool valid_char(int c)
@@ -649,23 +918,29 @@ inline bool valid_char(int c)
 }
 inline void write_char_at(int y, int x, int ch)
 {
-	mvaddch(y, x, ch);
+	//~ mvaddch(y, x, ch);
+	char c = ch;
+	JAVA_CALL(NativeWrapper_wmove, 0, y, x);
+	addnstr(1,&c);
 }
 
 void fakecursorxy(int x, int y)
 {
-	curses_fakecursorxy(x, y);
+	//~ curses_fakecursorxy(x, y);
+	JAVA_CALL(NativeWrapper_fakecursorxy, x, y, 0);
 }
 
 int wherex()
 {
-    return getcurx(stdscr) + 1;
+    //~ return getcurx(stdscr) + 1;
+    return JAVA_CALL_INT(NativeWrapper_getcurx, 0) + 1;
 }
 
 
 int wherey()
 {
-    return getcury(stdscr) + 1;
+    //~ return getcury(stdscr) + 1;
+    return JAVA_CALL_INT(NativeWrapper_getcury, 0) + 1;
 }
 
 void delay(unsigned int time)
@@ -673,7 +948,8 @@ void delay(unsigned int time)
     if (crawl_state.disables[DIS_DELAY])
         return;
 
-    refresh();
+    //~ refresh();
+    JAVA_CALL(NativeWrapper_wrefresh, 0);
     if (time)
         usleep(time * 1000);
 }
