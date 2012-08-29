@@ -23,7 +23,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.os.Vibrator;
 import android.os.Handler;
 import android.text.InputType;
 import android.util.AttributeSet;
@@ -56,8 +55,6 @@ public class TermView extends View implements OnGestureListener
 	private int char_width = 0;
 	private int font_text_size = 0;
 
-	private Vibrator vibrator;
-	private boolean vibrate;
 	private Handler handler = null;
 	private StateManager state = null;
 
@@ -107,8 +104,6 @@ public class TermView extends View implements OnGestureListener
 		cursor.setColor(Color.GREEN);
 		cursor.setStyle(Paint.Style.STROKE);
 		cursor.setStrokeWidth(0);
-
-		vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
 
 		setFocusableInTouchMode(true);
 		gesture = new GestureDetector(context, this);
@@ -469,28 +464,6 @@ public class TermView extends View implements OnGestureListener
 		{
 			canvas.drawPaint(back);
 		}
-	}
-
-	public void noise()
-	{
-		if (vibrate)
-		{
-			vibrator.vibrate(50);
-		}
-	}
-
-	public void onResume()
-	{
-		// Log.d("Crawl","Termview.onResume()");
-		vibrate = Preferences.getVibrate();
-	}
-
-	public void onPause()
-	{
-		// Log.d("Crawl","Termview.onPause()");
-		// this is the only guaranteed safe place to save state
-		// according to SDK docs
-		// state.gameThread.send(GameThread.Request.SaveGame);
 	}
 
 	@Override

@@ -3,15 +3,12 @@
  * @brief Functions for android support
 **/
 
-/* Some replacement routines missing in gcc
-   Some of these are inspired by/stolen from the Linux-conio package
-   by Mental EXPlotion. Hope you guys don't mind.
-   The colour exchange system is perhaps a little overkill, but I wanted
-   it to be general to support future changes.. The only thing not
-   supported properly is black on black (used by curses for "normal" mode)
-   and white on white (used by me for "bright black" (darkgrey) on black
+/* 
+ * This is essentially the input/output adapter for the android code,
+ * interfacing via the Java Native Interface.
+ * Originally based off of libunix.cc
 
-   Jan 1998 Svante Gerhard <svante@algonet.se>                          */
+   Aug 2012 Michael Barlow <michaelbarlow7@gmail.com>                 */
 #include "AppHdr.h"
 
 #include <stdio.h>
@@ -20,7 +17,6 @@
 #include <unistd.h>
 #include <stdarg.h>
 #include <ctype.h>
-#define _LIBUNIX_IMPLEMENTATION
 #include "libunix.h"
 #include "defines.h"
 
@@ -39,15 +35,7 @@
 
 #include <wchar.h>
 #include <locale.h>
-//#include <langinfo.h> ANDROID
 #include <termios.h>
-
-static struct termios def_term;
-static struct termios game_term;
-
-#ifdef USE_UNIX_SIGNALS
-#include <signal.h>
-#endif
 
 #include <time.h>
 #include <jni.h>
@@ -112,21 +100,15 @@ static struct termios game_term;
 
 void (*crawl_quit_hook)(void) = NULL;
 
-//~#include <android/log.h> //ANDROID: Turn this off when we're not using it!!
-//~ extern "C" {
-   //~ #include "curses/curses.h" //ANDROID: We have our own curses file
- //~ }
-
 
 // Globals holding current text/backg. colors
 static short FG_COL = WHITE;
 static short BG_COL = BLACK;
-static int   Current_Colour = BG_COL * 8 + FG_COL;// ANDROID
+static int   Current_Colour = BG_COL * 8 + FG_COL;
 
 static int curs_fg_attr(int col);
 static int curs_bg_attr(int col);
 
-//~ static bool cursor_is_enabled = true;
 static bool cursor_is_enabled = true;
 
 static jmp_buf jbuf;
@@ -139,42 +121,22 @@ static jobject NativeWrapperObj;
 
 /* Java Methods */
 static jmethodID NativeWrapper_fatal;
-static jmethodID NativeWrapper_warn;
-static jmethodID NativeWrapper_waddnstr;
-static jmethodID NativeWrapper_wattrset;
-static jmethodID NativeWrapper_wattrget;
-static jmethodID NativeWrapper_overwrite;
-static jmethodID NativeWrapper_touchwin;
-static jmethodID NativeWrapper_whline;
+static jmethodID NativeWrapper_waddnstr; 
+static jmethodID NativeWrapper_wattrset; 
 static jmethodID NativeWrapper_wclear;
 static jmethodID NativeWrapper_wclrtoeol;
-static jmethodID NativeWrapper_wclrtobot;
-static jmethodID NativeWrapper_noise;
 static jmethodID NativeWrapper_init_color;
 static jmethodID NativeWrapper_init_pair;
-static jmethodID NativeWrapper_initscr;
-static jmethodID NativeWrapper_newwin;
-static jmethodID NativeWrapper_delwin;
-static jmethodID NativeWrapper_scroll;
 static jmethodID NativeWrapper_wrefresh;
 static jmethodID NativeWrapper_getch;
 static jmethodID NativeWrapper_wmove;
 static jmethodID NativeWrapper_mvwinch;
 static jmethodID NativeWrapper_curs_set;
-static jmethodID NativeWrapper_flushinp;
 static jmethodID NativeWrapper_getcury;
 static jmethodID NativeWrapper_getcurx;
 static jmethodID NativeWrapper_fakecursorxy;
-// #ifdef ANGDROID_NIGHTLY
-static jmethodID NativeWrapper_wctomb;
-static jmethodID NativeWrapper_mbstowcs;
-static jmethodID NativeWrapper_wcstombs;
-// #endif
-static jmethodID NativeWrapper_score_start;
-static jmethodID NativeWrapper_score_detail;
-static jmethodID NativeWrapper_score_submit;
 
-void init_curses( JNIEnv* env1, jobject obj1 )
+void init_java_methods( JNIEnv* env1, jobject obj1 )
 {
 	env = env1;
 
@@ -186,61 +148,22 @@ void init_curses( JNIEnv* env1, jobject obj1 )
 
 	/* NativeWrapper Methods */
 	NativeWrapper_fatal = JAVA_METHOD("fatal", "(Ljava/lang/String;)V");	
-	NativeWrapper_warn = JAVA_METHOD("warn", "(Ljava/lang/String;)V");
 	NativeWrapper_waddnstr = JAVA_METHOD("waddnstr", "(II[B)V");
 	NativeWrapper_wattrset = JAVA_METHOD("wattrset", "(II)V");
-	NativeWrapper_wattrget = JAVA_METHOD("wattrget", "(III)I");
-	NativeWrapper_overwrite = JAVA_METHOD("overwrite", "(II)V");
-	NativeWrapper_touchwin = JAVA_METHOD("touchwin", "(I)V");
-	NativeWrapper_whline = JAVA_METHOD("whline", "(IBI)V");
-	NativeWrapper_wclrtobot = JAVA_METHOD("wclrtobot", "(I)V");
 	NativeWrapper_wclrtoeol = JAVA_METHOD("wclrtoeol", "(I)V");
 	NativeWrapper_wclear = JAVA_METHOD("wclear", "(I)V");
-	NativeWrapper_noise = JAVA_METHOD("noise", "()V");
-	NativeWrapper_initscr = JAVA_METHOD("initscr", "()V");
 	NativeWrapper_wrefresh = JAVA_METHOD("wrefresh", "(I)V");
 	NativeWrapper_getch = JAVA_METHOD("getch", "(I)I");
 	NativeWrapper_getcury = JAVA_METHOD("getcury", "(I)I");
 	NativeWrapper_getcurx = JAVA_METHOD("getcurx", "(I)I");
 	NativeWrapper_init_color = JAVA_METHOD("init_color", "(II)V");
 	NativeWrapper_init_pair = JAVA_METHOD("init_pair", "(III)V");
-	NativeWrapper_newwin = JAVA_METHOD("newwin", "(IIII)I");
-	NativeWrapper_delwin = JAVA_METHOD("delwin", "(I)V");
-	NativeWrapper_scroll = JAVA_METHOD("scroll", "(I)V");
 	NativeWrapper_wmove = JAVA_METHOD("wmove", "(III)V");
 	NativeWrapper_mvwinch = JAVA_METHOD("mvwinch", "(III)I");
 	NativeWrapper_curs_set = JAVA_METHOD("curs_set", "(I)V");
-	NativeWrapper_flushinp = JAVA_METHOD("flushinp", "()V");
 	NativeWrapper_fakecursorxy = JAVA_METHOD("fakecursorxy","(III)V");
-// #ifdef ANGDROID_NIGHTLY
-	NativeWrapper_wctomb = JAVA_METHOD("wctomb", "([BB)I");
-	NativeWrapper_mbstowcs = JAVA_METHOD("mbstowcs", "([B[BI)I");
-	NativeWrapper_wcstombs = JAVA_METHOD("wcstombs", "([B[BI)I");
-// #endif
-	NativeWrapper_score_start = JAVA_METHOD("score_start", "()V");
-	NativeWrapper_score_detail = JAVA_METHOD("score_detail", "([B[B)V");
-	NativeWrapper_score_submit = JAVA_METHOD("score_submit", "([B[B)V");
-
-	// process argc/argv 
-	//~ jstring argv0 = NULL;
-	//~ int i;
-	//~ for(i = 0; i < argc; i++) {
-		//~ argv0 = (*env)->GetObjectArrayElement(env, argv, i);
-		//~ const char *copy_argv0 = (*env)->GetStringUTFChars(env, argv0, 0);
-//~ 
-		//~ LOGD("argv%d = %s",i,copy_argv0);
-		//~ //angdroid_process_argv(i,copy_argv0); ANGDROID STUFF
-//~ 
-		//~ (*env)->ReleaseStringUTFChars(env, argv0, copy_argv0);
-	//~ }
-//~ 
-	//~ if (!setjmp(jbuf))
-		//~ angdroid_main(); ANGDROID STUFF
-	//~ else
-		//~ ; //longjmp to here
-	//~ LOGD("Curses initialized");
 }
-//ANDROID STUFF BEGINS HERE
+
 extern "C" 
 {
 	void Java_com_crawlmb_NativeWrapper_initGame( JNIEnv* env, jobject object , jstring jInitLocation);
@@ -248,7 +171,7 @@ extern "C"
 
 void Java_com_crawlmb_NativeWrapper_initGame( JNIEnv* env, jobject object , jstring jInitLocation)
 {
-	init_curses(env, object);
+	init_java_methods(env, object);
 	const char *constInitLocation = env->GetStringUTFChars(jInitLocation, NULL);
 	char *initLocation = new char[strlen(constInitLocation) + 1];
 	strncpy (initLocation, constInitLocation, strlen(constInitLocation));
@@ -328,35 +251,17 @@ static void setup_colour_pairs(void)
         {
             if ((i > 0) || (j > 0))
             {
-				//~ init_pair(i * 8 + j, j, i);
 				JAVA_CALL(NativeWrapper_init_pair, i * 8 + j, j, i);
 			}
         }
 
-    //~ init_pair(63, COLOR_BLACK, Options.background_colour);
     JAVA_CALL(NativeWrapper_init_pair, 63, COLOR_BLACK, Options.background_colour);
 }
 
 static void unix_handle_terminal_resize();
 
-static void termio_init()// ANDROID: Input/terminal method. 
+static void termio_init()
 {
-    //~ tcgetattr(0, &def_term);
-    //~ memcpy(&game_term, &def_term, sizeof(struct termios));
-
-    //~ def_term.c_cc[VINTR] = (char) 3;        // ctrl-C
-    //~ game_term.c_cc[VINTR] = (char) 3;       // ctrl-C
-//~ 
-    //~ // Let's recover some control sequences
-    //~ game_term.c_cc[VSTART] = (char) -1;     // ctrl-Q
-    //~ game_term.c_cc[VSTOP] = (char) -1;      // ctrl-S
-    //~ game_term.c_cc[VSUSP] = (char) -1;      // ctrl-Y
-//~ #ifdef VDSUSP
-    //~ game_term.c_cc[VDSUSP] = (char) -1;     // ctrl-Y
-//~ #endif
-//~ 
-    //~ tcsetattr(0, TCSAFLUSH, &game_term); //termios function
-//~ 
     crawl_state.terminal_resize_handler = unix_handle_terminal_resize;
 }
 
@@ -375,24 +280,7 @@ int getchk()
         pending = 0;
         return c;
     }
-
-    //~ wint_t c;
-
-    //switch (get_wch(&c))
-    //~ int c = crawl_getch(1);//TODO: This is where we handle input. Need to ensure this works as expected
     int c = JAVA_CALL_INT(NativeWrapper_getch, 1);
-    //~ switch (c)
-    //~ {
-    //~ case ERR:
-        //~ // getch() returns -1 on EOF, convert that into an Escape. Evil hack,
-        //~ // but the alternative is to explicitly check for -1 everywhere where
-        //~ // we might otherwise spin in a tight keyboard input loop.
-        //~ return ESCAPE;
-    //~ case OK:
-        //~ // a normal (printable) key
-        //~ return c;
-    //~ }
-//~ 
     return c;
 }
 
@@ -409,7 +297,7 @@ int m_getch()
     return (c);
 }
 
-int getch_ck() //ANDROID: Input
+int getch_ck() 
 {
     int c = m_getch();
     switch (c)
@@ -431,61 +319,12 @@ int getch_ck() //ANDROID: Input
     default:         return c;
     }
 }
-//ANDROID: Not sure what unix signals are exactly. I guess it uses signals.h
-#if defined(USE_UNIX_SIGNALS)
-
-static void handle_sigwinch(int)
-{
-    crawl_state.last_winch = time(0);
-    if (crawl_state.waiting_for_command)
-        handle_terminal_resize();
-    else
-        crawl_state.terminal_resized = true;
-}
-
-#endif // USE_UNIX_SIGNALS
 
 static void unix_handle_terminal_resize()
 {
     console_shutdown();
     console_startup();
 }
-
-//~ static void unixcurses_defkeys(void) //INPUT
-//~ {
-	//ANDROID: define_key is a curses thing. The precompiler might filter this out, but whatevs
-//~ #ifdef NCURSES_VERSION
-    //~ // keypad 0-9 (only if the "application mode" was successfully initialised)
-    //~ define_key("\033Op", 1000);
-    //~ define_key("\033Oq", 1001);
-    //~ define_key("\033Or", 1002);
-    //~ define_key("\033Os", 1003);
-    //~ define_key("\033Ot", 1004);
-    //~ define_key("\033Ou", 1005);
-    //~ define_key("\033Ov", 1006);
-    //~ define_key("\033Ow", 1007);
-    //~ define_key("\033Ox", 1008);
-    //~ define_key("\033Oy", 1009);
-//~ 
-    //~ // non-arrow keypad keys (for macros)
-    //~ define_key("\033OM", 1010); // Enter
-    //~ define_key("\033OP", 1011); // NumLock
-    //~ define_key("\033OQ", 1012); // /
-    //~ define_key("\033OR", 1013); // *
-    //~ define_key("\033OS", 1014); // -
-    //~ define_key("\033Oj", 1015); // *
-    //~ define_key("\033Ok", 1016); // +
-    //~ define_key("\033Ol", 1017); // +
-    //~ define_key("\033Om", 1018); // .
-    //~ define_key("\033On", 1019); // .
-    //~ define_key("\033Oo", 1020); // -
-//~ 
-    //~ // variants.  Ugly curses won't allow us to return the same code...
-    //~ define_key("\033[1~", 1031); // Home
-    //~ define_key("\033[4~", 1034); // End
-    //~ define_key("\033[E",  1040); // center arrow
-//~ #endif
-//~ }
 
 int unixcurses_get_vi_key(int keyin) //INPUT
 {
@@ -517,11 +356,6 @@ int unixcurses_get_vi_key(int keyin) //INPUT
     return keyin;
 }
 
-// Certain terminals support vt100 keypad application mode only after some
-// extra goading.
-#define KPADAPP "\033[?1051l\033[?1052l\033[?1060l\033[?1061h"
-#define KPADCUR "\033[?1051l\033[?1052l\033[?1060l\033[?1061l"
-
 int start_color() 
 {
 	int colors = 16;
@@ -548,7 +382,6 @@ int start_color()
 	int i;
 	for(i=0; i<colors; i++)
 	{
-		//~ init_color(i, color_table[i]);
 		JAVA_CALL(NativeWrapper_init_color, i, color_table[i]);
 	}
 
@@ -558,31 +391,17 @@ void console_startup(void)
 {
     termio_init();
 
-    //~ initscr(); 
-    // raw(); ANDROID WTF IS THIS? Maybe we don't need it?
-    //~ noecho();
-
-    //~ nonl();
-    //~ intrflush(stdscr, FALSE);
-
-    //meta(stdscr, TRUE); ANDROID: Don't think we need this
-    //~ unixcurses_defkeys(); //Looks like an input thing
     start_color();
     setup_colour_pairs();
 
-    //~ scrollok(stdscr, FALSE);
-
-    crawl_view.init_geometry();// might check this is getting the right sizes and stuff
+    crawl_view.init_geometry();
 
     set_mouse_enabled(false);
 }
 
 void console_shutdown()
 {
-    //resetty();
-    //~ endwin();
-
-    //~ tcsetattr(0, TCSAFLUSH, &def_term); //system
+    // I don't think we need to do anything here for android
 }
 
 
@@ -602,25 +421,11 @@ void crawl_quit(const char* msg)
 	longjmp(jbuf,1);
 }
 
-//~ int addnstr(int n, const char *s) 
-//~ {
-	//~ waddnstr(stdscr, n, s);
-	//~ jbyteArray array = env->NewByteArray(n);
-	//~ if (array == NULL) crawl_quit("Error: Out of memory");
-	//~ env->SetByteArrayRegion(array, 0, n, s);
-	//~ LOGC("curses.waddnstr %d %d %c",w->w,n,s[0]);
-	//~ JAVA_CALL(NativeWrapper_waddnstr, 0, n, array);
-	//~ env->DeleteLocalRef(array);
-	//~ return 0;
-//~ }
-
 int addnstr(int n, const char *s) 
 {
 	jbyteArray array = env->NewByteArray(n);
 	if (array == NULL) crawl_quit("Error: Out of memory");
-	env->SetByteArrayRegion(array, 0, n, (const jbyte *) s);//TODO: Check this added cast works
-	//~ LOGC("curses.waddnstr %d %d %c",w->w,n,s[0]);
-	//~ JAVA_CALL(NativeWrapper_waddnstr, 0, n, array);
+	env->SetByteArrayRegion(array, 0, n, (const jbyte *) s);
 	env->CallVoidMethod(NativeWrapperObj, NativeWrapper_waddnstr, 0, n, array);
 	env->DeleteLocalRef(array);
 	return 0;
@@ -643,7 +448,6 @@ void cprintf(const char *format, ...)
     {
 		i++;
         bp += s;
-        //~ putwch(c);
     }
     addnstr(i, buffer);
 }
@@ -659,8 +463,6 @@ void putwch(ucs_t chr)
 	char * printstr = new char[1];
 	sprintf(printstr, "%c", chr);
         
-    // TODO: recognize unsupported characters and try to transliterate
-    //~ addnwstr(&c, 1); 
     addnstr(1, printstr);
 }
 
@@ -818,7 +620,6 @@ static int curs_fg_attr(int col)
 
 void textcolor(int col)
 {
-    //~ (void)attrset(Current_Colour = curs_fg_attr(col));
     JAVA_CALL(NativeWrapper_wattrset,0, Current_Colour = curs_fg_attr(col));
 }
 
@@ -877,14 +678,12 @@ static int curs_bg_attr(int col)
 
 void textbackground(int col)
 {
-    //~ (void)attrset(Current_Colour = curs_bg_attr(col));
     JAVA_CALL(NativeWrapper_wattrset,0, Current_Colour = curs_bg_attr(col));
 }
 
 
 void gotoxy_sys(int x, int y)
 {	
-    //~ move(y - 1, x - 1);
 	JAVA_CALL(NativeWrapper_wmove, 0, y - 1, x - 1);
 }
 
@@ -906,9 +705,6 @@ inline bool operator == (const cchar_t &a, const cchar_t &b)
 inline int character_at(int y, int x)
 {
     int c;
-    // (void) is to hush an incorrect clang warning.
-    //~ (void)mvin_wch(y, x, &c); //ANDROID: Dunno what to do about this method :S
-    //~ c = mvinch(y, x);
     c = JAVA_CALL_INT(NativeWrapper_mvwinch, 0, y, x);
     return (c);
 }
@@ -918,7 +714,6 @@ inline bool valid_char(int c)
 }
 inline void write_char_at(int y, int x, int ch)
 {
-	//~ mvaddch(y, x, ch);
 	char c = ch;
 	JAVA_CALL(NativeWrapper_wmove, 0, y, x);
 	addnstr(1,&c);
@@ -926,20 +721,17 @@ inline void write_char_at(int y, int x, int ch)
 
 void fakecursorxy(int x, int y)
 {
-	//~ curses_fakecursorxy(x, y);
 	JAVA_CALL(NativeWrapper_fakecursorxy, x, y, 0);
 }
 
 int wherex()
 {
-    //~ return getcurx(stdscr) + 1;
     return JAVA_CALL_INT(NativeWrapper_getcurx, 0) + 1;
 }
 
 
 int wherey()
 {
-    //~ return getcury(stdscr) + 1;
     return JAVA_CALL_INT(NativeWrapper_getcury, 0) + 1;
 }
 
@@ -948,7 +740,6 @@ void delay(unsigned int time)
     if (crawl_state.disables[DIS_DELAY])
         return;
 
-    //~ refresh();
     JAVA_CALL(NativeWrapper_wrefresh, 0);
     if (time)
         usleep(time * 1000);

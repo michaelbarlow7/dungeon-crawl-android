@@ -11,7 +11,7 @@ public class CrawlDialog
 
 	public enum Action
 	{
-		GameFatalAlert, GameWarnAlert, StartGame, OnGameExit, ToggleKeyboard;
+		GameFatalAlert, StartGame, OnGameExit, ToggleKeyboard;
 
 		public static Action convert(int value)
 		{
@@ -36,9 +36,6 @@ public class CrawlDialog
 		case GameFatalAlert: // fatal error from crawl (native side)
 			fatalAlert(state.getFatalError());
 			break;
-		case GameWarnAlert: // warning from crawl (native side)
-			warnAlert(state.getWarnError());
-			break;
 		case StartGame: // start crawl
 			state.gameThread.send(GameThread.Request.StartGame);
 			break;
@@ -52,8 +49,6 @@ public class CrawlDialog
 	{
 		if (state.fatalError)
 			fatalAlert(state.getFatalError());
-		else if (state.warnError)
-			warnAlert(state.getWarnError());
 	}
 
 	public int fatalAlert(String msg)
@@ -66,20 +61,6 @@ public class CrawlDialog
 						state.fatalMessage = "";
 						state.fatalError = false;
 						activity.finish();
-					}
-				}).show();
-		return 0;
-	}
-
-	public int warnAlert(String msg)
-	{
-		new AlertDialog.Builder(activity).setTitle("Crawl").setMessage(msg)
-				.setNegativeButton("OK", new DialogInterface.OnClickListener()
-				{
-					public void onClick(DialogInterface dialog, int whichButton)
-					{
-						state.warnMessage = "";
-						state.warnError = false;
 					}
 				}).show();
 		return 0;

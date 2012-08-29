@@ -26,9 +26,7 @@ public class StateManager
 
 	/* alert dialog state */
 	public boolean fatalError = false;
-	public boolean warnError = false;
 	public String fatalMessage = "";
-	public String warnMessage = "";
 
 	/* progress dialog state */
 	public static String progress_lock = "lock";
@@ -79,11 +77,6 @@ public class StateManager
 		return w;
 	}
 
-	public void delWin(int handle)
-	{
-		termwins.remove(handle);
-	}
-
 	public int newWin(int nlines, int ncols, int begin_y, int begin_x)
 	{
 		int h = termWinNext;
@@ -95,11 +88,6 @@ public class StateManager
 	public String getFatalError()
 	{
 		return "Crawl quit with the following error: " + fatalMessage;
-	}
-
-	public String getWarnError()
-	{
-		return "Crawl sent the following warning: " + warnMessage;
 	}
 
 	public int getKeyUp()
@@ -145,12 +133,6 @@ public class StateManager
 	public int getKeyDelete()
 	{
 		return 0x9E;
-	}
-
-	public void clearKeys()
-	{
-		if (this.keyBuffer != null)
-			this.keyBuffer.clear();
 	}
 
 	public void resetKeyBuffer()

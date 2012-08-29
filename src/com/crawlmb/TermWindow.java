@@ -137,29 +137,6 @@ public class TermWindow
 		}
 	}
 
-	public void clrtobot()
-	{
-		// Log.d("Crawl","TermWindow.clrtobot ("+row+","+col+")");
-		for (int r = row; r < rows; r++)
-		{
-			for (int c = col; c < cols; c++)
-			{
-				TermPoint p = buffer[r][c];
-				newPoint(p);
-			}
-		}
-	}
-
-	public void hline(char c, int n)
-	{
-		// Log.d("Crawl","TermWindow.hline ("+row+","+col+") "+n);
-		int x = Math.min(cols, n + col);
-		for (int i = col; i < x; i++)
-		{
-			addch(c);
-		}
-	}
-
 	public void move(int row, int col)
 	{
 		if (col > -1 && col < cols && row > -1 & row < rows)
@@ -178,15 +155,6 @@ public class TermWindow
 	{
 		move(row, col);
 		return inch();
-	}
-
-	public int attrget(int row, int col)
-	{
-		if (col > -1 && col < cols && row > -1 & row < rows)
-		{
-			return buffer[row][col].Color;
-		}
-		return -1;
 	}
 
 	public int getcury()
@@ -232,18 +200,6 @@ public class TermWindow
 					p2.Char = p1.Char;
 					p2.Color = p1.Color;
 				}
-			}
-		}
-	}
-
-	public void touch()
-	{
-		for (int r = 0; r < rows; r++)
-		{
-			for (int c = 0; c < cols; c++)
-			{
-				TermPoint p = buffer[r][c];
-				p.isDirty = true;
 			}
 		}
 	}
@@ -332,17 +288,6 @@ public class TermWindow
 	{
 		move(row, col);
 		addch(c);
-	}
-
-	public void scroll()
-	{
-		for (int r = 1; r < rows; r++)
-		{
-			for (int c = 0; c < cols; c++)
-			{
-				buffer[r - 1][c] = buffer[r][c];
-			}
-		}
 	}
 
 	private int fakedX = -1;

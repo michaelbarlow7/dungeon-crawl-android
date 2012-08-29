@@ -231,15 +231,6 @@ public class GameActivity extends Activity // implements OnScoreSubmitObserver {
 
 		setScreen();
 
-		term.onResume();
-	}
-
-	@Override
-	protected void onPause()
-	{
-		// Log.d("Crawl", "onPause");
-		super.onPause();
-		term.onPause();
 	}
 
 	@Override
