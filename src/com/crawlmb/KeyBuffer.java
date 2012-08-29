@@ -220,7 +220,7 @@ public class KeyBuffer
 		
 		// Ugly hack to get escape on soft keyboards to work
 		// I hate this keybinding system. It's awful. This might just motivate me enough to change it
-		if (key_code == 111)
+		if (keyCode == 111)
 		{
 			key_code = 4;
 		}
