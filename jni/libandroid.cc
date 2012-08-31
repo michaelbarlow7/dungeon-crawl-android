@@ -136,6 +136,46 @@ static jmethodID NativeWrapper_getcury;
 static jmethodID NativeWrapper_getcurx;
 static jmethodID NativeWrapper_fakecursorxy;
 
+// Terminal stuff
+class TerminalChar
+{
+public:
+	jint x; // If this were java
+	jint y; // these two fields would be final
+	jint foregroundColour;
+	jint backgroundColour;
+	jchar character;
+	TerminalChar(){};
+	TerminalChar(int py, int px)
+	{
+		x = px;
+		y = py;
+	}
+};
+
+std::map<COLORS, int> colorMap;
+TerminalChar terminalWindow[LINES][COLS];
+std::set<TerminalChar *> dirtyTerminalChars;
+int x = 0;
+int y = 0;
+jint backgroundColour; //RGB values
+jint foregroundColour;
+
+void advance()
+{
+		x++;
+		if (x >= COLS)
+		{
+			y++;
+			x = 0;
+		}
+		if (y >= LINES)
+		{
+			y = LINES - 1;
+		}
+}
+// end of terminal stuff
+
 void init_java_methods( JNIEnv* env1, jobject obj1 )
 {
 	env = env1;
@@ -358,6 +398,28 @@ int unixcurses_get_vi_key(int keyin) //INPUT
 
 int start_color() 
 {
+	//~ colorMap.insert(std::pair<COLORS, int>(BLACK, 0xFF000000));
+	colorMap[BLACK] = 0xFF000000; // This really should be global, or loaded in the onload, or whatever
+	colorMap[BLUE] = 0xFF0040FF;
+	colorMap[GREEN] = 0xFF008040;
+	colorMap[CYAN] = 0xFF00A0A0;
+	colorMap[RED] = 0xFFFF4040;
+	colorMap[MAGENTA] = 0xFF9020FF;
+	colorMap[BROWN] = 0xFFA64800;
+	colorMap[LIGHTGRAY] = 0xFFC0C0C0;
+	colorMap[DARKGRAY] = 0xFF606060;
+	colorMap[LIGHTBLUE] = 0xFF00FFFF;
+	colorMap[LIGHTGREEN] = 0xFF00FF00;
+	colorMap[LIGHTCYAN] = 0xFF20FFDC;
+	colorMap[LIGHTRED] = 0xFFFF5050;
+	colorMap[LIGHTMAGENTA] = 0xFFFA4FFD;
+	colorMap[YELLOW] = 0xFFFFFF00;
+	colorMap[WHITE] = 0xFFFFFFFF;
+	colorMap[MAX_TERM_COLOUR] = 0xFF008040;
+
+	foregroundColour = colorMap[WHITE];
+	backgroundColour = colorMap[BLACK];
+
 	int colors = 16;
 
 	int color_table[] = {
@@ -387,12 +449,28 @@ int start_color()
 
 	return 0;
 }
+void setUpTerminalCharacters()
+{
+	// Set up terminal window here
+	for (int i = 0; i < LINES; ++i)
+	{
+		for (int j = 0; j < COLS; ++j)
+		{//TODO: We'd ideally initialize all this in the constructor
+			terminalWindow[i][j].x = j;
+			terminalWindow[i][j].y = i;
+			terminalWindow[i][j].character = ' ';
+			terminalWindow[i][j].foregroundColour = colorMap[WHITE];
+			terminalWindow[i][j].backgroundColour = colorMap[BLACK];
+		}
+	}
+}
 void console_startup(void)
 {
     termio_init();
-
     start_color();
     setup_colour_pairs();
+    
+    setUpTerminalCharacters();
 
     crawl_view.init_geometry();
 
@@ -420,9 +498,63 @@ void crawl_quit(const char* msg)
 
 	longjmp(jbuf,1);
 }
+void advanceLine()
+{
+	y++;
+	if (y >= LINES)
+	{
+		y = LINES - 1;
+	}
+	x = 0;
+}
+void clear_to_end_of_line();
+void addChar(char c)
+{
+	bool isDirty = false;
+	TerminalChar * terminalChar = &terminalWindow[y][x];
+	if (terminalChar->foregroundColour != foregroundColour)
+	{
+		terminalChar->foregroundColour = foregroundColour;
+		isDirty = true;
+	}
+	if (terminalChar->backgroundColour != backgroundColour)
+	{
+		terminalChar->backgroundColour = backgroundColour;
+		isDirty = true;
+	}
+	if (c == '\n')
+	{
+		// On a newline character, clear to the end of the line and 
+		// advance a row
+		//~ clear_to_end_of_line();
+		advanceLine(); // For now, we'll have it like this, but we will actually clear the line later
+		return;
+	}
+	//~ if (*s > 19 && terminalChar->character != *s)
+	else if (terminalChar->character != c)
+	{
+		terminalChar->character = c;
+		isDirty = true;
+	}
+	if (isDirty)
+	{
+		dirtyTerminalChars.insert(terminalChar);
+	}
+	advance();
+}
 
 int addnstr(int n, const char *s) 
 {
+	//NEW CODE
+	const char *original = s; //Just here to preserve the original functionality
+	while (*s)
+	{
+		addChar(*s);
+		++s;
+	}
+	s = original; // Get rid of this once we implement it properly
+	
+	//NEW CODE ENDS
 	jbyteArray array = env->NewByteArray(n);
 	if (array == NULL) crawl_quit("Error: Out of memory");
 	env->SetByteArrayRegion(array, 0, n, (const jbyte *) s);
@@ -430,6 +562,9 @@ int addnstr(int n, const char *s)
 	env->DeleteLocalRef(array);
 	return 0;
 }
+
+
+
 
 void cprintf(const char *format, ...)
 {
@@ -500,7 +635,13 @@ void clear_to_end_of_line(void)
 {
     textcolor(LIGHTGREY);
     textbackground(BLACK);
-    //~ clrtoeol();
+    // MY CODE
+    //while (x < COLS)
+    //~ {
+		//~ addChar(' ');
+	//~ }
+	// MY CODE ENDS
+
     JAVA_CALL(NativeWrapper_wclrtoeol, 0);
 
 #ifdef USE_TILE_WEB
@@ -620,6 +761,11 @@ static int curs_fg_attr(int col)
 
 void textcolor(int col)
 {
+	//MY STUFF
+	COLORS fgcolor = (COLORS) macro_colour(col & 0x00ff);
+	foregroundColour = colorMap[fgcolor];
+	// Will need to check for other flags, but for now, just check for colours
+	// MY STUFF ENDS
     JAVA_CALL(NativeWrapper_wattrset,0, Current_Colour = curs_fg_attr(col));
 }
 
@@ -678,6 +824,11 @@ static int curs_bg_attr(int col)
 
 void textbackground(int col)
 {
+	//MY STUFF
+	COLORS bgcolor = (COLORS) macro_colour(col & 0x00ff);
+	backgroundColour = colorMap[bgcolor];
+	// Will need to check for other flags, but for now, just check for colours
+	// MY STUFF ENDS
     JAVA_CALL(NativeWrapper_wattrset,0, Current_Colour = curs_bg_attr(col));
 }
 
