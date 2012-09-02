@@ -246,6 +246,11 @@ void sendTerminalToScreen()
 	dirtyTerminalChars.clear();
 }
 
+static inline short macro_colour(short col)
+{
+    return (Options.colour[ col ]);
+}
+
 int getchk()
 {
 	sendTerminalToScreen();
@@ -588,61 +593,61 @@ inline unsigned get_brand(int col)
                                             : CHATTR_NORMAL;
 }
 // OLD METHOD, though we might have to use some of its smarts
-static int curs_fg_attr(int col)
-{
-    short fg, bg;
-
-    FG_COL = col & 0x00ff;
-    fg = translate_colour(macro_colour(FG_COL));
-    bg = translate_colour(BG_COL == BLACK ? Options.background_colour
-                                           : BG_COL);
-
-    // calculate which curses flags we need...
-    unsigned int flags = 0;
-
-    unsigned brand = get_brand(col);
-    if (brand != CHATTR_NORMAL)
-    {
-        flags |= convert_to_curses_attr(brand);
-
-        if ((brand & CHATTR_ATTRMASK) == CHATTR_HILITE)
-        {
-            bg = translate_colour(
-                    macro_colour((brand & CHATTR_COLMASK) >> 8));
-
-            if (fg == bg)
-                fg = COLOR_BLACK;
-        }
-
-        // If we can't do a dark grey friend brand, then we'll
-        // switch the colour to light grey.
-        if (Options.no_dark_brand
-                && fg == (COLOR_BLACK | COLFLAG_CURSES_BRIGHTEN)
-                && bg == 0)
-        {
-            fg = COLOR_WHITE;
-        }
-    }
-
-    // curses typically uses A_BOLD to give bright foreground colour,
-    // but various termcaps may disagree
-    if (fg & COLFLAG_CURSES_BRIGHTEN)
-        flags |= A_BOLD;
-
-    // curses typically uses A_BLINK to give bright background colour,
-    // but various termcaps may disagree (in whole or in part)
-    if (bg & COLFLAG_CURSES_BRIGHTEN)
-        flags |= A_BLINK;
-
-    // Strip out all the bits above the raw 3-bit colour definition
-    fg &= 0x0007;
-    bg &= 0x0007;
-
-    // figure out which colour pair we want
-    const int pair = (fg == 0 && bg == 0) ? 63 : (bg * 8 + fg);
-
-    return (pair | flags);
-}
+//~ static int curs_fg_attr(int col)
+//~ {
+    //~ short fg, bg;
+//~ 
+    //~ FG_COL = col & 0x00ff;
+    //~ fg = translate_colour(macro_colour(FG_COL));
+    //~ bg = translate_colour(BG_COL == BLACK ? Options.background_colour
+                                           //~ : BG_COL);
+//~ 
+    //~ // calculate which curses flags we need...
+    //~ unsigned int flags = 0;
+//~ 
+    //~ unsigned brand = get_brand(col);
+    //~ if (brand != CHATTR_NORMAL)
+    //~ {
+        //~ flags |= convert_to_curses_attr(brand);
+//~ 
+        //~ if ((brand & CHATTR_ATTRMASK) == CHATTR_HILITE)
+        //~ {
+            //~ bg = translate_colour(
+                    //~ macro_colour((brand & CHATTR_COLMASK) >> 8));
+//~ 
+            //~ if (fg == bg)
+                //~ fg = COLOR_BLACK;
+        //~ }
+//~ 
+        //~ // If we can't do a dark grey friend brand, then we'll
+        //~ // switch the colour to light grey.
+        //~ if (Options.no_dark_brand
+                //~ && fg == (COLOR_BLACK | COLFLAG_CURSES_BRIGHTEN)
+                //~ && bg == 0)
+        //~ {
+            //~ fg = COLOR_WHITE;
+        //~ }
+    //~ }
+//~ 
+    //~ // curses typically uses A_BOLD to give bright foreground colour,
+    //~ // but various termcaps may disagree
+    //~ if (fg & COLFLAG_CURSES_BRIGHTEN)
+        //~ flags |= A_BOLD;
+//~ 
+    //~ // curses typically uses A_BLINK to give bright background colour,
+    //~ // but various termcaps may disagree (in whole or in part)
+    //~ if (bg & COLFLAG_CURSES_BRIGHTEN)
+        //~ flags |= A_BLINK;
+//~ 
+    //~ // Strip out all the bits above the raw 3-bit colour definition
+    //~ fg &= 0x0007;
+    //~ bg &= 0x0007;
+//~ 
+    //~ // figure out which colour pair we want
+    //~ const int pair = (fg == 0 && bg == 0) ? 63 : (bg * 8 + fg);
+//~ 
+    //~ return (pair | flags);
+//~ }
 
 void textcolor(int col)
 {
@@ -655,58 +660,58 @@ void textcolor(int col)
 }
 
 // OLD METHOD, though we might have to use some of its smarts
-static int curs_bg_attr(int col)
-{
-    short fg, bg;
-
-    BG_COL = col & 0x00ff;
-    fg = translate_colour(macro_colour(FG_COL));
-    bg = translate_colour(BG_COL == BLACK ? Options.background_colour
-                                           : BG_COL);
-
-    unsigned int flags = 0;
-
-    unsigned brand = get_brand(col);
-    if (brand != CHATTR_NORMAL)
-    {
-        flags |= convert_to_curses_attr(brand);
-
-        if ((brand & CHATTR_ATTRMASK) == CHATTR_HILITE)
-        {
-            bg = (brand & CHATTR_COLMASK) >> 8;
-            if (fg == bg)
-                fg = COLOR_BLACK;
-        }
-
-        // If we can't do a dark grey friend brand, then we'll
-        // switch the colour to light grey.
-        if (Options.no_dark_brand
-                && fg == (COLOR_BLACK | COLFLAG_CURSES_BRIGHTEN)
-                && bg == 0)
-        {
-            fg = COLOR_WHITE;
-        }
-    }
-
-    // curses typically uses A_BOLD to give bright foreground colour,
-    // but various termcaps may disagree
-    if (fg & COLFLAG_CURSES_BRIGHTEN)
-        flags |= A_BOLD;
-
-    // curses typically uses A_BLINK to give bright background colour,
-    // but various termcaps may disagree
-    if (bg & COLFLAG_CURSES_BRIGHTEN)
-        flags |= A_BLINK;
-
-    // Strip out all the bits above the raw 3-bit colour definition
-    fg &= 0x0007;
-    bg &= 0x0007;
-
-    // figure out which colour pair we want
-    const int pair = (fg == 0 && bg == 0) ? 63 : (bg * 8 + fg);
-
-    return (pair | flags);
-}
+//~ static int curs_bg_attr(int col)
+//~ {
+    //~ short fg, bg;
+//~ 
+    //~ BG_COL = col & 0x00ff;
+    //~ fg = translate_colour(macro_colour(FG_COL));
+    //~ bg = translate_colour(BG_COL == BLACK ? Options.background_colour
+                                           //~ : BG_COL);
+//~ 
+    //~ unsigned int flags = 0;
+//~ 
+    //~ unsigned brand = get_brand(col);
+    //~ if (brand != CHATTR_NORMAL)
+    //~ {
+        //~ flags |= convert_to_curses_attr(brand);
+//~ 
+        //~ if ((brand & CHATTR_ATTRMASK) == CHATTR_HILITE)
+        //~ {
+            //~ bg = (brand & CHATTR_COLMASK) >> 8;
+            //~ if (fg == bg)
+                //~ fg = COLOR_BLACK;
+        //~ }
+//~ 
+        //~ // If we can't do a dark grey friend brand, then we'll
+        //~ // switch the colour to light grey.
+        //~ if (Options.no_dark_brand
+                //~ && fg == (COLOR_BLACK | COLFLAG_CURSES_BRIGHTEN)
+                //~ && bg == 0)
+        //~ {
+            //~ fg = COLOR_WHITE;
+        //~ }
+    //~ }
+//~ 
+    //~ // curses typically uses A_BOLD to give bright foreground colour,
+    //~ // but various termcaps may disagree
+    //~ if (fg & COLFLAG_CURSES_BRIGHTEN)
+        //~ flags |= A_BOLD;
+//~ 
+    //~ // curses typically uses A_BLINK to give bright background colour,
+    //~ // but various termcaps may disagree
+    //~ if (bg & COLFLAG_CURSES_BRIGHTEN)
+        //~ flags |= A_BLINK;
+//~ 
+    //~ // Strip out all the bits above the raw 3-bit colour definition
+    //~ fg &= 0x0007;
+    //~ bg &= 0x0007;
+//~ 
+    //~ // figure out which colour pair we want
+    //~ const int pair = (fg == 0 && bg == 0) ? 63 : (bg * 8 + fg);
+//~ 
+    //~ return (pair | flags);
+//~ }
 
 void textbackground(int col)
 {
@@ -765,6 +770,7 @@ void fakecursorxy(int px, int py)
 	int tempColor = flippingChar.foregroundColour;
 	flippingChar.foregroundColour = flippingChar.backgroundColour;
 	flippingChar.backgroundColour = tempColor;
+	dirtyTerminalChars.insert(&flippingChar);
 }
 
 int wherex()
