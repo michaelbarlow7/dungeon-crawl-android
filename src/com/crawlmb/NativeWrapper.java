@@ -1,6 +1,7 @@
 package com.crawlmb;
 
 
+
 import android.util.Log;
 
 public class NativeWrapper
@@ -68,7 +69,6 @@ public class NativeWrapper
 	public int getch(final int v)
 	{
 		state.gameThread.setFullyInitialized();
-		wrefresh(0);
 		int key = state.getKey(v);
 		return key;
 	}
@@ -375,4 +375,24 @@ public class NativeWrapper
 			}
 		}
 	}
+
+	public void printTerminalChar(int y, int x, char c, int fgcolor, int bgcolor)
+	{
+		synchronized(display_lock)
+		{
+//			Formatter fmt = new Formatter();
+//			fmt.format("fgcolor:%x bgcolor:%x ", fgcolor, bgcolor);
+//			Log.d("Crawl","printingTerminalChar, y is: " + y + ", x is: " + x + ", character is: " + c + ", " + fmt);
+			term.drawPoint(y, x, c, fgcolor, bgcolor, false);
+		}
+	}
+
+	public void invalidateTerminal()
+	{
+		synchronized(display_lock)
+		{
+			term.postInvalidate();
+		}
+	}
+
 }

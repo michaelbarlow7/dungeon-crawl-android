@@ -41,6 +41,7 @@
 #include <jni.h>
 #include <setjmp.h>
 
+
 #define LINES 24
 #define COLS 80
 
@@ -135,6 +136,8 @@ static jmethodID NativeWrapper_curs_set;
 static jmethodID NativeWrapper_getcury;
 static jmethodID NativeWrapper_getcurx;
 static jmethodID NativeWrapper_fakecursorxy;
+static jmethodID NativeWrapper_printTerminalChar;
+static jmethodID NativeWrapper_invalidateTerminal;
 
 // Terminal stuff
 class TerminalChar
@@ -163,10 +166,10 @@ jint foregroundColour;
 
 void advance()
 {
-		x++;
+		++x;
 		if (x >= COLS)
 		{
-			y++;
+			++y;
 			x = 0;
 		}
 		if (y >= LINES)
@@ -202,6 +205,8 @@ void init_java_methods( JNIEnv* env1, jobject obj1 )
 	NativeWrapper_mvwinch = JAVA_METHOD("mvwinch", "(III)I");
 	NativeWrapper_curs_set = JAVA_METHOD("curs_set", "(I)V");
 	NativeWrapper_fakecursorxy = JAVA_METHOD("fakecursorxy","(III)V");
+	NativeWrapper_printTerminalChar = JAVA_METHOD("printTerminalChar", "(IICII)V");
+	NativeWrapper_invalidateTerminal = JAVA_METHOD("invalidateTerminal", "()V");
 }
 
 extern "C" 
@@ -221,105 +226,29 @@ void Java_com_crawlmb_NativeWrapper_initGame( JNIEnv* env, jobject object , jstr
 	main (argc, argv);
 }
 
-static unsigned int convert_to_curses_attr(int chattr)
-{
-    switch (chattr & CHATTR_ATTRMASK)
-    {
-    case CHATTR_STANDOUT:       return (A_STANDOUT);
-    case CHATTR_BOLD:           return (A_BOLD);
-    case CHATTR_BLINK:          return (A_BLINK);
-    case CHATTR_UNDERLINE:      return (A_UNDERLINE);
-    case CHATTR_REVERSE:        return (A_REVERSE);
-    case CHATTR_DIM:            return (A_DIM);
-    default:                    return (A_NORMAL);
-    }
-}
-
-static inline short macro_colour(short col)
-{
-    return (Options.colour[ col ]);
-}
-
-// Translate DOS colors to curses.
-static short translate_colour(short col)
-{
-	switch (col)
-    {
-    case BLACK:
-        return COLOR_BLACK;
-    case BLUE:
-        return COLOR_BLUE;
-    case GREEN:
-        return COLOR_GREEN;
-    case CYAN:
-        return COLOR_CYAN;
-    case RED:
-        return COLOR_RED;
-    case MAGENTA:
-        return COLOR_MAGENTA;
-    case BROWN:
-        return COLOR_YELLOW;
-    case LIGHTGREY:
-        return COLOR_WHITE;
-    case DARKGREY:
-        return COLOR_BLACK + COLFLAG_CURSES_BRIGHTEN;
-    case LIGHTBLUE:
-        return COLOR_BLUE + COLFLAG_CURSES_BRIGHTEN;
-    case LIGHTGREEN:
-        return COLOR_GREEN + COLFLAG_CURSES_BRIGHTEN;
-    case LIGHTCYAN:
-        return COLOR_CYAN + COLFLAG_CURSES_BRIGHTEN;
-    case LIGHTRED:
-        return COLOR_RED + COLFLAG_CURSES_BRIGHTEN;
-    case LIGHTMAGENTA:
-        return COLOR_MAGENTA + COLFLAG_CURSES_BRIGHTEN;
-    case YELLOW:
-        return COLOR_YELLOW + COLFLAG_CURSES_BRIGHTEN;
-    case WHITE:
-        return COLOR_WHITE + COLFLAG_CURSES_BRIGHTEN;
-    default:
-        return COLOR_GREEN;
-    }
-}
-
-static void setup_colour_pairs(void)
-{
-    short i, j;
-
-    for (i = 0; i < 8; i++)
-        for (j = 0; j < 8; j++)
-        {
-            if ((i > 0) || (j > 0))
-            {
-				JAVA_CALL(NativeWrapper_init_pair, i * 8 + j, j, i);
-			}
-        }
-
-    JAVA_CALL(NativeWrapper_init_pair, 63, COLOR_BLACK, Options.background_colour);
-}
-
-static void unix_handle_terminal_resize();
-
-static void termio_init()
-{
-    crawl_state.terminal_resize_handler = unix_handle_terminal_resize;
-}
-
 void set_mouse_enabled(bool enabled)
 {
 	return;
 }
 
-static int pending = 0;
+void sendTerminalToScreen()
+{
+	if (dirtyTerminalChars.empty())
+	{
+		return;
+	}
+	std::set<TerminalChar *>::iterator it;
+	for (it = dirtyTerminalChars.begin(); it != dirtyTerminalChars.end(); it++)
+	{
+		JAVA_CALL(NativeWrapper_printTerminalChar, (*it)->y, (*it)->x, (*it)->character, (*it)->foregroundColour, (*it)->backgroundColour);
+	}
+	JAVA_CALL(NativeWrapper_invalidateTerminal);
+	dirtyTerminalChars.clear();
+}
 
 int getchk()
 {
-    if (pending)
-    {
-        int c = pending;
-        pending = 0;
-        return c;
-    }
+	sendTerminalToScreen();
     int c = JAVA_CALL_INT(NativeWrapper_getch, 1);
     return c;
 }
@@ -420,33 +349,6 @@ int start_color()
 	foregroundColour = colorMap[WHITE];
 	backgroundColour = colorMap[BLACK];
 
-	int colors = 16;
-
-	int color_table[] = {
-		0xFF000000, //BLACK
-		0xFF0040FF, //BLUE
-		0xFF008040, //GREEN
-		0xFF00A0A0, //CYAN
-		0xFFFF4040, //RED
-		0xFF9020FF, //MAGENTA
-		0xFFA64800, //YELLOW 
-		0xFFC0C0C0, //WHITE
-		0xFF606060, //BRIGHT_BLACK (GRAY)
-		0xFF00FFFF, //BRIGHT_BLUE
-		0xFF00FF00, //BRIGHT_GREEN
-		0xFF20FFDC, //BRIGHT_CYAN
-		0xFFFF5050, //BRIGHT_RED
-		0xFFFA4FFD, //BRIGHT_MAGENTA
-		0xFFFFFF00, //BRIGHT_YELLOW
-		0xFFFFFFFF  //BRIGHT_WHITE
-	};
-
-	int i;
-	for(i=0; i<colors; i++)
-	{
-		JAVA_CALL(NativeWrapper_init_color, i, color_table[i]);
-	}
-
 	return 0;
 }
 void setUpTerminalCharacters()
@@ -466,15 +368,11 @@ void setUpTerminalCharacters()
 }
 void console_startup(void)
 {
-    termio_init();
     start_color();
-    setup_colour_pairs();
     
     setUpTerminalCharacters();
 
     crawl_view.init_geometry();
-
-    set_mouse_enabled(false);
 }
 
 void console_shutdown()
@@ -498,6 +396,7 @@ void crawl_quit(const char* msg)
 
 	longjmp(jbuf,1);
 }
+
 void advanceLine()
 {
 	y++;
@@ -507,6 +406,7 @@ void advanceLine()
 	}
 	x = 0;
 }
+
 void clear_to_end_of_line();
 void addChar(char c)
 {
@@ -545,7 +445,6 @@ void addChar(char c)
 
 int addnstr(int n, const char *s) 
 {
-	//NEW CODE
 	const char *original = s; //Just here to preserve the original functionality
 	while (*s)
 	{
@@ -553,18 +452,8 @@ int addnstr(int n, const char *s)
 		++s;
 	}
 	s = original; // Get rid of this once we implement it properly
-	
-	//NEW CODE ENDS
-	jbyteArray array = env->NewByteArray(n);
-	if (array == NULL) crawl_quit("Error: Out of memory");
-	env->SetByteArrayRegion(array, 0, n, (const jbyte *) s);
-	env->CallVoidMethod(NativeWrapperObj, NativeWrapper_waddnstr, 0, n, array);
-	env->DeleteLocalRef(array);
 	return 0;
 }
-
-
-
 
 void cprintf(const char *format, ...)
 {
@@ -625,10 +514,6 @@ void puttext(int x1, int y1, const crawl_view_buffer &vbuf)
 void update_screen(void)
 {
     //ANDROID: We don't really need this I don't think
-
-#ifdef USE_TILE_WEB
-    tiles.set_need_redraw();
-#endif
 }
 
 void clear_to_end_of_line(void)
@@ -641,12 +526,6 @@ void clear_to_end_of_line(void)
 		//~ addChar(' ');
 	//~ }
 	// MY CODE ENDS
-
-    JAVA_CALL(NativeWrapper_wclrtoeol, 0);
-
-#ifdef USE_TILE_WEB
-    tiles.clear_to_end_of_line();
-#endif
 }
 
 int get_number_of_lines(void)
@@ -663,11 +542,17 @@ void clrscr()
 {
     textcolor(LIGHTGREY);
     textbackground(BLACK);
-    //~ clear();
-    JAVA_CALL(NativeWrapper_wclear, 0);
-#ifdef DGAMELAUNCH
-    fflush(stdout);
-#endif
+    x = 0;
+    y = 0;
+    for (int i = 0; i < LINES; ++i)
+    {
+		for (int j = 0; j < COLS; ++j)
+		{
+			addChar(' ');
+		}
+	}
+	x = 0;
+	y = 0;
 }
 
 void set_cursor_enabled(bool enabled)
@@ -690,7 +575,7 @@ void enable_smart_cursor(bool dummy)
 {
 }
 
-inline unsigned get_brand(int col)//ANDROID: looks pretty harmless
+inline unsigned get_brand(int col)
 {
     return (col & COLFLAG_FRIENDLY_MONSTER) ? Options.friend_brand :
            (col & COLFLAG_NEUTRAL_MONSTER)  ? Options.neutral_brand :
@@ -702,7 +587,7 @@ inline unsigned get_brand(int col)//ANDROID: looks pretty harmless
            (col & COLFLAG_REVERSE)          ? CHATTR_REVERSE
                                             : CHATTR_NORMAL;
 }
-
+// OLD METHOD, though we might have to use some of its smarts
 static int curs_fg_attr(int col)
 {
     short fg, bg;
@@ -766,9 +651,10 @@ void textcolor(int col)
 	foregroundColour = colorMap[fgcolor];
 	// Will need to check for other flags, but for now, just check for colours
 	// MY STUFF ENDS
-    JAVA_CALL(NativeWrapper_wattrset,0, Current_Colour = curs_fg_attr(col));
+    //~ JAVA_CALL(NativeWrapper_wattrset,0, Current_Colour = curs_fg_attr(col));
 }
 
+// OLD METHOD, though we might have to use some of its smarts
 static int curs_bg_attr(int col)
 {
     short fg, bg;
@@ -829,15 +715,16 @@ void textbackground(int col)
 	backgroundColour = colorMap[bgcolor];
 	// Will need to check for other flags, but for now, just check for colours
 	// MY STUFF ENDS
-    JAVA_CALL(NativeWrapper_wattrset,0, Current_Colour = curs_bg_attr(col));
+    //~ JAVA_CALL(NativeWrapper_wattrset,0, Current_Colour = curs_bg_attr(col));
 }
 
 
-void gotoxy_sys(int x, int y)
-{	
-	JAVA_CALL(NativeWrapper_wmove, 0, y - 1, x - 1);
+void gotoxy_sys(int px, int py)
+{
+	x = px - 1;
+	y = py - 1;
 }
-
+// WHAT IS ALL THIS SHIT?
 #define CCHARW_MAX	5
 
 typedef unsigned long chtype;
@@ -853,37 +740,42 @@ inline bool operator == (const cchar_t &a, const cchar_t &b)
 {
     return (a.attr == b.attr && *a.chars == *b.chars);
 }
-inline int character_at(int y, int x)
+// ALL THE STUFF ABOVE???
+inline int character_at(int py, int px)
 {
-    int c;
-    c = JAVA_CALL_INT(NativeWrapper_mvwinch, 0, y, x);
-    return (c);
+	gotoxy_sys(px, py);
+	return terminalWindow[y][x].character;
+    //~ int c;
+    //~ c = JAVA_CALL_INT(NativeWrapper_mvwinch, 0, py, px);
+    //~ return (c);
 }
-inline bool valid_char(int c)
+
+inline void write_char_at(int py, int px, int ch)
 {
-    return c != 0;
-}
-inline void write_char_at(int y, int x, int ch)
-{
+	gotoxy_sys(px, py);
+	
 	char c = ch;
-	JAVA_CALL(NativeWrapper_wmove, 0, y, x);
 	addnstr(1,&c);
 }
 
-void fakecursorxy(int x, int y)
+void fakecursorxy(int px, int py)
 {
-	JAVA_CALL(NativeWrapper_fakecursorxy, x, y, 0);
+	gotoxy_sys(px, py);
+	TerminalChar flippingChar = terminalWindow[y][x];
+	int tempColor = flippingChar.foregroundColour;
+	flippingChar.foregroundColour = flippingChar.backgroundColour;
+	flippingChar.backgroundColour = tempColor;
 }
 
 int wherex()
 {
-    return JAVA_CALL_INT(NativeWrapper_getcurx, 0) + 1;
+	return x + 1;
 }
 
 
 int wherey()
 {
-    return JAVA_CALL_INT(NativeWrapper_getcury, 0) + 1;
+	return y + 1;
 }
 
 void delay(unsigned int time)
@@ -891,7 +783,7 @@ void delay(unsigned int time)
     if (crawl_state.disables[DIS_DELAY])
         return;
 
-    JAVA_CALL(NativeWrapper_wrefresh, 0);
+	sendTerminalToScreen();
     if (time)
         usleep(time * 1000);
 }
