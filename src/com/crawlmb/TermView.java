@@ -114,20 +114,6 @@ public class TermView extends View implements OnGestureListener
 		if (bitmap != null)
 		{
 			canvas.drawBitmap(bitmap, 0, 0, null);
-
-			int x = state.stdscr.col * (char_width);
-			int y = (state.stdscr.row + 1) * char_height;
-
-			// due to font "scrunch", cursor is sometimes a bit too big
-			int cl = Math.max(x, 0);
-			int cr = Math.min(x + char_width, canvas_width - 1);
-			int ct = Math.max(y - char_height, 0);
-			int cb = Math.min(y, canvas_height - 1);
-
-			if (state.stdscr.cursor_visible)
-			{
-				canvas.drawRect(cl, ct, cr, cb, cursor);
-			}
 		}
 	}
 

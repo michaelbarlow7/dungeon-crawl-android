@@ -79,6 +79,7 @@ public class NativeWrapper
 		state.handler.sendEmptyMessage(CrawlDialog.Action.OnGameExit.ordinal());
 		// Log.d(TAG, "onGameExit()");
 	}
+	private native void refreshTerminal();
 
 	public boolean onGameStart()
 	{
@@ -128,7 +129,7 @@ public class NativeWrapper
 		synchronized (display_lock)
 		{
 			term.onGameStart(); // recalcs TermView canvas dimension
-			frosh(null);
+			refreshTerminal();
 		}
 	}
 

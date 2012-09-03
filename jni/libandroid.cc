@@ -212,6 +212,7 @@ void init_java_methods( JNIEnv* env1, jobject obj1 )
 extern "C" 
 {
 	void Java_com_crawlmb_NativeWrapper_initGame( JNIEnv* env, jobject object , jstring jInitLocation);
+	void Java_com_crawlmb_NativeWrapper_refreshTerminal( JNIEnv* env, jobject object);
 };
 
 void Java_com_crawlmb_NativeWrapper_initGame( JNIEnv* env, jobject object , jstring jInitLocation)
@@ -224,6 +225,19 @@ void Java_com_crawlmb_NativeWrapper_initGame( JNIEnv* env, jobject object , jstr
 	int argc = 3;
 	char *argv[] = {"","-rc", initLocation};
 	main (argc, argv);
+}
+
+void Java_com_crawlmb_NativeWrapper_refreshTerminal( JNIEnv* env, jobject object)
+{
+	for (int i = 0; i < LINES; ++i)
+	{
+		for (int j = 0; j < COLS; ++j)
+		{
+			TerminalChar * terminalChar = &terminalWindow[i][j];
+			JAVA_CALL(NativeWrapper_printTerminalChar, terminalChar->y, terminalChar->x, terminalChar->character, terminalChar->foregroundColour, terminalChar->backgroundColour);
+		}
+	}
+	JAVA_CALL(NativeWrapper_invalidateTerminal);
 }
 
 void set_mouse_enabled(bool enabled)
@@ -431,8 +445,7 @@ void addChar(char c)
 	{
 		// On a newline character, clear to the end of the line and 
 		// advance a row
-		//~ clear_to_end_of_line();
-		advanceLine(); // For now, we'll have it like this, but we will actually clear the line later
+		clear_to_end_of_line();
 		return;
 	}
 	//~ if (*s > 19 && terminalChar->character != *s)
@@ -526,10 +539,10 @@ void clear_to_end_of_line(void)
     textcolor(LIGHTGREY);
     textbackground(BLACK);
     // MY CODE
-    //while (x < COLS)
-    //~ {
-		//~ addChar(' ');
-	//~ }
+    do
+    {
+		addChar(' ');
+	} while (x > 0);
 	// MY CODE ENDS
 }
 
@@ -653,7 +666,18 @@ void textcolor(int col)
 {
 	//MY STUFF
 	COLORS fgcolor = (COLORS) macro_colour(col & 0x00ff);
+	unsigned brand = get_brand(col);
+	if ((brand & CHATTR_ATTRMASK) == CHATTR_HILITE)
+    {
+		COLORS bgcolor = (COLORS) macro_colour((brand & CHATTR_COLMASK) >> 8);
+		backgroundColour = colorMap[bgcolor];
+    }
 	foregroundColour = colorMap[fgcolor];
+	if (foregroundColour == backgroundColour)
+	{
+		foregroundColour = colorMap[BLACK];
+	}
+
 	// Will need to check for other flags, but for now, just check for colours
 	// MY STUFF ENDS
     //~ JAVA_CALL(NativeWrapper_wattrset,0, Current_Colour = curs_fg_attr(col));
@@ -717,7 +741,19 @@ void textbackground(int col)
 {
 	//MY STUFF
 	COLORS bgcolor = (COLORS) macro_colour(col & 0x00ff);
+	
+	unsigned brand = get_brand(col);
+	if ((brand & CHATTR_ATTRMASK) == CHATTR_HILITE)
+    {
+		COLORS bgcolor = (COLORS) macro_colour((brand & CHATTR_COLMASK) >> 8);
+    }
+	
 	backgroundColour = colorMap[bgcolor];
+	if (foregroundColour == backgroundColour)
+	{
+		foregroundColour = colorMap[BLACK];
+	}
+	
 	// Will need to check for other flags, but for now, just check for colours
 	// MY STUFF ENDS
     //~ JAVA_CALL(NativeWrapper_wattrset,0, Current_Colour = curs_bg_attr(col));
@@ -766,11 +802,11 @@ inline void write_char_at(int py, int px, int ch)
 void fakecursorxy(int px, int py)
 {
 	gotoxy_sys(px, py);
-	TerminalChar flippingChar = terminalWindow[y][x];
-	int tempColor = flippingChar.foregroundColour;
-	flippingChar.foregroundColour = flippingChar.backgroundColour;
-	flippingChar.backgroundColour = tempColor;
-	dirtyTerminalChars.insert(&flippingChar);
+	TerminalChar * flippingChar = &terminalWindow[y][x];
+	int tempColor = flippingChar->foregroundColour;
+	flippingChar->foregroundColour = flippingChar->backgroundColour;
+	flippingChar->backgroundColour = tempColor;
+	dirtyTerminalChars.insert(flippingChar);
 }
 
 int wherex()
