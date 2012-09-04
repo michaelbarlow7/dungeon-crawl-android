@@ -174,7 +174,7 @@ void Java_com_crawlmb_NativeWrapper_refreshTerminal( JNIEnv* env, jobject object
 	{
 		for (int j = 0; j < COLS; ++j)
 		{
-			TerminalChar * terminalChar = getCurrentTerminalChar();
+			TerminalChar * terminalChar = &terminalWindow[i][j];
 			JAVA_CALL(NativeWrapper_printTerminalChar, terminalChar->y, terminalChar->x, terminalChar->character, terminalChar->foregroundColour, terminalChar->backgroundColour);
 		}
 	}
