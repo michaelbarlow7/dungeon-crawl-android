@@ -11,17 +11,10 @@ public class NativeWrapper
 	}
 
 	private TermView term = null;
-	private StateManager state = null;
+	private StateManager stateManager = null;
 
 	private String display_lock = "lock";
 	private static final String TAG = NativeWrapper.class.getCanonicalName();
-	public static final int A_NORMAL = 0;
-	public static final int A_REVERSE = 0x100;
-	public static final int A_STANDOUT = 0x200;
-	public static final int A_BOLD = 0x400;
-	public static final int A_UNDERLINE = 0x800;
-	public static final int A_BLINK = 0x1000;
-	public static final int A_DIM = 0x2000;
 
 	public void gameStart()
 	{
@@ -51,27 +44,22 @@ public class NativeWrapper
 
 	public native String initGame(String initFileLocation);
 
-	// Not sure what these two methods do
-	native int gameQueryInt(int argc, String[] argv);
-
-	native String gameQueryString(int argc, String[] argv);
-
 	public NativeWrapper(StateManager s)
 	{
-		state = s;
+		stateManager = s;
 	}
 
 	public int getch(final int v)
 	{
-		state.gameThread.setFullyInitialized();
-		int key = state.getKey(v);
+		stateManager.gameThread.setFullyInitialized();
+		int key = stateManager.getKey(v);
 		return key;
 	}
 
 	// this is called from native thread just before exiting
 	public void onGameExit()
 	{
-		state.handler.sendEmptyMessage(CrawlDialog.Action.OnGameExit.ordinal());
+		stateManager.handler.sendEmptyMessage(CrawlDialog.Action.OnGameExit.ordinal());
 		// Log.d(TAG, "onGameExit()");
 	}
 
@@ -121,9 +109,9 @@ public class NativeWrapper
 		// Log.d(TAG, "fatal("+msg+")");
 		synchronized (display_lock)
 		{
-			state.fatalMessage = msg;
-			state.fatalError = true;
-			state.handler.sendMessage(state.handler.obtainMessage(
+			stateManager.fatalMessage = msg;
+			stateManager.fatalError = true;
+			stateManager.handler.sendMessage(stateManager.handler.obtainMessage(
 					CrawlDialog.Action.GameFatalAlert.ordinal(), 0, 0, msg));
 		}
 	}

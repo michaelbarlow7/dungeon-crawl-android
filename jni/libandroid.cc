@@ -89,7 +89,7 @@ static jmethodID NativeWrapper_printTerminalChar;
 static jmethodID NativeWrapper_invalidateTerminal;
 
 // Terminal stuff
-class TerminalChar
+class TerminalChar //I guess this could be a struct. 
 {
 public:
 	jint x; // If this were java

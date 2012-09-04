@@ -4,9 +4,6 @@ import android.os.Handler;
 
 import android.view.KeyEvent;
 
-import java.util.Map;
-import java.util.HashMap;
-
 public class StateManager
 {
 	static final int KEY_A1 = 0534; /* upper left of keypad */
@@ -19,9 +16,6 @@ public class StateManager
 	static final int KEY_LEFT = 0404; /* left-arrow key */
 	static final int KEY_RIGHT = 0405; /* right-arrow key */
 	/* screen state */
-	public Map<Integer, TermWindow> termwins = null;
-	public TermWindow virtscr = null;
-	public TermWindow stdscr = null;
 	public int termWinNext = 0;
 
 	/* alert dialog state */
@@ -45,8 +39,6 @@ public class StateManager
 
 	StateManager()
 	{
-		endWin();
-
 		nativew = new NativeWrapper(this);
 		gameThread = new GameThread(this, nativew);
 
@@ -57,32 +49,6 @@ public class StateManager
 	{
 		handler = h;
 		nativew.link(t);
-	}
-
-	public void endWin()
-	{
-		termWinNext = -1;
-		termwins = new HashMap<Integer, TermWindow>();
-
-		// initialize virtual screen (virtscr) and curses stdscr
-		int h = newWin(0, 0, 0, 0);
-		virtscr = getWin(h);
-		h = newWin(0, 0, 0, 0);
-		stdscr = getWin(h);
-	}
-
-	public TermWindow getWin(int handle)
-	{
-		TermWindow w = termwins.get(handle);
-		return w;
-	}
-
-	public int newWin(int nlines, int ncols, int begin_y, int begin_x)
-	{
-		int h = termWinNext;
-		termwins.put(h, new TermWindow(nlines, ncols, begin_y, begin_x));
-		termWinNext++;
-		return h;
 	}
 
 	public String getFatalError()
