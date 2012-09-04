@@ -100,8 +100,8 @@ public class GameActivity extends Activity // implements OnScoreSubmitObserver {
 			intent = new Intent(this, PreferencesActivity.class);
 			startActivity(intent);
 			break;
-		case '5':
-//			finish();
+		case '3':
+			finish();
 			break;
 		}
 		return super.onMenuItemSelected(featureId, item);

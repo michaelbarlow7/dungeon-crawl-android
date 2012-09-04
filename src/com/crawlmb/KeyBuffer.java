@@ -189,11 +189,11 @@ public class KeyBuffer
 			case 0:
 				return 27; // Esc
 			case 1:
-				return 0;
+				return 27;
 			case 2:
-				return 24; // Ctrl-X (Quit)
+				return 'S'; // Save
 			case 3:
-				return 0;
+				return 'y'; // yes
 			}
 		}
 		return -1;
