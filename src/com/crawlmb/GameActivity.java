@@ -93,8 +93,8 @@ public class GameActivity extends Activity // implements OnScoreSubmitObserver {
 		switch (item.getNumericShortcut())
 		{
 		case '1':
-			// intent = new Intent(this, HelpActivity.class);
-			// startActivity(intent);
+			 intent = new Intent(this, HelpActivity.class);
+			 startActivity(intent);
 			break;
 		case '2':
 			intent = new Intent(this, PreferencesActivity.class);

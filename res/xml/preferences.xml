@@ -3,11 +3,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
   <PreferenceCategory android:title="@string/display_category">
 	<CheckBoxPreference 
-	   android:key="crawl.vibrate"
-	   android:defaultValue="false" 
-	   android:title="@string/preferences_vibrate_title"
-	   android:summary="@string/preferences_vibrate_summary" />
-	<CheckBoxPreference 
 	   android:key="crawl.fullscreen"
 	   android:defaultValue="true" 
 	   android:title="@string/preferences_fullscreen_title"
