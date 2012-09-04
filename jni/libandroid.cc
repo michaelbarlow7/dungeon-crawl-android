@@ -45,35 +45,8 @@
 #define LINES 24
 #define COLS 80
 
-#define COLOR_BLACK 0
-#define COLOR_BLUE 1
-#define COLOR_GREEN 2
-#define COLOR_CYAN 3
-#define COLOR_RED 4
-#define COLOR_MAGENTA 5
-#define COLOR_YELLOW 6
-#define COLOR_WHITE 7
-
-#define COLOR_GRAY 8
-#define COLOR_LIGHT_BLACK 8
-#define COLOR_LIGHT_BLUE 9
-#define COLOR_LIGHT_GREEN 10
-#define COLOR_LIGHT_CYAN 11
-#define COLOR_LIGHT_RED 12
-#define COLOR_LIGHT_MAGENTA 13
-#define COLOR_LIGHT_YELLOW 14
-#define COLOR_LIGHT_WHITE 15
-
-#define A_NORMAL 0
-#define A_REVERSE 0x100
-#define A_STANDOUT 0x200
-#define A_BOLD 0x400
-#define A_UNDERLINE 0x800
-#define A_BLINK 0x1000
-#define A_DIM 0x2000
-
-// Adding stuff for ANDROID TODO: Probably a redundant conversion, since it gets converted later on, 
-// but it's here for now to keep the curses interface consistent
+// Probably a redundant conversion, since it gets converted later on, 
+// but it's a bit of leftover code from the curses stuff
 #define KEY_HOME	0406		/* home key */
 #define KEY_END		0550		/* end key */
 #define KEY_DOWN	0402		/* down-arrow key */
@@ -101,17 +74,6 @@
 
 void (*crawl_quit_hook)(void) = NULL;
 
-
-// Globals holding current text/backg. colors
-static short FG_COL = WHITE;
-static short BG_COL = BLACK;
-static int   Current_Colour = BG_COL * 8 + FG_COL;
-
-static int curs_fg_attr(int col);
-static int curs_bg_attr(int col);
-
-static bool cursor_is_enabled = true;
-
 static jmp_buf jbuf;
 /* JVM enviroment */
 static JavaVM *jvm;
@@ -122,20 +84,7 @@ static jobject NativeWrapperObj;
 
 /* Java Methods */
 static jmethodID NativeWrapper_fatal;
-static jmethodID NativeWrapper_waddnstr; 
-static jmethodID NativeWrapper_wattrset; 
-static jmethodID NativeWrapper_wclear;
-static jmethodID NativeWrapper_wclrtoeol;
-static jmethodID NativeWrapper_init_color;
-static jmethodID NativeWrapper_init_pair;
-static jmethodID NativeWrapper_wrefresh;
 static jmethodID NativeWrapper_getch;
-static jmethodID NativeWrapper_wmove;
-static jmethodID NativeWrapper_mvwinch;
-static jmethodID NativeWrapper_curs_set;
-static jmethodID NativeWrapper_getcury;
-static jmethodID NativeWrapper_getcurx;
-static jmethodID NativeWrapper_fakecursorxy;
 static jmethodID NativeWrapper_printTerminalChar;
 static jmethodID NativeWrapper_invalidateTerminal;
 
@@ -163,6 +112,7 @@ int x = 0;
 int y = 0;
 jint backgroundColour; //RGB values
 jint foregroundColour;
+unsigned brand;
 
 void advance()
 {
@@ -177,7 +127,11 @@ void advance()
 			y = LINES - 1;
 		}
 }
-// end of terminal stuff
+
+TerminalChar * getCurrentTerminalChar()
+{
+	return &terminalWindow[y][x];
+}
 
 void init_java_methods( JNIEnv* env1, jobject obj1 )
 {
@@ -191,20 +145,7 @@ void init_java_methods( JNIEnv* env1, jobject obj1 )
 
 	/* NativeWrapper Methods */
 	NativeWrapper_fatal = JAVA_METHOD("fatal", "(Ljava/lang/String;)V");	
-	NativeWrapper_waddnstr = JAVA_METHOD("waddnstr", "(II[B)V");
-	NativeWrapper_wattrset = JAVA_METHOD("wattrset", "(II)V");
-	NativeWrapper_wclrtoeol = JAVA_METHOD("wclrtoeol", "(I)V");
-	NativeWrapper_wclear = JAVA_METHOD("wclear", "(I)V");
-	NativeWrapper_wrefresh = JAVA_METHOD("wrefresh", "(I)V");
 	NativeWrapper_getch = JAVA_METHOD("getch", "(I)I");
-	NativeWrapper_getcury = JAVA_METHOD("getcury", "(I)I");
-	NativeWrapper_getcurx = JAVA_METHOD("getcurx", "(I)I");
-	NativeWrapper_init_color = JAVA_METHOD("init_color", "(II)V");
-	NativeWrapper_init_pair = JAVA_METHOD("init_pair", "(III)V");
-	NativeWrapper_wmove = JAVA_METHOD("wmove", "(III)V");
-	NativeWrapper_mvwinch = JAVA_METHOD("mvwinch", "(III)I");
-	NativeWrapper_curs_set = JAVA_METHOD("curs_set", "(I)V");
-	NativeWrapper_fakecursorxy = JAVA_METHOD("fakecursorxy","(III)V");
 	NativeWrapper_printTerminalChar = JAVA_METHOD("printTerminalChar", "(IICII)V");
 	NativeWrapper_invalidateTerminal = JAVA_METHOD("invalidateTerminal", "()V");
 }
@@ -233,7 +174,7 @@ void Java_com_crawlmb_NativeWrapper_refreshTerminal( JNIEnv* env, jobject object
 	{
 		for (int j = 0; j < COLS; ++j)
 		{
-			TerminalChar * terminalChar = &terminalWindow[i][j];
+			TerminalChar * terminalChar = getCurrentTerminalChar();
 			JAVA_CALL(NativeWrapper_printTerminalChar, terminalChar->y, terminalChar->x, terminalChar->character, terminalChar->foregroundColour, terminalChar->backgroundColour);
 		}
 	}
@@ -376,7 +317,7 @@ void setUpTerminalCharacters()
 	for (int i = 0; i < LINES; ++i)
 	{
 		for (int j = 0; j < COLS; ++j)
-		{//TODO: We'd ideally initialize all this in the constructor
+		{//TODO: We'd ideally initialize all this in a constructor
 			terminalWindow[i][j].x = j;
 			terminalWindow[i][j].y = i;
 			terminalWindow[i][j].character = ' ';
@@ -404,7 +345,6 @@ void crawl_quit(const char* msg)
 {
 	if (msg) 
 	{
-		//~ LOGE(msg);
 		JAVA_CALL(NativeWrapper_fatal, env->NewStringUTF(msg));
 	}
 
@@ -429,18 +369,6 @@ void advanceLine()
 void clear_to_end_of_line();
 void addChar(char c)
 {
-	bool isDirty = false;
-	TerminalChar * terminalChar = &terminalWindow[y][x];
-	if (terminalChar->foregroundColour != foregroundColour)
-	{
-		terminalChar->foregroundColour = foregroundColour;
-		isDirty = true;
-	}
-	if (terminalChar->backgroundColour != backgroundColour)
-	{
-		terminalChar->backgroundColour = backgroundColour;
-		isDirty = true;
-	}
 	if (c == '\n')
 	{
 		// On a newline character, clear to the end of the line and 
@@ -448,12 +376,50 @@ void addChar(char c)
 		clear_to_end_of_line();
 		return;
 	}
-	//~ if (*s > 19 && terminalChar->character != *s)
-	else if (terminalChar->character != c)
+	
+	// Need to determine colours depending on brand
+	int fg = foregroundColour;
+	int bg = backgroundColour;
+	if (brand != CHATTR_NORMAL)
+	{
+		if ((brand & CHATTR_ATTRMASK) == CHATTR_HILITE)
+		{
+			COLORS bgcolor = (COLORS) macro_colour((brand & CHATTR_COLMASK) >> 8);
+			bg = colorMap[bgcolor];
+		}
+
+		if ((brand & CHATTR_ATTRMASK) == CHATTR_REVERSE)
+		{
+			int temp = fg;
+			fg = bg;
+			bg = temp;
+		}
+		
+		if (fg == bg)
+		{
+			fg = colorMap[BLACK];
+		}
+	}
+	
+	// Apply changes to terminalChar, if they apply
+	bool isDirty = false;
+	TerminalChar * terminalChar = getCurrentTerminalChar();
+	if (terminalChar->foregroundColour != fg)
+	{
+		terminalChar->foregroundColour = fg;
+		isDirty = true;
+	}
+	if (terminalChar->backgroundColour != bg)
+	{
+		terminalChar->backgroundColour = bg;
+		isDirty = true;
+	}
+	if (terminalChar->character != c)
 	{
 		terminalChar->character = c;
 		isDirty = true;
 	}
+	
 	if (isDirty)
 	{
 		dirtyTerminalChars.insert(terminalChar);
@@ -463,13 +429,11 @@ void addChar(char c)
 
 int addnstr(int n, const char *s) 
 {
-	const char *original = s; //Just here to preserve the original functionality
 	while (*s)
 	{
 		addChar(*s);
 		++s;
 	}
-	s = original; // Get rid of this once we implement it properly
 	return 0;
 }
 
@@ -538,12 +502,10 @@ void clear_to_end_of_line(void)
 {
     textcolor(LIGHTGREY);
     textbackground(BLACK);
-    // MY CODE
     do
     {
 		addChar(' ');
 	} while (x > 0);
-	// MY CODE ENDS
 }
 
 int get_number_of_lines(void)
@@ -575,18 +537,16 @@ void clrscr()
 
 void set_cursor_enabled(bool enabled)
 {
-    //~ curs_set(cursor_is_enabled = enabled);
-    JAVA_CALL(NativeWrapper_curs_set, cursor_is_enabled = enabled);
 }
 
 bool is_cursor_enabled()
 {
-    return (cursor_is_enabled);
+    return true;
 }
 
 bool is_smart_cursor_enabled()
 {
-    return false;
+    return true;
 }
 
 void enable_smart_cursor(bool dummy)
@@ -605,158 +565,19 @@ inline unsigned get_brand(int col)
            (col & COLFLAG_REVERSE)          ? CHATTR_REVERSE
                                             : CHATTR_NORMAL;
 }
-// OLD METHOD, though we might have to use some of its smarts
-//~ static int curs_fg_attr(int col)
-//~ {
-    //~ short fg, bg;
-//~ 
-    //~ FG_COL = col & 0x00ff;
-    //~ fg = translate_colour(macro_colour(FG_COL));
-    //~ bg = translate_colour(BG_COL == BLACK ? Options.background_colour
-                                           //~ : BG_COL);
-//~ 
-    //~ // calculate which curses flags we need...
-    //~ unsigned int flags = 0;
-//~ 
-    //~ unsigned brand = get_brand(col);
-    //~ if (brand != CHATTR_NORMAL)
-    //~ {
-        //~ flags |= convert_to_curses_attr(brand);
-//~ 
-        //~ if ((brand & CHATTR_ATTRMASK) == CHATTR_HILITE)
-        //~ {
-            //~ bg = translate_colour(
-                    //~ macro_colour((brand & CHATTR_COLMASK) >> 8));
-//~ 
-            //~ if (fg == bg)
-                //~ fg = COLOR_BLACK;
-        //~ }
-//~ 
-        //~ // If we can't do a dark grey friend brand, then we'll
-        //~ // switch the colour to light grey.
-        //~ if (Options.no_dark_brand
-                //~ && fg == (COLOR_BLACK | COLFLAG_CURSES_BRIGHTEN)
-                //~ && bg == 0)
-        //~ {
-            //~ fg = COLOR_WHITE;
-        //~ }
-    //~ }
-//~ 
-    //~ // curses typically uses A_BOLD to give bright foreground colour,
-    //~ // but various termcaps may disagree
-    //~ if (fg & COLFLAG_CURSES_BRIGHTEN)
-        //~ flags |= A_BOLD;
-//~ 
-    //~ // curses typically uses A_BLINK to give bright background colour,
-    //~ // but various termcaps may disagree (in whole or in part)
-    //~ if (bg & COLFLAG_CURSES_BRIGHTEN)
-        //~ flags |= A_BLINK;
-//~ 
-    //~ // Strip out all the bits above the raw 3-bit colour definition
-    //~ fg &= 0x0007;
-    //~ bg &= 0x0007;
-//~ 
-    //~ // figure out which colour pair we want
-    //~ const int pair = (fg == 0 && bg == 0) ? 63 : (bg * 8 + fg);
-//~ 
-    //~ return (pair | flags);
-//~ }
 
 void textcolor(int col)
 {
-	//MY STUFF
 	COLORS fgcolor = (COLORS) macro_colour(col & 0x00ff);
-	unsigned brand = get_brand(col);
-	if ((brand & CHATTR_ATTRMASK) == CHATTR_HILITE)
-    {
-		COLORS bgcolor = (COLORS) macro_colour((brand & CHATTR_COLMASK) >> 8);
-		backgroundColour = colorMap[bgcolor];
-    }
+	brand = get_brand(col);
 	foregroundColour = colorMap[fgcolor];
-	if (foregroundColour == backgroundColour)
-	{
-		foregroundColour = colorMap[BLACK];
-	}
-
-	// Will need to check for other flags, but for now, just check for colours
-	// MY STUFF ENDS
-    //~ JAVA_CALL(NativeWrapper_wattrset,0, Current_Colour = curs_fg_attr(col));
 }
-
-// OLD METHOD, though we might have to use some of its smarts
-//~ static int curs_bg_attr(int col)
-//~ {
-    //~ short fg, bg;
-//~ 
-    //~ BG_COL = col & 0x00ff;
-    //~ fg = translate_colour(macro_colour(FG_COL));
-    //~ bg = translate_colour(BG_COL == BLACK ? Options.background_colour
-                                           //~ : BG_COL);
-//~ 
-    //~ unsigned int flags = 0;
-//~ 
-    //~ unsigned brand = get_brand(col);
-    //~ if (brand != CHATTR_NORMAL)
-    //~ {
-        //~ flags |= convert_to_curses_attr(brand);
-//~ 
-        //~ if ((brand & CHATTR_ATTRMASK) == CHATTR_HILITE)
-        //~ {
-            //~ bg = (brand & CHATTR_COLMASK) >> 8;
-            //~ if (fg == bg)
-                //~ fg = COLOR_BLACK;
-        //~ }
-//~ 
-        //~ // If we can't do a dark grey friend brand, then we'll
-        //~ // switch the colour to light grey.
-        //~ if (Options.no_dark_brand
-                //~ && fg == (COLOR_BLACK | COLFLAG_CURSES_BRIGHTEN)
-                //~ && bg == 0)
-        //~ {
-            //~ fg = COLOR_WHITE;
-        //~ }
-    //~ }
-//~ 
-    //~ // curses typically uses A_BOLD to give bright foreground colour,
-    //~ // but various termcaps may disagree
-    //~ if (fg & COLFLAG_CURSES_BRIGHTEN)
-        //~ flags |= A_BOLD;
-//~ 
-    //~ // curses typically uses A_BLINK to give bright background colour,
-    //~ // but various termcaps may disagree
-    //~ if (bg & COLFLAG_CURSES_BRIGHTEN)
-        //~ flags |= A_BLINK;
-//~ 
-    //~ // Strip out all the bits above the raw 3-bit colour definition
-    //~ fg &= 0x0007;
-    //~ bg &= 0x0007;
-//~ 
-    //~ // figure out which colour pair we want
-    //~ const int pair = (fg == 0 && bg == 0) ? 63 : (bg * 8 + fg);
-//~ 
-    //~ return (pair | flags);
-//~ }
 
 void textbackground(int col)
 {
-	//MY STUFF
 	COLORS bgcolor = (COLORS) macro_colour(col & 0x00ff);
-	
-	unsigned brand = get_brand(col);
-	if ((brand & CHATTR_ATTRMASK) == CHATTR_HILITE)
-    {
-		COLORS bgcolor = (COLORS) macro_colour((brand & CHATTR_COLMASK) >> 8);
-    }
-	
+	brand = get_brand(col);
 	backgroundColour = colorMap[bgcolor];
-	if (foregroundColour == backgroundColour)
-	{
-		foregroundColour = colorMap[BLACK];
-	}
-	
-	// Will need to check for other flags, but for now, just check for colours
-	// MY STUFF ENDS
-    //~ JAVA_CALL(NativeWrapper_wattrset,0, Current_Colour = curs_bg_attr(col));
 }
 
 
@@ -765,30 +586,11 @@ void gotoxy_sys(int px, int py)
 	x = px - 1;
 	y = py - 1;
 }
-// WHAT IS ALL THIS SHIT?
-#define CCHARW_MAX	5
 
-typedef unsigned long chtype;
-typedef	chtype	attr_t;		/* ...must be at least as wide as chtype */
-typedef struct
-{
-    attr_t	attr;
-    wchar_t	chars[CCHARW_MAX];
-}
-cchar_t;
-typedef cchar_t char_info;
-inline bool operator == (const cchar_t &a, const cchar_t &b)
-{
-    return (a.attr == b.attr && *a.chars == *b.chars);
-}
-// ALL THE STUFF ABOVE???
 inline int character_at(int py, int px)
 {
 	gotoxy_sys(px, py);
-	return terminalWindow[y][x].character;
-    //~ int c;
-    //~ c = JAVA_CALL_INT(NativeWrapper_mvwinch, 0, py, px);
-    //~ return (c);
+	return getCurrentTerminalChar()->character;
 }
 
 inline void write_char_at(int py, int px, int ch)
@@ -802,7 +604,7 @@ inline void write_char_at(int py, int px, int ch)
 void fakecursorxy(int px, int py)
 {
 	gotoxy_sys(px, py);
-	TerminalChar * flippingChar = &terminalWindow[y][x];
+	TerminalChar * flippingChar = getCurrentTerminalChar();
 	int tempColor = flippingChar->foregroundColour;
 	flippingChar->foregroundColour = flippingChar->backgroundColour;
 	flippingChar->backgroundColour = tempColor;
@@ -830,7 +632,6 @@ void delay(unsigned int time)
         usleep(time * 1000);
 }
 
-/* This is Juho Snellman's modified kbhit, to work with macros */
 bool kbhit()
 {
 	// I don't think we need this in android, buffering is handled by java code
