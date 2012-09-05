@@ -1,0 +1,3 @@
+[submodule "android-crawl-console"]
+	path = android-crawl-console
+	url = git://gitorious.org/~barbs/crawl/android-crawl-console.git
