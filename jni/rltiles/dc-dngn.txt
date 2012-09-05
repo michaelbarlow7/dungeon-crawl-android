@@ -1,4 +1,0 @@
-%name dngn
-%abstract floor TILE
-%abstract wall TILE
-%abstract feat TILE
