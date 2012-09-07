@@ -163,7 +163,7 @@ public class CrawlAppActivity extends Activity
 		@Override
 		protected Void doInBackground(Void... params)
 		{
-			totalFiles = 284; //Number of files that need creating. Hard-coded I know, but
+			totalFiles = 286; //Number of files that need creating. Hard-coded I know, but
 							  // counting them dynamically took a surprising amount of time
 			if (installDialog != null)
 			{
@@ -178,6 +178,10 @@ public class CrawlAppActivity extends Activity
 			mkdir("/saves/db");
 			publishProgress(++installedFiles);
 			mkdir("/saves/des");
+			publishProgress(++installedFiles);
+			mkdir("/saves/sprint");
+			publishProgress(++installedFiles);
+			mkdir("/saves/zotdef");
 			publishProgress(++installedFiles);
 			mkdir("/morgue");
 			publishProgress(++installedFiles);
