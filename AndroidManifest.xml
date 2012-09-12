@@ -8,7 +8,7 @@
     <uses-sdk android:minSdkVersion="9" />
 
     <application
-        android:icon="@drawable/stone_soup_icon_32x32"
+        android:icon="@drawable/stone_soup_icon_512x512"
         android:label="@string/app_name" >
         <activity
             android:name=".CrawlAppActivity"
@@ -17,7 +17,6 @@
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -35,10 +34,21 @@
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
         </activity>
         <activity
+            android:name=".CharacterFilesActivity"
+            android:label="@string/morgue" 
+            android:windowSoftInputMode="stateHidden">
+        </activity>
+        <activity
             android:name=".ConfigEditor"
             android:theme="@android:style/Theme.Light"
             android:windowSoftInputMode="stateHidden"
             android:label="Config Editor">
+        </activity>
+        <activity
+            android:name=".CharFileViewer"
+            android:theme="@android:style/Theme.Light"
+            android:windowSoftInputMode="stateHidden"
+            android:label="Character File Viewer">
         </activity>
         <activity android:name=".PreferencesActivity" android:label="@string/app_name" android:windowSoftInputMode="stateHidden">
             <intent-filter>

@@ -166,4 +166,10 @@
   </PreferenceCategory>
     <PreferenceCategory android:key="configFiles" android:title="Config Files" >
     </PreferenceCategory>
+    <PreferenceCategory android:key="morgue" android:title="@string/morgue">
+        <Preference
+            android:key="character_files"
+            android:title="Character files...">
+        </Preference>
+    </PreferenceCategory>
 </PreferenceScreen>

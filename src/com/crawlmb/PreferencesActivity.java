@@ -20,6 +20,7 @@ package com.crawlmb;
 
 import java.io.File;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
@@ -43,6 +44,15 @@ public class PreferencesActivity extends PreferenceActivity implements OnSharedP
 		addPreferencesFromResource(R.xml.preferences);
 
 		setConfigFilePreferences();
+		
+		setCharacterFilesIntent();
+	}
+
+	private void setCharacterFilesIntent()
+	{
+		Preference characterFilesPreference = findPreference("character_files");
+		Intent characterFilesIntent = new Intent(this, CharacterFilesActivity.class);
+		characterFilesPreference.setIntent(characterFilesIntent);
 	}
 
 	private void setConfigFilePreferences()

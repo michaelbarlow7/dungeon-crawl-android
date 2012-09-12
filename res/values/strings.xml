@@ -8,6 +8,9 @@
     <string name="install_dialog_title">Installing Dungeon Crawl: Stone Soup</string>
     <string name="launching_game_line_1">Launching game. If this is the first time running Dungeon Crawl,</string>
     <string name="launching_game_line_2">this might take a while. Please wait...</string>
+    <string name="copy_text">Copy text</string>
+    <string name="text_copied">Text copied to clipboard</string>
+    <string name="morgue">Morgue</string>
 
     <string name="preferences_vibrate_title">Vibrate</string>
     <string name="preferences_vibrate_summary">Enable or disable vibration in game</string>
