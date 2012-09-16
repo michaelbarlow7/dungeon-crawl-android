@@ -48,7 +48,6 @@ public class GameActivity extends Activity // implements OnScoreSubmitObserver {
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		Preferences.init(getResources(), getSharedPreferences(Preferences.NAME, MODE_PRIVATE));
 
 		// Log.d("Crawl", "onCreate");
 

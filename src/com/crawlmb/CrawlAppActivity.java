@@ -35,6 +35,8 @@ public class CrawlAppActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+		
+		Preferences.init(getResources(), getSharedPreferences(Preferences.NAME, MODE_PRIVATE));//I feel this belongs in the Application class, though we don't have one yet
 
 		setBackground();
 		
@@ -126,6 +128,11 @@ public class CrawlAppActivity extends Activity
 
 	private void startGameActivity()
 	{
+		if (Preferences.getSkipSplash())
+		{
+			runOnUiThread(new startGameRunnable());
+			return;
+		}
 		// Wait 1.5 seconds, then start game
 		Timer timer = new Timer();
 		TimerTask gameStartTask = new TimerTask()

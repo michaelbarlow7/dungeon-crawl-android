@@ -16,6 +16,8 @@
     <string name="preferences_vibrate_summary">Enable or disable vibration in game</string>
     <string name="preferences_fullscreen_title">Full screen</string>
     <string name="preferences_fullscreen_summary">Enable or disable game in full screen</string>
+    <string name="preferences_skipsplash_title">Skip splash screen</string>
+    <string name="preferences_skipsplash_summary">Automatically skip the splash screen on startup</string>
     <string name="preferences_orientation_title">Orientation</string>
     <string name="preferences_orientation_summary">Select screen orientation</string>
     <string name="preferences_gameplugin_title">Selected variant</string>
@@ -32,8 +34,6 @@
     <string name="preferences_enabletouch_summary">Turn on touchscreen directional controls</string>
     <string name="preferences_alwaysrun_title">Always run</string>
     <string name="preferences_alwaysrun_summary">Always run when using touch directional commands</string>
-    <string name="preferences_skipwelcome_title">Skip welcome screen</string>
-    <string name="preferences_skipwelcome_summary">Automatically skip the Crawl splash screen at startup</string>
 
     <string name="display_category">Display</string>
     <string name="control_category">Control</string>

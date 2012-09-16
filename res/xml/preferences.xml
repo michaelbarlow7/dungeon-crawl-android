@@ -14,6 +14,11 @@
 	   android:summary="@string/preferences_orientation_summary" 
 	   android:entries="@array/orientationDescriptions"
 	   android:entryValues="@array/orientations" />
+	<CheckBoxPreference 
+	   android:key="crawl.skipsplash"
+	   android:defaultValue="false" 
+	   android:title="@string/preferences_skipsplash_title"
+	   android:summary="@string/preferences_skipsplash_summary" />
   </PreferenceCategory>
   <PreferenceCategory android:title="@string/control_category">
 	<PreferenceScreen

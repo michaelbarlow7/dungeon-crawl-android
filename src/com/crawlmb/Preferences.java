@@ -18,6 +18,7 @@ final public class Preferences
 	static final String KEY_VIBRATE = "crawl.vibrate";
 	static final String KEY_FULLSCREEN = "crawl.fullscreen";
 	static final String KEY_ORIENTATION = "crawl.orientation";
+	static final String KEY_SKIPSPLASH = "crawl.skipsplash";
 
 	static final String KEY_ENABLETOUCH = "crawl.enabletouch";
 	static final String KEY_PORTRAITKB = "crawl.portraitkb";
@@ -28,7 +29,6 @@ final public class Preferences
 
 	static final String KEY_GAMEPLUGIN = "crawl.gameplugin";
 	static final String KEY_GAMEPROFILE = "crawl.gameprofile";
-	static final String KEY_SKIPWELCOME = "crawl.skipwelcome";
 	static final String KEY_AUTOSTARTBORG = "crawl.autostartborg";
 
 	static final String KEY_PROFILES = "crawl.profiles";
@@ -74,6 +74,11 @@ final public class Preferences
 		SharedPreferences.Editor ed = sharedPreferences.edit();
 		ed.putBoolean(Preferences.KEY_FULLSCREEN, value);
 		ed.commit();
+	}
+	
+	public static boolean getSkipSplash()
+	{
+		return sharedPreferences.getBoolean(Preferences.KEY_SKIPSPLASH, false);
 	}
 
 	public static boolean isScreenPortraitOrientation()
