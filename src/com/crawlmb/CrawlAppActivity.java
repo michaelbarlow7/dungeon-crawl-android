@@ -35,8 +35,6 @@ public class CrawlAppActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		
-		Preferences.init(getResources(), getSharedPreferences(Preferences.NAME, MODE_PRIVATE));//I feel this belongs in the Application class, though we don't have one yet
 
 		setBackground();
 		
