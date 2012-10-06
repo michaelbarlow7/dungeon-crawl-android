@@ -161,6 +161,10 @@ public class GameActivity extends Activity // implements OnScoreSubmitObserver {
 			{
 				CrawlKeyboard virtualKeyboard = new CrawlKeyboard(this);
 				screenLayout.addView(virtualKeyboard.virtualKeyboardView);
+				
+				//Add directional-key view
+				addDirectionalKeyView(virtualKeyboard.virtualKeyboardView.getId());
+				
 				getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 			}
 			else if (keyboardType.equals(keyboards[2])) // System Keyboard
@@ -180,6 +184,17 @@ public class GameActivity extends Activity // implements OnScoreSubmitObserver {
 
 			term.invalidate();
 		}
+	}
+
+	private void addDirectionalKeyView(int virtualKeyboardId) {
+		DirectionalTouchView view = new DirectionalTouchView(this);
+		RelativeLayout.LayoutParams directionalLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT,
+			LayoutParams.FILL_PARENT);
+		directionalLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+		directionalLayoutParams.addRule(RelativeLayout.ABOVE, virtualKeyboardId);
+		view.setLayoutParams(directionalLayoutParams);
+		view.setTermView(term);
+		screenLayout.addView(view);
 	}
 
 	public void openContextMenu()
