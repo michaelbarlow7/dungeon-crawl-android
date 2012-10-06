@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.inputmethodservice.KeyboardView
+<com.crawlmb.CrawlKeyboardView
         xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:crawl="http://schemas.android.com/apk/res/com.crawlmb"
         android:id="@+id/keyboard"
         android:layout_alignParentBottom="true"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        crawl:keyTextSize="20sp"
+        crawl:keyBackground="@drawable/btn_keyboard_key_ics"
+        crawl:keyTextColor="#FFFFFFFF"
+        crawl:keyHintColor="#FFAAAAAA"
+        crawl:keyCursorColor="#FFFFFFFF"
+        crawl:keyTextStyle="bold"
+        crawl:recolorSymbols="true"
         />

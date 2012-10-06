@@ -29,7 +29,7 @@ import android.view.MenuItem;
 import android.view.WindowManager;
 import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.os.Handler;
 import android.os.Message;
 
@@ -39,7 +39,7 @@ public class GameActivity extends Activity // implements OnScoreSubmitObserver {
 	public static StateManager state = null;
 	private CrawlDialog dialog = null;
 
-	private LinearLayout screenLayout = null;
+	private RelativeLayout screenLayout = null;
 	private TermView term = null;
 
 	protected Handler handler = null;
@@ -136,16 +136,17 @@ public class GameActivity extends Activity // implements OnScoreSubmitObserver {
 
 			if (screenLayout != null)
 				screenLayout.removeAllViews();
-			screenLayout = new LinearLayout(this);
+			screenLayout = new RelativeLayout(this);
 
 			term = new TermView(this);
-			term.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,
-					LayoutParams.WRAP_CONTENT, 1.0f));
+			RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT,
+					LayoutParams.WRAP_CONTENT);
+			layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+			term.setLayoutParams(layoutParams);
 			term.setFocusable(true);
 			registerForContextMenu(term);
 			state.link(term, handler);
 
-			screenLayout.setOrientation(LinearLayout.VERTICAL);
 			screenLayout.addView(term);
 
 			String keyboardType;

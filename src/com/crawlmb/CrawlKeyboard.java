@@ -1,14 +1,16 @@
 package com.crawlmb;
 
+import com.crawlmb.CrawlKeyboardView.OnKeyboardActionListener;
+
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.inputmethodservice.Keyboard;
-import android.inputmethodservice.KeyboardView;
-import android.inputmethodservice.KeyboardView.OnKeyboardActionListener;
 
 public class CrawlKeyboard implements OnKeyboardActionListener
 {
-	KeyboardView virtualKeyboardView;
+	CrawlKeyboardView virtualKeyboardView;
 	Keyboard virtualKeyboardQwerty;
 	Keyboard virtualKeyboardSymbols;
 	Keyboard virtualKeyboardSymbolsShift;
@@ -22,8 +24,11 @@ public class CrawlKeyboard implements OnKeyboardActionListener
 		virtualKeyboardSymbols = new Keyboard(ctx, R.xml.keyboard_sym);
 		virtualKeyboardSymbolsShift = new Keyboard(ctx, R.xml.keyboard_symshift);
 		LayoutInflater inflater = LayoutInflater.from(ctx);
-		virtualKeyboardView = (KeyboardView)inflater.inflate(
+		virtualKeyboardView = (CrawlKeyboardView)inflater.inflate(
 				R.layout.input, null);
+		LayoutParams layoutParams = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+		layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+		virtualKeyboardView.setLayoutParams(layoutParams);
 		virtualKeyboardView.setKeyboard(virtualKeyboardQwerty);
 		virtualKeyboardView.setOnKeyboardActionListener(this);
 	}
