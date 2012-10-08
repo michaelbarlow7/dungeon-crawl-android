@@ -23,19 +23,24 @@
 package com.crawlmb;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -73,13 +78,15 @@ public class ConfigEditor extends Activity
 
 	// Identifiers for our menu items.
 	private static final int MENU_REVERT = Menu.FIRST;
-	private static final int MENU_SAVE = Menu.FIRST + 6;
+	private static final int MENU_SAVE = Menu.FIRST + 1;
+	private static final int MENU_RESTORE_DEFAULT = Menu.FIRST + 2;
 
 	// The different distinct states the activity can be run in.
 	private static final int STATE_EDIT = 0;
 	private static final int STATE_EDIT_NOTE_FROM_SDCARD = 2;
 
-	private static final int DIALOG_UNSAVED_CHANGES = 1;;
+	private static final int DIALOG_UNSAVED_CHANGES = 1;
+	private static final int DIALOG_RESTORE_DEFAULT_CONFIRM = 2;
 
 	private int mState;
 	private Uri mUri;
@@ -358,6 +365,8 @@ public class ConfigEditor extends Activity
 		menu.add(Menu.NONE, MENU_REVERT, Menu.NONE, R.string.menu_revert).setIcon(android.R.drawable.ic_menu_revert);
 
 		menu.add(Menu.NONE, MENU_SAVE, Menu.NONE, R.string.menu_save).setIcon(android.R.drawable.ic_menu_save);
+		
+		menu.add(Menu.NONE, MENU_RESTORE_DEFAULT, Menu.NONE, R.string.menu_restore_default).setIcon(android.R.drawable.ic_menu_set_as);
 
 		return true;
 	}
@@ -384,9 +393,79 @@ public class ConfigEditor extends Activity
 		case MENU_SAVE:
 			saveNote();
 			break;
+		case MENU_RESTORE_DEFAULT:
+		  showDialog(DIALOG_RESTORE_DEFAULT_CONFIRM);
+			break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
+  private void copyConfigFile()
+  {
+  // Same method as in CrawlAppActivity. Should probably put this in one place,
+  // but ceebs right now.
+    AssetManager assetManager = getAssets();
+    String destname = getFilesDir().toString() + "/settings/init.txt";
+    File newasset = new File(destname);
+    newasset.delete();// Delete the old file, make way for the new
+    try
+    {
+      newasset.createNewFile();
+      BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(newasset));
+      BufferedInputStream in = new BufferedInputStream(assetManager.open("settings/init.txt"));
+      int b;
+      while ((b = in.read()) != -1)
+      {
+        out.write(b);
+      }
+      out.flush();
+      out.close();
+      in.close();
+    }
+    catch (IOException ex)
+    {
+      Log.e(TAG, "Exception occured copying init.txt : " + ex);
+    }
+    chmod(destname, 0666);
+  }
+  
+  private void chmod(String filename, int permissions)
+  {
+    // Using undocumented method, as per Nethack app
+
+    try
+    {
+      Class<?> fileUtils = Class.forName("android.os.FileUtils");
+      Method setPermissions =
+          fileUtils.getMethod("setPermissions", String.class, int.class, int.class, int.class);
+      int a = (Integer) setPermissions.invoke(null, filename, permissions, -1, -1);
+      if (a != 0)
+      {
+        // This will probably always happen now when running from SD
+        // card (or a Samsung phone),
+        // so don't generate error spew.
+        // Log.i("NetHackDbg",
+        // "android.os.FileUtils.setPermissions() returned " + a +
+        // " for '" + filename + "', probably didn't work.");
+      }
+    }
+    catch (ClassNotFoundException e)
+    {
+      Log.i("NetHackDbg", "android.os.FileUtils.setPermissions() failed - ClassNotFoundException.");
+    }
+    catch (IllegalAccessException e)
+    {
+      Log.i("NetHackDbg", "android.os.FileUtils.setPermissions() failed - IllegalAccessException.");
+    }
+    catch (InvocationTargetException e)
+    {
+      Log.i("NetHackDbg", "android.os.FileUtils.setPermissions() failed - InvocationTargetException.");
+    }
+    catch (NoSuchMethodException e)
+    {
+      Log.i("NetHackDbg", "android.os.FileUtils.setPermissions() failed - NoSuchMethodException.");
+    }
+  }
 
 	private final void revertNote()
 	{
@@ -441,12 +520,34 @@ public class ConfigEditor extends Activity
 		{
 		case DIALOG_UNSAVED_CHANGES:
 			return getUnsavedChangesWarningDialog();
+		case DIALOG_RESTORE_DEFAULT_CONFIRM:
+		  return getRestoreDialogConfirmDialog();
 		default:
 			return null;
 		}
 	}
 
-	Dialog getUnsavedChangesWarningDialog()
+	private Dialog getRestoreDialogConfirmDialog()
+  {
+	   return new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert)
+	        .setTitle(R.string.menu_restore_default)
+	        .setMessage(R.string.restore_default_confirm_message)
+	        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener()
+          {
+            
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+              copyConfigFile();// Probably should be done on another thread, but it's pretty quick
+              mFileContent = readFile(getFile(mUri));
+              getNoteFromFile();
+            }
+          })
+          .setNegativeButton(android.R.string.no, null)
+          .create();
+  }
+
+  Dialog getUnsavedChangesWarningDialog()
 	{
 		return new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert)
 				.setTitle(R.string.warning_unsaved_changes_title)

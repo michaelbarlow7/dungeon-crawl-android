@@ -90,6 +90,8 @@
     <string name="error_reading_file">Error while reading file</string>
     <string name="menu_revert">Revert</string>
     <string name="menu_save">Save</string>
+    <string name="menu_restore_default">Restore default file</string>
+    <string name="restore_default_confirm_message">This will restore the config file to its default setting, are you sure you want to continue?</string>
     <string name="config_saved">Config saved. Restart to apply changes</string>
     <string name="error_writing_file">Error while writing file</string>
     <string name="warning_unsaved_changes_title">Text modified</string>
