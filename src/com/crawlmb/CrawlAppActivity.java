@@ -194,36 +194,9 @@ public class CrawlAppActivity extends Activity
 			copyFile("README.txt");
 			copyFileOrDir("dat");
 			copyFileOrDir("settings");
-			writeInitFile();
 			copyFileOrDir("docs");
 			return null;
 		}
-
-		private void writeInitFile()
-		{
-			FileOutputStream fileOutputStream;
-			try
-			{
-				fileOutputStream = new FileOutputStream(getFilesDir() + "/settings/init.txt",true);
-				BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
-				String androidWarning = "\n# THE FOLLOWING SETTINGS ARE HERE FOR THE ANDROID PORT\n# EDITTING THEM MAY CAUSE THE GAME TO STOP WORKING PROPERLY\n";
-				String crawlDirSpecification = "crawl_dir = " + getFilesDir() + "\n";
-				String saveDirSpecification = "save_dir = " + getFilesDir() + "/saves\n";
-				String morgueDirSpecification = "morgue_dir = " + getFilesDir() + "/morgue\n";
-				String macroDirSpecification = "macro_dir = " + getFilesDir() + "/settings\n";
-				bufferedOutputStream.write(androidWarning.getBytes());
-				bufferedOutputStream.write(crawlDirSpecification.getBytes());
-				bufferedOutputStream.write(saveDirSpecification.getBytes());
-				bufferedOutputStream.write(morgueDirSpecification.getBytes());
-				bufferedOutputStream.write(macroDirSpecification.getBytes());
-				bufferedOutputStream.flush();
-				bufferedOutputStream.close();
-			}
-			catch (IOException e)
-			{
-				e.printStackTrace();
-			}
-		} 
 		private void mkdir(String relativePath)
 		{
 			// FIXME: making files using this method, because we can't seem to

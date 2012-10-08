@@ -18,8 +18,7 @@ public class NativeWrapper
 
 	public void gameStart()
 	{
-		String initFilePath = term.getContext().getFilesDir() + "/settings/init.txt";
-		initGame(initFilePath);
+		initGame(term.getContext().getFilesDir().getPath());
 
 	}
 

@@ -8,6 +8,7 @@
     android:id="@+id/note"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:inputType="textMultiLine|textNoSuggestions"
     android:background="@android:color/transparent"
     android:textSize="12sp"
     android:padding="5dip"
