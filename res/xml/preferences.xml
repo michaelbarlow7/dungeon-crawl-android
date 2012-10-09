@@ -160,14 +160,15 @@
 	   android:title="@string/preferences_alwaysrun_title"
 	   android:summary="@string/preferences_alwaysrun_summary" 
 	   android:dependency="crawl.enabletouch" />
-	<ListPreference
+	<!--Not using this right now, but might in the future -->
+	<!--ListPreference
 	   android:title="Center screen tap"
 	   android:summary="Select functionality for center screen tap"
 	   android:key="crawl.centerscreentap"
 	   android:defaultValue="Space"
 	   android:dependency="crawl.enabletouch"
 	   android:entries="@array/virtKeyActionDescriptions"
-	   android:entryValues="@array/virtKeyActions"/>
+	   android:entryValues="@array/virtKeyActions"/-->
   </PreferenceCategory>
     <PreferenceCategory android:key="configFiles" android:title="Config Files" >
     </PreferenceCategory>

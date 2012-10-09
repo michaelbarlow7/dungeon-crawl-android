@@ -8,7 +8,7 @@ public class StateManager
 {
 	static final int KEY_A1 = 0534; /* upper left of keypad */
 	static final int KEY_A3 = 0535; /* upper right of keypad */
-	static final int KEY_B2 = 0536; /* center of keypad */// CURRENTLY NOT USED
+	static final int KEY_B2 = 0536; /* center of keypad */
 	static final int KEY_C1 = 0537; /* lower left of keypad */
 	static final int KEY_C3 = 0540; /* lower right of keypad */
 	static final int KEY_DOWN = 0402; /* down-arrow key */
