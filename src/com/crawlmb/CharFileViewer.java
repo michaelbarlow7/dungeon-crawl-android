@@ -40,10 +40,13 @@ import android.text.Spannable;
 import android.text.method.ArrowKeyMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -119,10 +122,19 @@ public class CharFileViewer extends Activity
 		setContentView(R.layout.char_file_viewer);
 
 		mText = (TextView) findViewById(R.id.note);
-//		registerForContextMenu(mText);
+		registerForContextMenu(mText);
 
 	}
-
+	
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+      ContextMenuInfo menuInfo) 
+	{
+	  super.onCreateContextMenu(menu, v, menuInfo);
+	  MenuInflater inflater = getMenuInflater();
+	  inflater.inflate(R.menu.char_file_menu, menu);
+}
+	
 	private String readFile(File file)
 	{
 
@@ -306,6 +318,15 @@ public class CharFileViewer extends Activity
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+		clipboardManager.setText(mText.getText());
+		Toast.makeText(this, R.string.text_copied, Toast.LENGTH_SHORT).show();
+		return super.onOptionsItemSelected(item);
+	}
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) 
 	{
 		ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
 		clipboardManager.setText(mText.getText());
