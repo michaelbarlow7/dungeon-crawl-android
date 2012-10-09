@@ -407,11 +407,10 @@ public class ConfigEditor extends Activity
     AssetManager assetManager = getAssets();
     String destname = getFilesDir().toString() + "/settings/init.txt";
     File newasset = new File(destname);
-    newasset.delete();// Delete the old file, make way for the new
     try
     {
       newasset.createNewFile();
-      BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(newasset));
+      BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(newasset, false));
       BufferedInputStream in = new BufferedInputStream(assetManager.open("settings/init.txt"));
       int b;
       while ((b = in.read()) != -1)

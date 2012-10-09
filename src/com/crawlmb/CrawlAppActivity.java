@@ -2,7 +2,10 @@ package com.crawlmb;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -12,22 +15,28 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.AssetManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 public class CrawlAppActivity extends Activity
 {
 	public static final String TAG = CrawlAppActivity.class.getName();
 	private static final int INSTALL_DIALOG_ID = 0;
+	private static final int WARNING_DIALOG_ID = 1;
 	private ProgressDialog installDialog;
-
-	private File dataDirectory;
+	private int versionCode = -1;
+  private String versionName;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -38,16 +47,116 @@ public class CrawlAppActivity extends Activity
 
 		setBackground();
 		
-		dataDirectory = new File(getFilesDir() + "/dat");
-		if (dataDirectory.exists())
-		{
-			startGameActivity();
-		}
-		else
-		{
-			new InstallProgramTask().execute();
-		}
+		installIfRequired();
 	}
+
+	// Install a new version if we need to
+  private void installIfRequired()
+  {
+    File versionFile = new File(getFilesDir() + "/version.txt");
+		if (versionFile.exists())
+		{
+		  String version = readFile(versionFile);
+		  if (version != null && version.trim().length() > 0 && getVersionCode() == Integer.parseInt(version))
+		  {
+		    startGameActivity();
+		    return;
+		  }
+		}
+		// If save folder exists, show warning dialog
+		File saveDir = new File(getFilesDir() + "/saves");
+		if (saveDir.exists())
+		{
+		  showDialog(WARNING_DIALOG_ID);
+		  return;
+		}
+		new InstallProgramTask().execute();
+  }
+
+  private int getVersionCode()
+  {
+    if (versionCode == -1)
+    {
+    try
+    {
+      versionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
+    }
+    catch (NameNotFoundException e)
+    {
+      e.printStackTrace();
+    }
+      
+    }
+    return versionCode;
+  }
+  
+  private String getVersionName()
+  {
+    if (versionName == null)
+    {
+    try
+    {
+      versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+    }
+    catch (NameNotFoundException e)
+    {
+      e.printStackTrace();
+    }
+      
+    }
+    return versionName;
+  }
+	
+	 private String readFile(File file)
+	  {
+
+	    FileInputStream fis = null;
+	    BufferedInputStream bis = null;
+	    DataInputStream dis = null;
+	    StringBuffer sb = new StringBuffer();
+
+	    try
+	    {
+	      fis = new FileInputStream(file);
+
+	      // Here BufferedInputStream is added for fast reading.
+	      bis = new BufferedInputStream(fis);
+	      dis = new DataInputStream(bis);
+
+	      // dis.available() returns 0 if the file does not have more lines.
+	      while (dis.available() != 0)
+	      {
+
+	        // this statement reads the line from the file and print it to
+	        // the console.
+	        sb.append(dis.readLine());
+	        if (dis.available() != 0)
+	        {
+	          sb.append("\n");
+	        }
+	      }
+
+	      // dispose all the resources after using them.
+	      fis.close();
+	      bis.close();
+	      dis.close();
+
+	    }
+	    catch (FileNotFoundException e)
+	    {
+	      Log.e(TAG, "File not found", e);
+	      Toast.makeText(this, R.string.file_not_found, Toast.LENGTH_SHORT).show();
+	      return null;
+	    }
+	    catch (IOException e)
+	    {
+	      Log.e(TAG, "File not found", e);
+	      Toast.makeText(this, R.string.error_reading_file, Toast.LENGTH_SHORT).show();
+	      return null;
+	    }
+
+	    return sb.toString();
+	  }
 
 	private void setBackground()
 	{
@@ -73,17 +182,54 @@ public class CrawlAppActivity extends Activity
 	@Override
 	public Dialog onCreateDialog(int id)
 	{
-		if (id != INSTALL_DIALOG_ID)
-		{
-			return null;
-		}
-		installDialog = new ProgressDialog(this);
-		installDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-		installDialog.setTitle(R.string.install_dialog_title);
-		installDialog.setIndeterminate(true);
-		installDialog.setCancelable(false);
-		return installDialog;
+	  switch (id)
+    {
+    case INSTALL_DIALOG_ID:
+      installDialog = new ProgressDialog(this);
+      installDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+      installDialog.setTitle(R.string.install_dialog_title);
+      installDialog.setIndeterminate(true);
+      installDialog.setCancelable(false);
+      return installDialog;
+    case WARNING_DIALOG_ID:
+      AlertDialog.Builder builder = new AlertDialog.Builder(this);
+      builder.setIcon(android.R.drawable.ic_dialog_alert);
+      builder.setTitle(R.string.warning_dialog_title);
+      builder.setMessage(getString(R.string.warning_dialog_message, getVersionName()));
+      builder.setPositiveButton(R.string.warning_dialog_positive_button, new DialogInterface.OnClickListener()
+      {
+        
+        @Override
+        public void onClick(DialogInterface dialog, int which)
+        {
+          new InstallProgramTask().execute();
+        }
+      });
+      builder.setNeutralButton(R.string.warning_dialog_neutral_button, new DialogInterface.OnClickListener()
+      {
+        
+        @Override
+        public void onClick(DialogInterface dialog, int which)
+        {
+          Intent launchBrowser = new Intent(Intent.ACTION_VIEW, Uri.parse("http://code.google.com/p/dungeon-crawl-android/downloads/list"));
+          startActivity(launchBrowser);
+          finish();
+        }
+      });
+      builder.setNegativeButton(R.string.menu_quit, new DialogInterface.OnClickListener()
+      {
+        
+        @Override
+        public void onClick(DialogInterface dialog, int which)
+        {
+          finish();
+        }
+      });
+      return builder.create();
 
+    default:
+      return null;
+    }
 	}
 
 	private void chmod(String filename, int permissions)
@@ -168,7 +314,7 @@ public class CrawlAppActivity extends Activity
 		@Override
 		protected Void doInBackground(Void... params)
 		{
-			totalFiles = 286; //Number of files that need creating. Hard-coded I know, but
+			totalFiles = 480; //Number of files that need creating. Hard-coded I know, but
 							  // counting them dynamically took a surprising amount of time
 			if (installDialog != null)
 			{
@@ -192,12 +338,41 @@ public class CrawlAppActivity extends Activity
 			publishProgress(++installedFiles);
 
 			copyFile("README.txt");
+			delete(new File(getFilesDir() + "/dat"));
 			copyFileOrDir("dat");
-			copyFileOrDir("settings");
+			// Only copy the settings folder if it doesn't already exist
+			File settingsFolder = new File(getFilesDir() + "/settings");
+			if (!settingsFolder.exists())
+			{
+			  copyFileOrDir("settings");
+			}
 			copyFileOrDir("docs");
+			writeVersionFile();
+			publishProgress(++installedFiles);
+			Log.d(TAG, "Total number of files copied: " + installedFiles);
 			return null;
 		}
-		private void mkdir(String relativePath)
+		private void delete(File path)
+    {
+      if(!path.exists())
+      {
+        return;
+      }
+      File[] list = path.listFiles();
+      if (list == null) //File, not directory
+      {
+        path.delete();
+        return;
+      }
+      
+      for (int i = 0; i < list.length; i++)
+      {
+        delete(list[i]);
+      }
+        
+    }
+
+    private void mkdir(String relativePath)
 		{
 			// FIXME: making files using this method, because we can't seem to
 			// make files using the native code for some reason
@@ -248,7 +423,7 @@ public class CrawlAppActivity extends Activity
 			try
 			{
 				newasset.createNewFile();
-				BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(newasset));
+				BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(newasset, false));
 				BufferedInputStream in = new BufferedInputStream(assetManager.open(fileName));
 				int b;
 				while ((b = in.read()) != -1)
@@ -283,4 +458,21 @@ public class CrawlAppActivity extends Activity
 			startGameActivity();
 		}
 	}
+	
+  private void writeVersionFile()
+  {
+    FileOutputStream fileOutputStream;
+    try
+    {
+      fileOutputStream = new FileOutputStream(getFilesDir() + "/version.txt",false);
+      BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
+      bufferedOutputStream.write(String.valueOf(getVersionCode()).getBytes());
+      bufferedOutputStream.flush();
+      bufferedOutputStream.close();
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+    }
+  } 
 }

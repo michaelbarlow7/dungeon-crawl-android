@@ -128,7 +128,6 @@ public class CrawlKeyboardView extends View implements View.OnClickListener {
         void swipeUp();
     }
 
-    private static final boolean DEBUG = false;
     private static final int NOT_A_KEY = -1;
     private static final int[] KEY_DELETE = { Keyboard.KEYCODE_DELETE };
 //    private static final int[] LONG_PRESSABLE_STATE_SET = { R.attr.state_long_pressable };   
@@ -177,7 +176,6 @@ public class CrawlKeyboardView extends View implements View.OnClickListener {
 
     private boolean mPreviewCentered = false;
     private boolean mShowPreview = true;
-    private boolean mShowTouchPoints = true;
     private int mPopupPreviewX;
     private int mPopupPreviewY;
     private int mWindowY;
@@ -726,17 +724,6 @@ public class CrawlKeyboardView extends View implements View.OnClickListener {
             paint.setColor((int) (mBackgroundDimAmount * 0xFF) << 24);
             canvas.drawRect(0, 0, getWidth(), getHeight(), paint);
         }
-
-        if (DEBUG && mShowTouchPoints) {
-            paint.setAlpha(128);
-            paint.setColor(0xFFFF0000);
-            canvas.drawCircle(mStartX, mStartY, 3, paint);
-            canvas.drawLine(mStartX, mStartY, mLastX, mLastY, paint);
-            paint.setColor(0xFF0000FF);
-            canvas.drawCircle(mLastX, mLastY, 3, paint);
-            paint.setColor(0xFF00FF00);
-            canvas.drawCircle((mStartX + mLastX) / 2, (mStartY + mLastY) / 2, 2, paint);
-        }
         
         mDrawPending = false;
         mDirtyRect.setEmpty();
@@ -1091,9 +1078,6 @@ public class CrawlKeyboardView extends View implements View.OnClickListener {
         return false;
     }
 
-    private long mOldEventTime;
-    private boolean mUsedVelocity;
-
     @Override
     public boolean onTouchEvent(MotionEvent me) {
         // Convert multi-pointer up/down events to single up/down events to 
@@ -1141,7 +1125,6 @@ public class CrawlKeyboardView extends View implements View.OnClickListener {
         int touchY = (int) me.getY() + mVerticalCorrection - getPaddingTop();
         final int action = me.getAction();
         final long eventTime = me.getEventTime();
-        mOldEventTime = eventTime;
         int keyIndex = getKeyIndices(touchX, touchY, null);
         mPossiblePoly = possiblePoly;
 
