@@ -67,7 +67,7 @@ import java.util.Map;
  */
 public class CrawlKeyboardView extends View implements View.OnClickListener {
 
-    private static final int KEY_ALPHA_LEVEL = 128;
+    private static final int KEY_ALPHA_LEVEL = 120;
 
 	/**
      * Listener for virtual keyboard events.
