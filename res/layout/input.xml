@@ -12,5 +12,7 @@
         crawl:keyHintColor="#FFAAAAAA"
         crawl:keyCursorColor="#FFFFFFFF"
         crawl:keyTextStyle="bold"
+        crawl:shadowColor="#FF33B5E5"
+        crawl:shadowRadius="9"
         crawl:recolorSymbols="true"
         />
