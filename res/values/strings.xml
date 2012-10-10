@@ -7,7 +7,7 @@
     <string name="menu_quit">Quit</string>
     <string name="install_dialog_title">Installing Dungeon Crawl: Stone Soup</string>
     <string name="warning_dialog_title">Warning</string>
-    <string name="warning_dialog_message">Pressing \"Install\" will install the latest version of Dungeon Crawl. If you have any saved characters currently running, they may not be compatible with this version.\nYou can download an older version of the app if you wish to continue playing with your older characters. Press \""Download older version\" to download an older version from the project website (this release is %s, so try one before that). Otherwise, just press \"Install\" to continue installing the latest version.</string>
+    <string name="warning_dialog_message">Pressing \"Install\" will install the latest version of Dungeon Crawl. If you have any saved characters currently running, they may not be compatible with this version.\nYou can download an older version of the app if you wish to continue playing with your older characters. Press \""Download older version\" to download an older version from the project website (this release is %s, so try one before that). Otherwise, just press \"Install\" to continue installing the latest version.\nIf you mess everything up, you can still backup the saves directory from the preference screen</string>
     <string name="warning_dialog_positive_button">Install</string>
     <string name="warning_dialog_neutral_button">Download old version</string>
     <string name="warning_dialog_negative_button">Cancel</string>
@@ -16,6 +16,13 @@
     <string name="copy_text">Copy text</string>
     <string name="text_copied">Text copied to clipboard</string>
     <string name="morgue">Morgue</string>
+    <string name="save_files">Save Files</string>
+    <string name="backup_save_directory">Backup save directory</string>
+    <string name="backup_saves_dialog_message">The save directory will be backed up to here:</string>
+    <string name="backup">Backup</string>
+    <string name="copying_files">Copying files...</string>
+    <string name="files_copied_successfully">Files copied successfully</string>
+    <string name="error_copying_files">Error copying files</string>
 
     <string name="preferences_vibrate_title">Vibrate</string>
     <string name="preferences_vibrate_summary">Enable or disable vibration in game</string>

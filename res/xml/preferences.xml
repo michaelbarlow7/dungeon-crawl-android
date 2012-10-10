@@ -178,4 +178,6 @@
             android:title="Character files...">
         </Preference>
     </PreferenceCategory>
+    <PreferenceCategory android:key="saveFiles" android:title="@string/save_files">
+    </PreferenceCategory>
 </PreferenceScreen>
