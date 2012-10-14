@@ -366,7 +366,9 @@ public class TermView extends View implements OnGestureListener
 		case 4:
 			key = StateManager.KEY_LEFT;
 			break;
-		// case '5': key = ' '; break; // now configurable below
+	  case 5: 
+      key = StateManager.KEY_B2; 
+      break; 
 		case 6:
 			key = StateManager.KEY_RIGHT;
 			break;

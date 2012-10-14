@@ -87,7 +87,7 @@ public class DirectionalTouchView extends View implements  OnGestureListener
 		case 4:
 			key = StateManager.KEY_LEFT;
 			break;
-		 case 5: 
+		case 5: 
 		   key = StateManager.KEY_B2; 
 		   break; 
 		case 6:
