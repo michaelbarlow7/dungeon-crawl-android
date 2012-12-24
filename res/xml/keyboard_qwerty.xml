@@ -39,7 +39,7 @@
     </Row>
     
     <Row>
-        <Key android:codes="42" android:keyLabel="*" android:keyEdgeFlags="left"/>
+        <Key android:codes="9" android:keyIcon="@drawable/sym_keyboard_tab" android:keyEdgeFlags="left"/>
         <Key android:codes="97" android:keyLabel="a"/>
         <Key android:codes="115" android:keyLabel="s"/>
         <Key android:codes="100" android:keyLabel="d"/>
