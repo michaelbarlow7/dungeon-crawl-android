@@ -78,7 +78,7 @@ public class StateManager
 
 	public int getKeyEnter()
 	{
-		return 0x9C;
+		return 13;
 	}
 
 	public int getKeyEsc()
