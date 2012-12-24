@@ -12,5 +12,6 @@
     android:textSize="12sp"
     android:padding="5dip"
     android:gravity="top"
+    android:typeface="monospace"
 />
 </ScrollView>
