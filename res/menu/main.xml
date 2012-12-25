@@ -2,4 +2,6 @@
    <item android:title="@string/menu_help" android:numericShortcut="1" android:icon="@drawable/menu_help"/>
    <item android:title="@string/menu_preferences" android:numericShortcut="2" android:icon="@drawable/menu_preferences"/>   
    <item android:title="@string/menu_quit" android:numericShortcut="3" android:icon="@drawable/menu_quit"/>
+   <item android:title="@string/menu_reset_terminal_position" android:numericShortcut="4" android:icon="@android:drawable/ic_menu_revert"/>
+   <item android:title="@string/menu_lock_terminal_position" android:numericShortcut="5" android:icon="@android:drawable/ic_lock_lock"/>
 </menu>

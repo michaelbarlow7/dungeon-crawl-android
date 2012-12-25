@@ -510,12 +510,19 @@ public class TermView extends View implements GestureDetector.OnGestureListener,
   {
   }
   
-  public void savePosition()
+  private void savePosition()
   {
 	  SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
 	  editor.putFloat(SCALE_FACTOR_PREFERENCE, scaleFactor);
 	  editor.putInt(SCROLL_X_PREFERENCE, getScrollX());
 	  editor.putInt(SCROLL_Y_PREFERENCE, getScrollY());
 	  editor.commit();
+  }
+  
+  public void resetTerminalPosition()
+  {
+    scrollTo(0, 0);
+    scaleFactor = 1.0f;
+    invalidate();
   }
 }

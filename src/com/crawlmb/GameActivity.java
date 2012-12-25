@@ -91,17 +91,22 @@ public class GameActivity extends Activity // implements OnScoreSubmitObserver {
 		Intent intent;
 		switch (item.getNumericShortcut())
 		{
-		case '1':
+		case '1'://Help
 			 intent = new Intent(this, HelpActivity.class);
 			 startActivity(intent);
 			break;
-		case '2':
+		case '2'://Preferences
 			intent = new Intent(this, PreferencesActivity.class);
 			startActivity(intent);
 			break;
-		case '3':
+		case '3'://Quit
 			finish();
 			break;
+		case '4'://Reset terminal position
+		  term.resetTerminalPosition();
+		  break;
+		case '5'://Lock terminal position
+		  break;
 		}
 		return super.onMenuItemSelected(featureId, item);
 	}
