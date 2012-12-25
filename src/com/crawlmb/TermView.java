@@ -18,12 +18,14 @@
 package com.crawlmb;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.text.InputType;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -33,14 +35,17 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.GestureDetector;
 import android.view.WindowManager;
-import android.view.GestureDetector.OnGestureListener;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
+import android.view.ScaleGestureDetector;
 
-public class TermView extends View implements OnGestureListener
+public class TermView extends View implements GestureDetector.OnGestureListener, ScaleGestureDetector.OnScaleGestureListener
 {
 
-	Typeface tfStd;
+	private static final String SCALE_FACTOR_PREFERENCE = "scaleFactor";
+	private static final String SCROLL_X_PREFERENCE = "scrollX";
+	private static final String SCROLL_Y_PREFERENCE = "scrollY";
+  Typeface tfStd;
 	Typeface tfTiny;
 	Bitmap bitmap;
 	Canvas canvas;
@@ -58,7 +63,10 @@ public class TermView extends View implements OnGestureListener
 	private Handler handler = null;
 	private StateManager state = null;
 
-	private GestureDetector gesture;
+	private GestureDetector gestureDetector;
+	private ScaleGestureDetector scaleGestureDetector;
+	
+	private float scaleFactor;
 
 	public TermView(Context context)
 	{
@@ -91,6 +99,10 @@ public class TermView extends View implements OnGestureListener
 
 	protected void initTermView(Context context)
 	{
+	  SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+	  scaleFactor = preferences.getFloat(SCALE_FACTOR_PREFERENCE, 1.0f);
+	  scrollTo(preferences.getInt(SCROLL_X_PREFERENCE, 0), preferences.getInt(SCROLL_Y_PREFERENCE, 0));
+	      
 		fore = new Paint();
 		fore.setTextAlign(Paint.Align.LEFT);
 		if (isHighRes())
@@ -106,13 +118,15 @@ public class TermView extends View implements OnGestureListener
 		cursor.setStrokeWidth(0);
 
 		setFocusableInTouchMode(true);
-		gesture = new GestureDetector(context, this);
+		gestureDetector = new GestureDetector(context, this);
+		scaleGestureDetector = new ScaleGestureDetector(context, this);
 	}
 
 	protected void onDraw(Canvas canvas)
 	{
 		if (bitmap != null)
 		{
+	    canvas.scale(scaleFactor, scaleFactor);
 			canvas.drawBitmap(bitmap, 0, 0, null);
 		}
 	}
@@ -301,7 +315,14 @@ public class TermView extends View implements OnGestureListener
 	@Override
 	public boolean onTouchEvent(MotionEvent me)
 	{
-		return gesture.onTouchEvent(me);
+	  if (me.getAction() == MotionEvent.ACTION_UP)
+	  {
+	    // Save position data once the user has finished manipulating the TermView
+	    savePosition();
+	  }
+	  boolean scaleGestureHandled =  scaleGestureDetector.onTouchEvent(me);
+	  boolean gestureHandled = gestureDetector.onTouchEvent(me);
+	  return scaleGestureHandled || gestureHandled;
 	}
 
 	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY)
@@ -313,17 +334,19 @@ public class TermView extends View implements OnGestureListener
 			newscrollx = 0;
 		if (newscrolly < 0)
 			newscrolly = 0;
-		if (newscrollx >= canvas_width - getWidth())
-			newscrollx = canvas_width - getWidth() + 1;
-		if (newscrolly >= canvas_height - getHeight())
-			newscrolly = canvas_height - getHeight() + 1;
+		
+		if (newscrollx >= canvas_width*scaleFactor - getWidth())
+			newscrollx = (int) (canvas_width*scaleFactor - getWidth() + 1);
+		if (newscrolly >= canvas_height*scaleFactor - getHeight())
+			newscrolly = (int) (canvas_height*scaleFactor - getHeight() + 1);
 
-		if (canvas_width <= getWidth())
+		if (canvas_width*scaleFactor <= getWidth())
 			newscrollx = 0; // this.getScrollX();
-		if (canvas_height <= getHeight())
+		if (canvas_height*scaleFactor <= getHeight())
 			newscrolly = 0; // this.getScrollY();
 
-		scrollTo(newscrollx, newscrolly);
+		scrollTo(newscrollx, newscrolly); //TODO: Do this at the beginning according to preferences
+		
 
 		return true;
 	}
@@ -338,6 +361,7 @@ public class TermView extends View implements OnGestureListener
 		return true;
 	}
 
+	@Override
 	public boolean onSingleTapUp(MotionEvent event)
 	{
 		if (!Preferences.getEnableTouch())
@@ -454,6 +478,7 @@ public class TermView extends View implements OnGestureListener
 		}
 	}
 
+	//OnGestureListener methods
 	@Override
 	public void onLongPress(MotionEvent e)
 	{
@@ -463,4 +488,34 @@ public class TermView extends View implements OnGestureListener
 	public void onShowPress(MotionEvent e)
 	{
 	}
+
+	//OnScaleGestureListener methods
+  @Override
+  public boolean onScale(ScaleGestureDetector detector)
+  {
+    scaleFactor *= detector.getScaleFactor();
+    scaleFactor = Math.max(0.5f, Math.min(scaleFactor, 2.0f));
+    invalidate();
+    return true;
+  }
+
+  @Override
+  public boolean onScaleBegin(ScaleGestureDetector detector)
+  {
+    return true;
+  }
+
+  @Override
+  public void onScaleEnd(ScaleGestureDetector detector)
+  {
+  }
+  
+  public void savePosition()
+  {
+	  SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
+	  editor.putFloat(SCALE_FACTOR_PREFERENCE, scaleFactor);
+	  editor.putInt(SCROLL_X_PREFERENCE, getScrollX());
+	  editor.putInt(SCROLL_Y_PREFERENCE, getScrollY());
+	  editor.commit();
+  }
 }
