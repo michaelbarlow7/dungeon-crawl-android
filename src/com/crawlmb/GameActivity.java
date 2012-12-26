@@ -77,12 +77,30 @@ public class GameActivity extends Activity // implements OnScoreSubmitObserver {
 		rebuildViews();
 	}
 
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
 		super.onCreateOptionsMenu(menu);
 		MenuInflater inflater = new MenuInflater(getApplication());
 		inflater.inflate(R.menu.main, menu);
 		return true;
+	}
+	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu)
+	{
+	  super.onPrepareOptionsMenu(menu);
+	  MenuItem menuItem = menu.findItem(R.id.menu_lock_terminal_position);
+	  if (term.getLockPositioning())
+	  {
+	    menuItem.setTitle(R.string.menu_unlock_terminal_position);
+	  }
+	  else
+	  {
+	    menuItem.setTitle(R.string.menu_lock_terminal_position);
+	  }
+	  
+	  return true;
 	}
 
 	@Override
@@ -106,6 +124,7 @@ public class GameActivity extends Activity // implements OnScoreSubmitObserver {
 		  term.resetTerminalPosition();
 		  break;
 		case '5'://Lock terminal position
+		  term.toggleLockPosition();
 		  break;
 		}
 		return super.onMenuItemSelected(featureId, item);

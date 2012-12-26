@@ -42,7 +42,8 @@ import android.view.ScaleGestureDetector;
 public class TermView extends View implements GestureDetector.OnGestureListener, ScaleGestureDetector.OnScaleGestureListener
 {
 
-	private static final String SCALE_FACTOR_PREFERENCE = "scaleFactor";
+	private static final String LOCK_POSITIONING_PREFERENCE = "lockPositioningPreference";
+  private static final String SCALE_FACTOR_PREFERENCE = "scaleFactor";
 	private static final String SCROLL_X_PREFERENCE = "scrollX";
 	private static final String SCROLL_Y_PREFERENCE = "scrollY";
   Typeface tfStd;
@@ -67,6 +68,8 @@ public class TermView extends View implements GestureDetector.OnGestureListener,
 	private ScaleGestureDetector scaleGestureDetector;
 	
 	private float scaleFactor;
+	
+	private boolean lockPositioning;
 
 	public TermView(Context context)
 	{
@@ -102,6 +105,7 @@ public class TermView extends View implements GestureDetector.OnGestureListener,
 	  SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 	  scaleFactor = preferences.getFloat(SCALE_FACTOR_PREFERENCE, 1.0f);
 	  scrollTo(preferences.getInt(SCROLL_X_PREFERENCE, 0), preferences.getInt(SCROLL_Y_PREFERENCE, 0));
+	  lockPositioning = preferences.getBoolean(LOCK_POSITIONING_PREFERENCE, false);
 	      
 		fore = new Paint();
 		fore.setTextAlign(Paint.Align.LEFT);
@@ -327,6 +331,10 @@ public class TermView extends View implements GestureDetector.OnGestureListener,
 
 	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY)
 	{
+	  if (lockPositioning)
+	  {
+	    return false;
+	  }
 		int newscrollx = this.getScrollX() + (int) distanceX;
 		int newscrolly = this.getScrollY() + (int) distanceY;
 
@@ -493,6 +501,10 @@ public class TermView extends View implements GestureDetector.OnGestureListener,
   @Override
   public boolean onScale(ScaleGestureDetector detector)
   {
+    if(lockPositioning)
+    {
+      return false;
+    }
     scaleFactor *= detector.getScaleFactor();
     scaleFactor = Math.max(0.5f, Math.min(scaleFactor, 2.0f));
     invalidate();
@@ -502,6 +514,10 @@ public class TermView extends View implements GestureDetector.OnGestureListener,
   @Override
   public boolean onScaleBegin(ScaleGestureDetector detector)
   {
+    if(lockPositioning)
+    {
+      return false;
+    }
     return true;
   }
 
@@ -524,5 +540,18 @@ public class TermView extends View implements GestureDetector.OnGestureListener,
     scrollTo(0, 0);
     scaleFactor = 1.0f;
     invalidate();
+  }
+  
+  public void toggleLockPosition()
+  {
+    lockPositioning = !lockPositioning;
+	  SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
+    editor.putBoolean(LOCK_POSITIONING_PREFERENCE, lockPositioning);
+    editor.commit();
+  }
+  
+  public boolean getLockPositioning()
+  {
+    return lockPositioning;
   }
 }
