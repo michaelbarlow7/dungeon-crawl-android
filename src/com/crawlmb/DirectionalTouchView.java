@@ -2,27 +2,29 @@ package com.crawlmb;
 
 import android.content.Context;
 import android.view.GestureDetector;
-import android.view.GestureDetector.OnGestureListener;
+import android.view.ScaleGestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
-public class DirectionalTouchView extends View implements  OnGestureListener
+public class DirectionalTouchView extends View implements  GestureDetector.OnGestureListener, ScaleGestureDetector.OnScaleGestureListener
 {
 
-	private GestureDetector gesture;
+	private GestureDetector gestureDetector;
+	private ScaleGestureDetector scaleGestureDetector;
 	private StateManager state = null;
-	private OnGestureListener passThroughGestureListener;
+	private PassThroughListener passThroughListener;
 	
 	public DirectionalTouchView(Context context) 
 	{
 		super(context);
-		gesture = new GestureDetector(context, this);
+		gestureDetector = new GestureDetector(context, this);
+		scaleGestureDetector = new ScaleGestureDetector(context, this);
 		state = ((GameActivity) context).getStateManager();
 	}
 	
-	public void setTermView(OnGestureListener onGestureListener)
+	public void setPassThroughListener(PassThroughListener onGestureListener)
 	{
-		this.passThroughGestureListener = onGestureListener;
+		this.passThroughListener = onGestureListener;
 	}
 	
 
@@ -48,7 +50,7 @@ public class DirectionalTouchView extends View implements  OnGestureListener
 	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) 
 	{
 		//We want to pass the scroll motion to the terminal view
-		passThroughGestureListener.onScroll(e1, e2, distanceX, distanceY);
+		passThroughListener.onScroll(e1, e2, distanceX, distanceY);
 		return true;
 	}
 
@@ -114,7 +116,31 @@ public class DirectionalTouchView extends View implements  OnGestureListener
 	@Override
 	public boolean onTouchEvent(MotionEvent event)
 	{
-		return gesture.onTouchEvent(event);
+	  if (event.getAction() == MotionEvent.ACTION_UP)
+    {
+      // Save position data once the user has finished manipulating the TermView
+      passThroughListener.savePosition();
+    }
+    boolean scaleGestureHandled =  scaleGestureDetector.onTouchEvent(event);
+    boolean gestureHandled = gestureDetector.onTouchEvent(event);
+    return scaleGestureHandled || gestureHandled;
 	}
+
+  @Override
+  public boolean onScale(ScaleGestureDetector detector)
+  {
+    return passThroughListener.onScale(detector);
+  }
+
+  @Override
+  public boolean onScaleBegin(ScaleGestureDetector detector)
+  {
+    return passThroughListener.onScaleBegin(detector);
+  }
+
+  @Override
+  public void onScaleEnd(ScaleGestureDetector detector)
+  {
+  }
 
 }

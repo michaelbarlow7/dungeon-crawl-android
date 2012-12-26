@@ -39,7 +39,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.view.ScaleGestureDetector;
 
-public class TermView extends View implements GestureDetector.OnGestureListener, ScaleGestureDetector.OnScaleGestureListener
+public class TermView extends View implements GestureDetector.OnGestureListener, ScaleGestureDetector.OnScaleGestureListener, PassThroughListener
 {
 
 	private static final String LOCK_POSITIONING_PREFERENCE = "lockPositioningPreference";
@@ -526,7 +526,7 @@ public class TermView extends View implements GestureDetector.OnGestureListener,
   {
   }
   
-  private void savePosition()
+  public void savePosition()
   {
 	  SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
 	  editor.putFloat(SCALE_FACTOR_PREFERENCE, scaleFactor);

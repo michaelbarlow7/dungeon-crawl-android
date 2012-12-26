@@ -217,7 +217,7 @@ public class GameActivity extends Activity // implements OnScoreSubmitObserver {
 		directionalLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
 		directionalLayoutParams.addRule(RelativeLayout.ABOVE, virtualKeyboardId);
 		view.setLayoutParams(directionalLayoutParams);
-		view.setTermView(term);
+		view.setPassThroughListener(term);
 		screenLayout.addView(view);
 	}
 
