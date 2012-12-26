@@ -539,6 +539,7 @@ public class TermView extends View implements GestureDetector.OnGestureListener,
   {
     scrollTo(0, 0);
     scaleFactor = 1.0f;
+    savePosition();
     invalidate();
   }
   
