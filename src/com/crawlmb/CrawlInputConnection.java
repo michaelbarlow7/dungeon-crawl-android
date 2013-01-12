@@ -15,6 +15,10 @@ public class CrawlInputConnection extends BaseInputConnection
 
 	public boolean commitText(CharSequence text, int newCursorPosition) 
 	{	
+		if (text.length() == 0)
+		{
+			return true;
+		}
 		char c = text.charAt(0);
 		termView.addKey(c);
 		return true;
