@@ -56,24 +56,25 @@ public class CrawlAppActivity extends Activity
     File versionFile = new File(getFilesDir() + "/version.txt");
 		if (versionFile.exists())
 		{
-		  String version = readFile(versionFile);
-		  if (version != null && version.trim().length() > 0 && getVersionCode() == Integer.parseInt(version))
-		  {
+//		  String installedVersion = readFile(versionFile);
+//		  if (installedVersion != null && installedVersion.trim().length() > 0 && Integer.parseInt(installedVersion) >= 5)
+//		  {
+			  //already installed, just start the game
 		    startGameActivity();
 		    return;
-		  }
+//		  }
 		}
 		// If save folder exists, show warning dialog
-		File saveDir = new File(getFilesDir() + "/saves");
-		if (saveDir.exists())
-		{
-		  showDialog(WARNING_DIALOG_ID);
-		  return;
-		}
+//		File saveDir = new File(getFilesDir() + "/saves");
+//		if (saveDir.exists())
+//		{
+//		  showDialog(WARNING_DIALOG_ID);
+//		  return;
+//		}
 		new InstallProgramTask().execute();
   }
 
-  private int getVersionCode()
+  private int getApplicationVersionCode()
   {
     if (versionCode == -1)
     {
@@ -466,7 +467,7 @@ public class CrawlAppActivity extends Activity
     {
       fileOutputStream = new FileOutputStream(getFilesDir() + "/version.txt",false);
       BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
-      bufferedOutputStream.write(String.valueOf(getVersionCode()).getBytes());
+      bufferedOutputStream.write(String.valueOf(getApplicationVersionCode()).getBytes());
       bufferedOutputStream.flush();
       bufferedOutputStream.close();
     }
