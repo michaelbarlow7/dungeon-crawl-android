@@ -3,6 +3,7 @@
 
     <string name="app_name">Dungeon Crawl: Stone Soup for Android</string>
     <string name="menu_preferences">Preferences</string>
+    <string name="menu">Menu</string>
     <string name="menu_help">Help</string>
     <string name="menu_quit">Quit</string>
     <string name="menu_reset_terminal_position">Reset terminal position</string>

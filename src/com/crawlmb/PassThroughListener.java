@@ -13,4 +13,6 @@ public interface PassThroughListener
   
   public void savePosition();
 
+  public void onLongPress(MotionEvent e);
+
 }

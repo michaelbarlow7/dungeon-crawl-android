@@ -43,7 +43,7 @@ public class DirectionalTouchView extends View implements  GestureDetector.OnGes
 	@Override
 	public void onLongPress(MotionEvent e) 
 	{
-		
+		passThroughListener.onLongPress(e);
 	}
 
 	@Override

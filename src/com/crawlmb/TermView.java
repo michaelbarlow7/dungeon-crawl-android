@@ -29,8 +29,10 @@ import android.preference.PreferenceManager;
 import android.text.InputType;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Display;
 import android.view.KeyEvent;
+import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.GestureDetector;
@@ -490,6 +492,7 @@ public class TermView extends View implements GestureDetector.OnGestureListener,
 	@Override
 	public void onLongPress(MotionEvent e)
 	{
+		showContextMenu();
 	}
 
 	@Override
@@ -509,6 +512,14 @@ public class TermView extends View implements GestureDetector.OnGestureListener,
     scaleFactor = Math.max(0.5f, Math.min(scaleFactor, 2.0f));
     invalidate();
     return true;
+  }
+  
+  @Override
+  protected void onCreateContextMenu (ContextMenu menu)
+  {
+	MenuInflater inflater = new MenuInflater(getContext());
+	inflater.inflate(R.menu.main, menu);
+	menu.setHeaderTitle(R.string.menu);
   }
 
   @Override
