@@ -56,21 +56,18 @@ public class CrawlAppActivity extends Activity
     File versionFile = new File(getFilesDir() + "/version.txt");
 		if (versionFile.exists())
 		{
-//		  String installedVersion = readFile(versionFile);
-//		  if (installedVersion != null && installedVersion.trim().length() > 0 && Integer.parseInt(installedVersion) >= 5)
-//		  {
-			  //already installed, just start the game
+		  String installedVersion = readFile(versionFile);
+		  if (installedVersion != null && installedVersion.trim().length() > 0 && Integer.parseInt(installedVersion) >= 7)
+		  {
+			// already installed, just start the game
 		    startGameActivity();
 		    return;
-//		  }
+		  }
 		}
-		// If save folder exists, show warning dialog
-//		File saveDir = new File(getFilesDir() + "/saves");
-//		if (saveDir.exists())
-//		{
-//		  showDialog(WARNING_DIALOG_ID);
-//		  return;
-//		}
+		// If a crawl update would render previous saves unusable,
+		// we should show a warning dialog
+//		showDialog(WARNING_DIALOG_ID);
+//		return;
 		new InstallProgramTask().execute();
   }
 
@@ -342,6 +339,7 @@ public class CrawlAppActivity extends Activity
 			delete(new File(getFilesDir() + "/dat"));
 			copyFileOrDir("dat");
 			// Only copy the settings folder if it doesn't already exist
+			// Otherwise we might overwrite the user's settings
 			File settingsFolder = new File(getFilesDir() + "/settings");
 			if (!settingsFolder.exists())
 			{
