@@ -2,6 +2,7 @@ package com.crawlmb;
 
 import android.content.Context;
 import android.view.GestureDetector;
+import android.view.HapticFeedbackConstants;
 import android.view.ScaleGestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -65,6 +66,7 @@ public class DirectionalTouchView extends View implements  GestureDetector.OnGes
 	{
 		if (!Preferences.getEnableTouch())
 			return false;
+		performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
 
 		int x = (int) event.getX();
 		int y = (int) event.getY();

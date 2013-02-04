@@ -25,7 +25,6 @@ final public class Preferences
 	static final String KEY_LANDSCAPEKB = "crawl.landscapekb";
 	static final String KEY_PORTRAITFONTSIZE = "crawl.portraitfontsize";
 	static final String KEY_LANDSCAPEFONTSIZE = "crawl.landscapefontsize";
-	static final String KEY_ALWAYSRUN = "crawl.alwaysrun";
 
 	static final String KEY_GAMEPLUGIN = "crawl.gameplugin";
 	static final String KEY_GAMEPROFILE = "crawl.gameprofile";
@@ -35,6 +34,7 @@ final public class Preferences
 	static final String KEY_ACTIVEPROFILE = "crawl.activeprofile";
 
 	static final String KEY_INSTALLEDVERSION = "crawl.installedversion";
+	private static final String KEY_HAPTICFEEDBACKENABLED = "crawl.hapticfeedbackenabled";
 
 	private static SharedPreferences sharedPreferences;
 	private static int fontSize = 17;
@@ -177,5 +177,10 @@ final public class Preferences
 	public static KeyMapper getKeyMapper()
 	{
 		return keymapper;
+	}
+
+	public static boolean getHapticFeedbackEnabled() 
+	{
+		return sharedPreferences.getBoolean(Preferences.KEY_HAPTICFEEDBACKENABLED, true);
 	}
 }

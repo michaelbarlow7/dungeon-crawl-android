@@ -155,11 +155,10 @@
 	   android:title="@string/preferences_enabletouch_title"
 	   android:summary="@string/preferences_enabletouch_summary" />
 	<CheckBoxPreference 
-	   android:key="crawl.alwaysrun"
-	   android:defaultValue="true" 
-	   android:title="@string/preferences_alwaysrun_title"
-	   android:summary="@string/preferences_alwaysrun_summary" 
-	   android:dependency="crawl.enabletouch" />
+       android:key="crawl.hapticfeedbackenabled"
+       android:defaultValue="true" 
+       android:title="@string/preferences_haptic_feedback_title"
+       android:summary="@string/preferences_haptic_feedback_summary"/>
 	<!--Not using this right now, but might in the future -->
 	<!--ListPreference
 	   android:title="Center screen tap"

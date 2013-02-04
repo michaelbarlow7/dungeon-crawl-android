@@ -141,7 +141,7 @@ public class GameActivity extends Activity // implements OnScoreSubmitObserver {
 		super.finish();
 	}
 
-	protected void rebuildViews()
+	private void rebuildViews()
 	{
 		synchronized (StateManager.progress_lock)
 		{
@@ -172,6 +172,9 @@ public class GameActivity extends Activity // implements OnScoreSubmitObserver {
 			term.setLayoutParams(layoutParams);
 			term.setFocusable(true);
 			registerForContextMenu(term);
+			
+			boolean hapticFeedbackEnabled = Preferences.getHapticFeedbackEnabled();
+			term.setHapticFeedbackEnabled(hapticFeedbackEnabled);
 			state.link(term, handler);
 
 			screenLayout.addView(term);
@@ -187,10 +190,11 @@ public class GameActivity extends Activity // implements OnScoreSubmitObserver {
 			if (keyboardType.equals(keyboards[1])) // Crawl Keyboard
 			{
 				CrawlKeyboard virtualKeyboard = new CrawlKeyboard(this);
+				virtualKeyboard.virtualKeyboardView.setHapticFeedbackEnabled(hapticFeedbackEnabled);
 				screenLayout.addView(virtualKeyboard.virtualKeyboardView);
 				
 				//Add directional-key view
-				addDirectionalKeyView(virtualKeyboard.virtualKeyboardView.getId());
+				addDirectionalKeyView(virtualKeyboard.virtualKeyboardView.getId(), hapticFeedbackEnabled);
 				
 				getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 			}
@@ -213,7 +217,7 @@ public class GameActivity extends Activity // implements OnScoreSubmitObserver {
 		}
 	}
 
-	private void addDirectionalKeyView(int virtualKeyboardId) {
+	private void addDirectionalKeyView(int virtualKeyboardId, boolean hapticFeedbackEnabled) {
 		DirectionalTouchView view = new DirectionalTouchView(this);
 		RelativeLayout.LayoutParams directionalLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT,
 			LayoutParams.FILL_PARENT);
@@ -221,6 +225,7 @@ public class GameActivity extends Activity // implements OnScoreSubmitObserver {
 		directionalLayoutParams.addRule(RelativeLayout.ABOVE, virtualKeyboardId);
 		view.setLayoutParams(directionalLayoutParams);
 		view.setPassThroughListener(term);
+		view.setHapticFeedbackEnabled(hapticFeedbackEnabled);
 		screenLayout.addView(view);
 	}
 

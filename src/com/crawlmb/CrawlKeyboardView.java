@@ -39,6 +39,7 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.Gravity;
+import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -1153,6 +1154,7 @@ public class CrawlKeyboardView extends View implements View.OnClickListener {
 
         switch (action) {
             case MotionEvent.ACTION_DOWN:
+            	performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
                 mAbortKey = false;
                 mStartX = touchX;
                 mStartY = touchY;

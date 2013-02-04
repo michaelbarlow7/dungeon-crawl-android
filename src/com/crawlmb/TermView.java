@@ -31,6 +31,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Display;
+import android.view.HapticFeedbackConstants;
 import android.view.KeyEvent;
 import android.view.MenuInflater;
 import android.view.MotionEvent;
@@ -376,6 +377,7 @@ public class TermView extends View implements GestureDetector.OnGestureListener,
 	{
 		if (!Preferences.getEnableTouch())
 			return false;
+		performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
 
 		int x = (int) event.getX();
 		int y = (int) event.getY();
@@ -492,6 +494,7 @@ public class TermView extends View implements GestureDetector.OnGestureListener,
 	@Override
 	public void onLongPress(MotionEvent e)
 	{
+		performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
 		showContextMenu();
 	}
 
