@@ -36,7 +36,8 @@ public class CrawlAppActivity extends Activity
 	private static final int WARNING_DIALOG_ID = 1;
 	private ProgressDialog installDialog;
 	private int versionCode = -1;
-  private String versionName;
+	private String versionName;
+	private boolean updating = false;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -64,10 +65,12 @@ public class CrawlAppActivity extends Activity
 		    return;
 		  }
 		}
-		// If a crawl update would render previous saves unusable,
-		// we should show a warning dialog
-//		showDialog(WARNING_DIALOG_ID);
-//		return;
+	    // If save folder exists, we are updating
+		File saveDir = new File(getFilesDir() + "/saves");
+		if (saveDir.exists())
+		{
+		    updating = true;
+		}
 		new InstallProgramTask().execute();
   }
 
@@ -185,7 +188,7 @@ public class CrawlAppActivity extends Activity
     case INSTALL_DIALOG_ID:
       installDialog = new ProgressDialog(this);
       installDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-      installDialog.setTitle(R.string.install_dialog_title);
+      installDialog.setTitle(updating ? R.string.updating_dialog_title : R.string.install_dialog_title);
       installDialog.setIndeterminate(true);
       installDialog.setCancelable(false);
       return installDialog;
