@@ -302,9 +302,9 @@ public class KeyMapper
 			SharedPreferences.Editor ed = pref.edit();
 
 			// zero all keymap prefs
-			for (Iterator iter = keymapAll.values().iterator(); iter.hasNext();)
+			for (Iterator<KeyMap> iter = keymapAll.values().iterator(); iter.hasNext();)
 			{
-				map = (KeyMap) iter.next();
+				map = iter.next();
 				ed.putString(map.getPrefKey(), "");
 			}
 
@@ -396,9 +396,9 @@ public class KeyMapper
 			assignKeyMap(KEY_8KEY, '8');
 			assignKeyMap(KEY_9KEY, '9');
 
-			for (Iterator iter = keymapAssign.values().iterator(); iter.hasNext();)
+			for (Iterator<KeyMap> iter = keymapAssign.values().iterator(); iter.hasNext();)
 			{
-				map = (KeyMap) iter.next();
+				map = iter.next();
 				ed.putString(map.getPrefKey(), map.getPrefValue());
 			}
 			ed.putString("crawl.ctrldoubletap", "EnterKey");
@@ -407,9 +407,9 @@ public class KeyMapper
 		}
 		else
 		{
-			for (Iterator iter = keymapAll.values().iterator(); iter.hasNext();)
+			for (Iterator<KeyMap> iter = keymapAll.values().iterator(); iter.hasNext();)
 			{
-				map = (KeyMap) iter.next();
+				map = iter.next();
 				map.loadFromPref();
 				if (map.isAssigned())
 					keymapAssign.put(map.getPrefValue(), map);
