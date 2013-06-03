@@ -58,7 +58,7 @@ public class CrawlAppActivity extends Activity
 		if (versionFile.exists())
 		{
 		  String installedVersion = readFile(versionFile);
-		  if (installedVersion != null && installedVersion.trim().length() > 0 && Integer.parseInt(installedVersion) >= 7)
+		  if (installedVersion != null && installedVersion.trim().length() > 0 && Integer.parseInt(installedVersion) >= 8)
 		  {
 			// already installed, just start the game
 		    startGameActivity();
@@ -305,7 +305,7 @@ public class CrawlAppActivity extends Activity
 	private class InstallProgramTask extends AsyncTask<Void, Integer, Void>
 	{
 		private int totalFiles = 0;
-		private int installedFiles = 0;;
+		private int installedFiles = 0;
 		@Override
 		protected void onPreExecute()
 		{
@@ -315,7 +315,7 @@ public class CrawlAppActivity extends Activity
 		@Override
 		protected Void doInBackground(Void... params)
 		{
-			totalFiles = 480; //Number of files that need creating. Hard-coded I know, but
+			totalFiles = 541; //Number of files that need creating. Hard-coded I know, but
 							  // counting them dynamically took a surprising amount of time
 			if (installDialog != null)
 			{
