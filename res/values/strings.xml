@@ -26,6 +26,9 @@
     <string name="backup_save_directory">Backup save directory</string>
     <string name="backup_saves_dialog_message">The save directory will be backed up to here:</string>
     <string name="backup">Backup</string>
+    <string name="restore_save_directory">Restore save directory</string>
+    <string name="restore_saves_dialog_message">The save directory will be restored from here:</string>
+    <string name="restore">Restore</string>
     <string name="copying_files">Copying files...</string>
     <string name="files_copied_successfully">Files copied successfully</string>
     <string name="error_copying_files">Error copying files</string>

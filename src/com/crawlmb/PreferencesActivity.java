@@ -24,6 +24,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -43,104 +45,115 @@ import android.widget.Toast;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.preference.PreferenceCategory;
 
-public class PreferencesActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener
-{
+public class PreferencesActivity extends PreferenceActivity implements
+		OnSharedPreferenceChangeListener {
 
-	private final class CopySaveDirectoryTask extends AsyncTask<String, Void, Boolean>
-  {
-    public String TAG = "CopySaveDirectoryTask";
-    private String destination;
+	private final class CopySaveDirectoryTask extends
+			AsyncTask<String, Void, Boolean> {
+		public String TAG = "CopySaveDirectoryTask";
+		private String source;
+		private String destination;
+		private boolean reloadCrawl;
 
-    @Override
-    protected Boolean doInBackground(String... params)
-    {
-      destination = params[0];
-      boolean result = copyFileOrDir("saves");
-      
-      return result;
-    }
+		public CopySaveDirectoryTask(boolean reloadCrawl) {
+			this.reloadCrawl = reloadCrawl;
+		}
 
-    private boolean copyFileOrDir(String fileName)
-    {
-      String originalPath = getFilesDir() + "/" + fileName;
-      File originalPathFile = new File(originalPath);
-      File[] listOfFiles = originalPathFile.listFiles();
-      if (listOfFiles == null) // then we know it's a file, not a directory
-      {
-        return copyFile(fileName);
-      }
-      else
-      {
-        String destPath = destination + "/" + fileName;
+		void deleteRecursive(File fileOrDirectory) {
+			if (fileOrDirectory.isDirectory())
+				for (File child : fileOrDirectory.listFiles())
+					deleteRecursive(child);
 
-        File dir = new File(destPath);
-        boolean mkdirSuccess = dir.mkdir();
-        if (!mkdirSuccess)
-        {
-          return false;
-        }
-        
-        for (int i = 0; i < listOfFiles.length; i++)
-        {
-          boolean result = copyFileOrDir(fileName + "/" + listOfFiles[i].getName());
-          if (!result)
-          {
-            return false;
-          }
-        }
-        return true;
-      }
-    }
+			fileOrDirectory.delete();
+		}
 
-    private boolean copyFile(String fileName)
-    {
-      String destname = destination + "/" + fileName;
-      Log.d(TAG, "Copying: " + fileName + " to " + destname);
-      File destinationFile = new File(destname);
-      try
-      {
-        destinationFile.createNewFile();
-        BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(destinationFile, false));
-        BufferedInputStream in = new BufferedInputStream(new FileInputStream(getFilesDir() + "/" + fileName));
-        int b;
-        while ((b = in.read()) != -1)
-        {
-          out.write(b);
-        }
-        out.flush();
-        out.close();
-        in.close();
-      }
-      catch (IOException ex)
-      {
-        Log.e(TAG, "Exception occured copying " + fileName + ": " + ex);
-        return false;
-      }
-      return true;
-    }
+		@Override
+		protected Boolean doInBackground(String... params) {
+			source = params[0];
+			destination = params[1];
+			deleteRecursive(new File(destination));
+			boolean result = copyFileOrDir(source, "");
 
-    @Override
-    protected void onPostExecute(Boolean result)
-    {
-      removeDialog(DIALOG_COPY_FILES_PROGRESS);
-      int toastTextResource;
-      if (result)
-      {
-        toastTextResource = R.string.files_copied_successfully;
-      }
-      else
-      {
-        toastTextResource = R.string.error_copying_files;
-      }
-      Toast.makeText(PreferencesActivity.this, toastTextResource, Toast.LENGTH_LONG).show();
-    }
-  }
+			return result;
+		}
 
-  private static final int DIALOG_COPY_FILES_PROGRESS = 0;
+		private boolean copyFileOrDir(String prefix, String fileName) {
+			String originalPath = prefix + "/" + fileName;
+			File originalPathFile = new File(originalPath);
+			File[] listOfFiles = originalPathFile.listFiles();
+			if (listOfFiles == null) // then we know it's a file, not a
+										// directory
+			{
+				return copyFile(originalPath, fileName);
+			} else {
+				String destPath = destination + "/" + fileName;
 
-  @Override
-	protected void onCreate(Bundle savedInstanceState)
-	{
+				File dir = new File(destPath);
+				boolean mkdirSuccess = dir.mkdir();
+				if (!mkdirSuccess) {
+					return false;
+				}
+
+				for (int i = 0; i < listOfFiles.length; i++) {
+					boolean result = copyFileOrDir(prefix, fileName + "/"
+							+ listOfFiles[i].getName());
+					if (!result) {
+						return false;
+					}
+				}
+				return true;
+			}
+		}
+
+		private boolean copyFile(String originalPath, String fileName) {
+			String destname = destination + "/" + fileName;
+			Log.d(TAG, "Copying: " + fileName + " to " + destname);
+			File destinationFile = new File(destname);
+			try {
+				destinationFile.createNewFile();
+
+				InputStream in = new FileInputStream(originalPath);
+				OutputStream out = new FileOutputStream(destinationFile, false);
+
+				// Transfer bytes from in to out
+				byte[] buf = new byte[1024];
+				int len;
+				while ((len = in.read(buf)) > 0) {
+					out.write(buf, 0, len);
+				}
+				in.close();
+				out.close();
+			} catch (IOException ex) {
+				Log.e(TAG, "Exception occured copying " + fileName + ": " + ex);
+				return false;
+			}
+			return true;
+		}
+
+		@Override
+		protected void onPostExecute(Boolean result) {
+			removeDialog(DIALOG_COPY_FILES_PROGRESS);
+			int toastTextResource;
+			if (result) {
+				toastTextResource = R.string.files_copied_successfully;
+				if (reloadCrawl) {
+					Intent resultIntent = new Intent();
+					resultIntent.putExtra("reloadCrawl", true);
+					setResult(RESULT_OK, resultIntent);
+					finish();
+				}
+			} else {
+				toastTextResource = R.string.error_copying_files;
+			}
+			Toast.makeText(PreferencesActivity.this, toastTextResource,
+					Toast.LENGTH_LONG).show();
+		}
+	}
+
+	private static final int DIALOG_COPY_FILES_PROGRESS = 0;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		getPreferenceManager().setSharedPreferencesName(Preferences.NAME);
@@ -149,128 +162,152 @@ public class PreferencesActivity extends PreferenceActivity implements OnSharedP
 		addPreferencesFromResource(R.xml.preferences);
 
 		setConfigFilePreferences();
-		
+
 		setCharacterFilesIntent();
-		
+
 		addExportSavePreference();
+		addRestoreSavePreference();
 	}
 
-	private void addExportSavePreference()
-  {
-	  DialogPreference backupDialogPreference = new DialogPreference(this, null)
-    {
-	    @Override
-	    public void onClick(DialogInterface dialog, int which)
-	    {
-	      switch (which)
-	      {
-	      case DialogInterface.BUTTON_POSITIVE:
-	        // Get stuff in edittext, back it up to that directory
-	        EditText directoryBox = (EditText) getDialog().findViewById(R.id.directoryBox);
-	        String destination = directoryBox.getText().toString();
-	        backupSaveDirectory(destination);
-	        break;
-	      }
-	    }
-    };
-    backupDialogPreference.setDialogLayoutResource(R.layout.backup_dialog);
-    backupDialogPreference.setDialogTitle(R.string.backup_save_directory);
-    backupDialogPreference.setTitle(R.string.backup_save_directory);
-    backupDialogPreference.setPositiveButtonText(R.string.backup);
-    backupDialogPreference.setNegativeButtonText(android.R.string.cancel);
-    
-    PreferenceCategory saveFilesCategory = (PreferenceCategory) findPreference("saveFiles");
-    saveFilesCategory.addPreference(backupDialogPreference);
-    
-  }
+	private void addExportSavePreference() {
+		DialogPreference backupDialogPreference = new DialogPreference(this,
+				null) {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				switch (which) {
+				case DialogInterface.BUTTON_POSITIVE:
+					// Get stuff in edittext, back it up to that directory
+					EditText directoryBox = (EditText) getDialog()
+							.findViewById(R.id.directoryBox);
+					String destination = directoryBox.getText().toString();
+					backupSaveDirectory(destination);
+					break;
+				}
+			}
+		};
+		backupDialogPreference.setDialogLayoutResource(R.layout.backup_dialog);
+		backupDialogPreference.setDialogTitle(R.string.backup_save_directory);
+		backupDialogPreference.setTitle(R.string.backup_save_directory);
+		backupDialogPreference.setPositiveButtonText(R.string.backup);
+		backupDialogPreference.setNegativeButtonText(android.R.string.cancel);
 
-  private void backupSaveDirectory(String destination)
-  {
-    showDialog(DIALOG_COPY_FILES_PROGRESS);
-    new CopySaveDirectoryTask().execute(destination);
-  }
-  
-  @Override
-  public Dialog onCreateDialog(int id)
-  {
-    switch (id)
-    {
-    case DIALOG_COPY_FILES_PROGRESS:
-      ProgressDialog filesCopyingDialog = new ProgressDialog(this);
-      filesCopyingDialog.setMessage(getString(R.string.copying_files));
-      return filesCopyingDialog;
-    default:
-      break;
-    }
-    return null;
-  }
+		PreferenceCategory saveFilesCategory = (PreferenceCategory) findPreference("saveFiles");
+		saveFilesCategory.addPreference(backupDialogPreference);
 
-  private void setCharacterFilesIntent()
-	{
+	}
+
+	private void addRestoreSavePreference() {
+		DialogPreference backupDialogPreference = new DialogPreference(this,
+				null) {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				switch (which) {
+				case DialogInterface.BUTTON_POSITIVE:
+					// Get stuff in edittext, restore it from that directory
+					EditText directoryBox = (EditText) getDialog()
+							.findViewById(R.id.directoryBox);
+					String source = directoryBox.getText().toString();
+					restoreSaveDirectory(source);
+					break;
+				}
+			}
+		};
+		backupDialogPreference.setDialogLayoutResource(R.layout.restore_dialog);
+		backupDialogPreference.setDialogTitle(R.string.restore_save_directory);
+		backupDialogPreference.setTitle(R.string.restore_save_directory);
+		backupDialogPreference.setPositiveButtonText(R.string.restore);
+		backupDialogPreference.setNegativeButtonText(android.R.string.cancel);
+
+		PreferenceCategory saveFilesCategory = (PreferenceCategory) findPreference("saveFiles");
+		saveFilesCategory.addPreference(backupDialogPreference);
+
+	}
+
+	private void backupSaveDirectory(String destination) {
+		showDialog(DIALOG_COPY_FILES_PROGRESS);
+		new CopySaveDirectoryTask(false).execute(getFilesDir() + "/saves",
+				destination + "/saves");
+	}
+
+	private void restoreSaveDirectory(String source) {
+		showDialog(DIALOG_COPY_FILES_PROGRESS);
+		new CopySaveDirectoryTask(true).execute(source + "/saves",
+				getFilesDir() + "/saves");
+	}
+
+	@Override
+	public Dialog onCreateDialog(int id) {
+		switch (id) {
+		case DIALOG_COPY_FILES_PROGRESS:
+			ProgressDialog filesCopyingDialog = new ProgressDialog(this);
+			filesCopyingDialog.setMessage(getString(R.string.copying_files));
+			return filesCopyingDialog;
+		default:
+			break;
+		}
+		return null;
+	}
+
+	private void setCharacterFilesIntent() {
 		Preference characterFilesPreference = findPreference("character_files");
-		Intent characterFilesIntent = new Intent(this, CharacterFilesActivity.class);
+		Intent characterFilesIntent = new Intent(this,
+				CharacterFilesActivity.class);
 		characterFilesPreference.setIntent(characterFilesIntent);
 	}
 
-	private void setConfigFilePreferences()
-	{
+	private void setConfigFilePreferences() {
 		PreferenceCategory configFilePreferences = (PreferenceCategory) findPreference("configFiles");
-		String[] configFiles = getResources().getStringArray(R.array.config_files);
-		for (int i = 0; i < configFiles.length; i++)
-		{
-			EditConfigFilePreference editConfigFilePreference =
-					new EditConfigFilePreference(this, configFiles[i]);
+		String[] configFiles = getResources().getStringArray(
+				R.array.config_files);
+		for (int i = 0; i < configFiles.length; i++) {
+			EditConfigFilePreference editConfigFilePreference = new EditConfigFilePreference(
+					this, configFiles[i]);
 			configFilePreferences.addPreference(editConfigFilePreference);
 		}
 
 		// The macro file is a special case. We should only show this setting if
 		// the file exists
 		File macroFile = new File(getFilesDir() + "/settings/macro.txt");
-		if (macroFile.exists())
-		{
-			EditConfigFilePreference editConfigFilePreference = new EditConfigFilePreference(this, "macro");
+		if (macroFile.exists()) {
+			EditConfigFilePreference editConfigFilePreference = new EditConfigFilePreference(
+					this, "macro");
 			configFilePreferences.addPreference(editConfigFilePreference);
 		}
 	}
 
 	@Override
-	protected void onResume()
-	{
+	protected void onResume() {
 		super.onResume();
 
 		setSummaryAll(getPreferenceScreen());
-		getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+		getPreferenceScreen().getSharedPreferences()
+				.registerOnSharedPreferenceChangeListener(this);
 
-		SharedPreferences pref = getSharedPreferences(Preferences.NAME, MODE_PRIVATE);
+		SharedPreferences pref = getSharedPreferences(Preferences.NAME,
+				MODE_PRIVATE);
 
-		if (pref.getBoolean(Preferences.KEY_FULLSCREEN, true))
-		{
+		if (pref.getBoolean(Preferences.KEY_FULLSCREEN, true)) {
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		}
-		else
-		{
+		} else {
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		}
 	}
 
 	@Override
-	protected void onPause()
-	{
+	protected void onPause() {
 		super.onPause();
-		getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+		getPreferenceScreen().getSharedPreferences()
+				.unregisterOnSharedPreferenceChangeListener(this);
 	}
 
-	private void setSummaryAll(PreferenceScreen pScreen)
-	{
-		for (int i = 0; i < pScreen.getPreferenceCount(); i++)
-		{
+	private void setSummaryAll(PreferenceScreen pScreen) {
+		for (int i = 0; i < pScreen.getPreferenceCount(); i++) {
 			Preference pref = pScreen.getPreference(i);
 			setSummaryPref(pref);
 		}
 	}
 
-	public void setSummaryPref(Preference pref)
-	{
+	public void setSummaryPref(Preference pref) {
 		if (pref == null)
 			return;
 
@@ -278,35 +315,27 @@ public class PreferencesActivity extends PreferenceActivity implements OnSharedP
 		if (key == null)
 			key = "";
 
-		if (pref instanceof KeyMapPreference)
-		{
+		if (pref instanceof KeyMapPreference) {
 			KeyMapPreference kbPref = (KeyMapPreference) pref;
 			String desc = kbPref.getDescription();
 			pref.setSummary(desc);
-		}
-		else if (pref instanceof PreferenceCategory)
-		{
+		} else if (pref instanceof PreferenceCategory) {
 			PreferenceCategory prefCat = (PreferenceCategory) pref;
 			int count = prefCat.getPreferenceCount();
-			for (int i = 0; i < count; i++)
-			{
+			for (int i = 0; i < count; i++) {
 				setSummaryPref(prefCat.getPreference(i));
 			}
-		}
-		else if (pref instanceof PreferenceScreen)
-		{
+		} else if (pref instanceof PreferenceScreen) {
 			setSummaryAll((PreferenceScreen) pref);
 		}
 	}
 
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key)
-	{
-		if (key.compareTo(Preferences.KEY_ACTIVEPROFILE) == 0 || key.compareTo(Preferences.KEY_PROFILES) == 0)
-		{
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+			String key) {
+		if (key.compareTo(Preferences.KEY_ACTIVEPROFILE) == 0
+				|| key.compareTo(Preferences.KEY_PROFILES) == 0) {
 			setSummaryAll(getPreferenceScreen());
-		}
-		else
-		{
+		} else {
 			Preference pref = findPreference(key);
 			setSummaryPref(pref);
 		}

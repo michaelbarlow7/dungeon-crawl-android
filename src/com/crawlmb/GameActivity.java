@@ -36,6 +36,8 @@ import android.os.Message;
 public class GameActivity extends Activity // implements OnScoreSubmitObserver {
 {
 
+	static final int PREFERENCES_FINISHED = 1;
+	
 	public static StateManager state = null;
 	private CrawlDialog dialog = null;
 
@@ -45,31 +47,26 @@ public class GameActivity extends Activity // implements OnScoreSubmitObserver {
 	protected Handler handler = null;
 
 	@Override
-	public void onCreate(Bundle savedInstanceState)
-	{
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		// Log.d("Crawl", "onCreate");
 
-		if (state == null)
-		{
+		if (state == null) {
 			state = new StateManager();
 		}
 	}
 
 	@Override
-	public void onStart()
-	{
+	public void onStart() {
 		super.onStart();
 
 		if (dialog == null)
 			dialog = new CrawlDialog(this, state);
 		final CrawlDialog crawlDialog = dialog;
-		handler = new Handler()
-		{
+		handler = new Handler() {
 			@Override
-			public void handleMessage(Message msg)
-			{
+			public void handleMessage(Message msg) {
 				crawlDialog.HandleMessage(msg);
 			}
 		};
@@ -78,78 +75,82 @@ public class GameActivity extends Activity // implements OnScoreSubmitObserver {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
-	{
+	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		MenuInflater inflater = new MenuInflater(getApplication());
 		inflater.inflate(R.menu.main, menu);
 		return true;
 	}
-	
+
 	@Override
-	public boolean onPrepareOptionsMenu(Menu menu)
-	{
-	  super.onPrepareOptionsMenu(menu);
-	  MenuItem menuItem = menu.findItem(R.id.menu_lock_terminal_position);
-	  if (term.getLockPositioning())
-	  {
-	    menuItem.setTitle(R.string.menu_unlock_terminal_position);
-	  }
-	  else
-	  {
-	    menuItem.setTitle(R.string.menu_lock_terminal_position);
-	  }
-	  
-	  return true;
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		super.onPrepareOptionsMenu(menu);
+		MenuItem menuItem = menu.findItem(R.id.menu_lock_terminal_position);
+		if (term.getLockPositioning()) {
+			menuItem.setTitle(R.string.menu_unlock_terminal_position);
+		} else {
+			menuItem.setTitle(R.string.menu_lock_terminal_position);
+		}
+
+		return true;
 	}
 
 	@Override
-	public boolean onMenuItemSelected(int featureId, MenuItem item)
-	{//TODO: Add help and quit menu options
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		// TODO: Add help and quit menu options
 		Intent intent;
-		switch (item.getNumericShortcut())
-		{
-		case '1'://Help
-			 intent = new Intent(this, HelpActivity.class);
-			 startActivity(intent);
-			break;
-		case '2'://Preferences
-			intent = new Intent(this, PreferencesActivity.class);
+		switch (item.getNumericShortcut()) {
+		case '1':// Help
+			intent = new Intent(this, HelpActivity.class);
 			startActivity(intent);
 			break;
-		case '3'://Reset terminal position
-		  term.resetTerminalPosition();
-		  break;
-		case '4'://Lock terminal position
-		  term.toggleLockPosition();
-		  break;
-		case '5'://Quit
+		case '2':// Preferences
+			intent = new Intent(this, PreferencesActivity.class);
+			startActivityForResult(intent, PREFERENCES_FINISHED);
+			break;
+		case '3':// Reset terminal position
+			term.resetTerminalPosition();
+			break;
+		case '4':// Lock terminal position
+			term.toggleLockPosition();
+			break;
+		case '5':// Quit
 			finish();
 			break;
-		case '6'://Show/Hide Keyboard
+		case '6':// Show/Hide Keyboard
 			toggleKeyboard();
 			break;
 		}
 		return super.onMenuItemSelected(featureId, item);
 	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode,
+            Intent data) {
+        if (requestCode == PREFERENCES_FINISHED) {
+            if (resultCode == RESULT_OK) {
+            	if(data.getBooleanExtra("reloadCrawl", false)) {
+            		// Because of a change in preferences, crawl must be reloaded
+            		finish();
+            		startActivity(getIntent());
+            	}
+            }
+        }
+    }
 
 	@Override
-	public void finish()
-	{
+	public void finish() {
 		// Log.d("Crawl","finish");
 		state.gameThread.send(GameThread.Request.StopGame);
 		super.finish();
 	}
 
-	private void rebuildViews()
-	{
-		synchronized (StateManager.progress_lock)
-		{
+	private void rebuildViews() {
+		synchronized (StateManager.progress_lock) {
 			// Log.d("Crawl","rebuildViews");
 
 			int orient = Preferences.getOrientation();
-			switch (orient)
-			{
+			switch (orient) {
 			case 0: // sensor
 				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
 				break;
@@ -166,14 +167,15 @@ public class GameActivity extends Activity // implements OnScoreSubmitObserver {
 			screenLayout = new RelativeLayout(this);
 
 			term = new TermView(this);
-			RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT,
-					LayoutParams.WRAP_CONTENT);
+			RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+					LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 			layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
 			term.setLayoutParams(layoutParams);
 			term.setFocusable(true);
 			registerForContextMenu(term);
-			
-			boolean hapticFeedbackEnabled = Preferences.getHapticFeedbackEnabled();
+
+			boolean hapticFeedbackEnabled = Preferences
+					.getHapticFeedbackEnabled();
 			term.setHapticFeedbackEnabled(hapticFeedbackEnabled);
 			state.link(term, handler);
 
@@ -185,29 +187,36 @@ public class GameActivity extends Activity // implements OnScoreSubmitObserver {
 			else
 				keyboardType = Preferences.getLandscapeKeyboard();
 
-			String[] keyboards = getResources().getStringArray(R.array.virtualKeyboardValues);
+			String[] keyboards = getResources().getStringArray(
+					R.array.virtualKeyboardValues);
 
 			if (keyboardType.equals(keyboards[1])) // Crawl Keyboard
 			{
 				CrawlKeyboard virtualKeyboard = new CrawlKeyboard(this);
-				virtualKeyboard.virtualKeyboardView.setHapticFeedbackEnabled(hapticFeedbackEnabled);
+				virtualKeyboard.virtualKeyboardView
+						.setHapticFeedbackEnabled(hapticFeedbackEnabled);
 				screenLayout.addView(virtualKeyboard.virtualKeyboardView);
-				
-				//Add directional-key view
-				addDirectionalKeyView(virtualKeyboard.virtualKeyboardView.getId(), hapticFeedbackEnabled);
-				
-				getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-			}
-			else if (keyboardType.equals(keyboards[2])) // System Keyboard
+
+				// Add directional-key view
+				addDirectionalKeyView(
+						virtualKeyboard.virtualKeyboardView.getId(),
+						hapticFeedbackEnabled);
+
+				getWindow()
+						.setSoftInputMode(
+								WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+			} else if (keyboardType.equals(keyboards[2])) // System Keyboard
 			{
-				InputMethodManager inputMethodManager =
-						(InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-				getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-				inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-			}
-			else
-			{
-				getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+				InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+				getWindow()
+						.setSoftInputMode(
+								WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+				inputMethodManager.toggleSoftInput(
+						InputMethodManager.SHOW_FORCED, 0);
+			} else {
+				getWindow()
+						.setSoftInputMode(
+								WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 			}
 
 			setContentView(screenLayout);
@@ -217,29 +226,29 @@ public class GameActivity extends Activity // implements OnScoreSubmitObserver {
 		}
 	}
 
-	private void addDirectionalKeyView(int virtualKeyboardId, boolean hapticFeedbackEnabled) {
+	private void addDirectionalKeyView(int virtualKeyboardId,
+			boolean hapticFeedbackEnabled) {
 		DirectionalTouchView view = new DirectionalTouchView(this);
-		RelativeLayout.LayoutParams directionalLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT,
-			LayoutParams.FILL_PARENT);
+		RelativeLayout.LayoutParams directionalLayoutParams = new RelativeLayout.LayoutParams(
+				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
 		directionalLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-		directionalLayoutParams.addRule(RelativeLayout.ABOVE, virtualKeyboardId);
+		directionalLayoutParams
+				.addRule(RelativeLayout.ABOVE, virtualKeyboardId);
 		view.setLayoutParams(directionalLayoutParams);
 		view.setPassThroughListener(term);
 		view.setHapticFeedbackEnabled(hapticFeedbackEnabled);
 		screenLayout.addView(view);
 	}
 
-	public void openContextMenu()
-	{
+	public void openContextMenu() {
 		super.openContextMenu(term);
 	}
 
-	public void toggleKeyboard()
-	{
+	public void toggleKeyboard() {
 		int currentKeyboard;
-		if (Preferences.isScreenPortraitOrientation())
-		{
-			currentKeyboard = Integer.parseInt(Preferences.getPortraitKeyboard());
+		if (Preferences.isScreenPortraitOrientation()) {
+			currentKeyboard = Integer.parseInt(Preferences
+					.getPortraitKeyboard());
 			if (currentKeyboard == 2) // System keyboard
 			{
 				toggleSystemKeyboard();
@@ -247,10 +256,9 @@ public class GameActivity extends Activity // implements OnScoreSubmitObserver {
 			}
 			currentKeyboard = currentKeyboard == 0 ? 1 : 0;
 			Preferences.setPortraitKeyboard(String.valueOf(currentKeyboard));
-		}
-		else
-		{
-			currentKeyboard = Integer.parseInt(Preferences.getLandscapeKeyboard());
+		} else {
+			currentKeyboard = Integer.parseInt(Preferences
+					.getLandscapeKeyboard());
 			if (currentKeyboard == 2) // System keyboard
 			{
 				toggleSystemKeyboard();
@@ -263,16 +271,13 @@ public class GameActivity extends Activity // implements OnScoreSubmitObserver {
 		rebuildViews();
 	}
 
-	private void toggleSystemKeyboard()
-	{
-		InputMethodManager inputMethodManager =
-				(InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+	private void toggleSystemKeyboard() {
+		InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 	}
 
 	@Override
-	protected void onResume()
-	{
+	protected void onResume() {
 		// Log.d("Crawl", "onResume");
 		super.onResume();
 
@@ -281,50 +286,36 @@ public class GameActivity extends Activity // implements OnScoreSubmitObserver {
 	}
 
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event)
-	{
-		if (!state.onKeyDown(keyCode, event))
-		{
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (!state.onKeyDown(keyCode, event)) {
 			return super.onKeyDown(keyCode, event);
-		}
-		else
-		{
+		} else {
 			return true;
 		}
 	}
 
 	@Override
-	public boolean onKeyUp(int keyCode, KeyEvent event)
-	{
-		if (!state.onKeyUp(keyCode, event))
-		{
+	public boolean onKeyUp(int keyCode, KeyEvent event) {
+		if (!state.onKeyUp(keyCode, event)) {
 			return super.onKeyUp(keyCode, event);
-		}
-		else
-		{
+		} else {
 			return true;
 		}
 	}
 
-	public void setScreen()
-	{
-		if (Preferences.getFullScreen())
-		{
+	public void setScreen() {
+		if (Preferences.getFullScreen()) {
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		}
-		else
-		{
+		} else {
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		}
 	}
 
-	public Handler getHandler()
-	{
+	public Handler getHandler() {
 		return handler;
 	}
 
-	public StateManager getStateManager()
-	{
+	public StateManager getStateManager() {
 		return state;
 	}
 
