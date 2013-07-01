@@ -149,11 +149,17 @@ public class ConfigEditor extends Activity
 		requestWindowFeature(Window.FEATURE_RIGHT_ICON);
 		setContentView(R.layout.config_editor);
 
-		mText = (EditText) findViewById(R.id.note);
-
-		mText.addTextChangedListener(mTextWatcherSdCard);
+		getMText();
 
 	}
+
+    private EditText getMText() {
+        mText = (EditText) findViewById(R.id.note);
+
+		mText.addTextChangedListener(mTextWatcherSdCard);
+		
+		return mText;
+    }
 
 	private TextWatcher mTextWatcherSdCard = new TextWatcher()
 	{
@@ -240,7 +246,7 @@ public class ConfigEditor extends Activity
 		// the link movement (so the user can click on links).
 		// TODO: Might be able to edit this, since we don't care about
 		// linkifying text
-		mText.setMovementMethod(new ArrowKeyMovementMethod()
+		getMText().setMovementMethod(new ArrowKeyMovementMethod()
 		{
 			public boolean onTouchEvent(TextView widget, Spannable buffer, MotionEvent event)
 			{
@@ -282,11 +288,11 @@ public class ConfigEditor extends Activity
 	private void getNoteFromFile()
 	{
 
-		mText.setTextKeepState(mFileContent);
+		getMText().setTextKeepState(mFileContent);
 		// keep state does not work, so we have to do it manually:
 		try
 		{
-			mText.setSelection(mSelectionStart, mSelectionStop);
+			getMText().setSelection(mSelectionStart, mSelectionStop);
 		}
 		catch (IndexOutOfBoundsException e)
 		{
@@ -339,9 +345,9 @@ public class ConfigEditor extends Activity
 
 		// Save away the original text, so we still have it if the activity
 		// needs to be killed while paused.
-		mSelectionStart = mText.getSelectionStart();
-		mSelectionStop = mText.getSelectionEnd();
-		mFileContent = mText.getText().toString();
+		mSelectionStart = getMText().getSelectionStart();
+		mSelectionStop = getMText().getSelectionEnd();
+		mFileContent = getMText().getText().toString();
 
 		outState.putString(BUNDLE_ORIGINAL_CONTENT, mOriginalContent);
 		outState.putString(BUNDLE_UNDO_REVERT, mUndoRevert);
@@ -374,7 +380,7 @@ public class ConfigEditor extends Activity
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu)
 	{
-		boolean contentChanged = !mOriginalContent.equals(mText.getText().toString());
+		boolean contentChanged = !mOriginalContent.equals(getMText().getText().toString());
 		menu.findItem(MENU_SAVE).setEnabled(contentChanged || mUndoRevert != null);
 		menu.findItem(MENU_REVERT).setEnabled(contentChanged);
 		return super.onPrepareOptionsMenu(menu);
@@ -468,24 +474,24 @@ public class ConfigEditor extends Activity
 
 	private final void revertNote()
 	{
-		String tmp = mText.getText().toString();
+		String tmp = getMText().getText().toString();
 		if (!tmp.equals(mOriginalContent))
 		{
 			// revert to original content
-			mText.setTextKeepState(mOriginalContent);
+			getMText().setTextKeepState(mOriginalContent);
 			mUndoRevert = tmp;
 		}
 		else if (mUndoRevert != null)
 		{
 			// revert to original content
-			mText.setTextKeepState(mUndoRevert);
+			getMText().setTextKeepState(mUndoRevert);
 			mUndoRevert = null;
 		}
 	}
 
 	private void saveNote()
 	{
-		mFileContent = mText.getText().toString();
+		mFileContent = getMText().getText().toString();
 
 		File file = getFile(mUri);
 		writeToFile(file, mFileContent);
@@ -583,7 +589,7 @@ public class ConfigEditor extends Activity
 		{
 			if (mState == STATE_EDIT_NOTE_FROM_SDCARD)
 			{
-				mFileContent = mText.getText().toString();
+				mFileContent = getMText().getText().toString();
 				if (!mFileContent.equals(mOriginalContent))
 				{
 					// Show a dialog
