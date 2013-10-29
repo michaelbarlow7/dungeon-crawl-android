@@ -38,6 +38,7 @@ public class CrawlAppActivity extends Activity
 	private int versionCode = -1;
 	private String versionName;
 	private boolean updating = false;
+	private static final int LATEST_VERSION = 10;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -58,7 +59,7 @@ public class CrawlAppActivity extends Activity
 		if (versionFile.exists())
 		{
 		  String installedVersion = readFile(versionFile);
-		  if (installedVersion != null && installedVersion.trim().length() > 0 && Integer.parseInt(installedVersion) >= 8)
+		  if (installedVersion != null && installedVersion.trim().length() > 0 && Integer.parseInt(installedVersion) >= LATEST_VERSION)
 		  {
 			// already installed, just start the game
 		    startGameActivity();
@@ -315,7 +316,7 @@ public class CrawlAppActivity extends Activity
 		@Override
 		protected Void doInBackground(Void... params)
 		{
-			totalFiles = 541; //Number of files that need creating. Hard-coded I know, but
+			totalFiles = 607; //Number of files that need creating. Hard-coded I know, but
 							  // counting them dynamically took a surprising amount of time
 			if (installDialog != null)
 			{
