@@ -38,7 +38,7 @@ public class CrawlAppActivity extends Activity
 	private int versionCode = -1;
 	private String versionName;
 	private boolean updating = false;
-	private static final int LATEST_VERSION = 10;
+	private static final int LATEST_VERSION = 11;
 
 	/** Called when the activity is first created. */
 	@Override
