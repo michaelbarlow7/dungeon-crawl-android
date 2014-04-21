@@ -38,7 +38,7 @@ public class CrawlAppActivity extends Activity
 	private int versionCode = -1;
 	private String versionName;
 	private boolean updating = false;
-	private static final int LATEST_VERSION = 11;
+	private static final int LATEST_VERSION = 12;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -316,7 +316,7 @@ public class CrawlAppActivity extends Activity
 		@Override
 		protected Void doInBackground(Void... params)
 		{
-			totalFiles = 607; //Number of files that need creating. Hard-coded I know, but
+			totalFiles = 611; //Number of files that need creating. Hard-coded I know, but
 							  // counting them dynamically took a surprising amount of time
 			if (installDialog != null)
 			{
