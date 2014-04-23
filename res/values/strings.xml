@@ -122,15 +122,16 @@
     <string name="button_save">Save</string>
     <string name="button_dont_save">Don\'t save</string>
     
+    <!--  The commented out entries seem to have been removed in 0.13.0 -->
     <string-array name="config_files">
         <item>init</item>
-        <item>autopickup_exceptions</item>
+        <!-- item>autopickup_exceptions</item>
         <item>food_colouring</item>
         <item>menu_colours</item>
-        <item>messages</item>
+        <item>messages</item-->
         <item>no_vi_command_keys</item>
-        <item>runrest_messages</item>
-        <item>standard_colours</item>
+        <!--  item>runrest_messages</item>
+        <item>standard_colours</item-->
     </string-array>
     <string name="config_file_prefererence_title">Edit %s.txt</string>
 
