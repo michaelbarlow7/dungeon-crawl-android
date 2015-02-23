@@ -20,6 +20,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.AssetManager;
 import android.net.Uri;
@@ -38,7 +39,7 @@ public class CrawlAppActivity extends Activity
 	private int versionCode = -1;
 	private String versionName;
 	private boolean updating = false;
-	private static final int LATEST_VERSION = 12;
+	private int latestVersion = 13;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -46,6 +47,14 @@ public class CrawlAppActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+
+		try {
+			PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+			latestVersion = pInfo.versionCode;
+		} catch (NameNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		setBackground();
 		
@@ -59,7 +68,8 @@ public class CrawlAppActivity extends Activity
 		if (versionFile.exists())
 		{
 		  String installedVersion = readFile(versionFile);
-		  if (installedVersion != null && installedVersion.trim().length() > 0 && Integer.parseInt(installedVersion) >= LATEST_VERSION)
+
+		  if (installedVersion != null && installedVersion.trim().length() > 0 && Integer.parseInt(installedVersion) >= latestVersion)
 		  {
 			// already installed, just start the game
 		    startGameActivity();
@@ -305,7 +315,10 @@ public class CrawlAppActivity extends Activity
 
 	private class InstallProgramTask extends AsyncTask<Void, Integer, Void>
 	{
-		private int totalFiles = 0;
+		// Number of files that need creating. Hard-coded I know, but
+		// counting them dynamically took a surprising amount of time
+		private static final int TOTAL_FILES = 632;
+
 		private int installedFiles = 0;
 		@Override
 		protected void onPreExecute()
@@ -316,12 +329,10 @@ public class CrawlAppActivity extends Activity
 		@Override
 		protected Void doInBackground(Void... params)
 		{
-			totalFiles = 611; //Number of files that need creating. Hard-coded I know, but
-							  // counting them dynamically took a surprising amount of time
 			if (installDialog != null)
 			{
 				installDialog.setIndeterminate(false);
-				installDialog.setMax(totalFiles);
+				installDialog.setMax(TOTAL_FILES);
 			}
 			publishProgress(installedFiles);
 			// These should simply return false if they already exist, so it
@@ -391,7 +402,7 @@ public class CrawlAppActivity extends Activity
 			try
 			{
 				assets = assetManager.list(path);
-				publishProgress(++installedFiles, totalFiles);
+				publishProgress(++installedFiles, TOTAL_FILES);
 				if (assets.length == 0) // then we know it's a file, not a
 										// directory
 				{
