@@ -4,3 +4,8 @@ libs/
 obj/
 jni
 .settings
+.gradle/
+build/
+*.iml
+.idea/
+local.properties
