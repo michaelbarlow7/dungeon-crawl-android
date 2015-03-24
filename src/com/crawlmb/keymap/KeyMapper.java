@@ -1,4 +1,4 @@
-package com.crawlmb;
+package com.crawlmb.keymap;
 
 import java.util.Iterator;
 import java.util.HashMap;

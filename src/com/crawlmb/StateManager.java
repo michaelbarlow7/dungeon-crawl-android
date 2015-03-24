@@ -4,17 +4,19 @@ import android.os.Handler;
 
 import android.view.KeyEvent;
 
+import com.crawlmb.view.TermView;
+
 public class StateManager
 {
-	static final int KEY_A1 = 0534; /* upper left of keypad */
-	static final int KEY_A3 = 0535; /* upper right of keypad */
-	static final int KEY_B2 = 0536; /* center of keypad */
-	static final int KEY_C1 = 0537; /* lower left of keypad */
-	static final int KEY_C3 = 0540; /* lower right of keypad */
-	static final int KEY_DOWN = 0402; /* down-arrow key */
-	static final int KEY_UP = 0403; /* up-arrow key */
-	static final int KEY_LEFT = 0404; /* left-arrow key */
-	static final int KEY_RIGHT = 0405; /* right-arrow key */
+	public static final int KEY_A1 = 0534; /* upper left of keypad */
+	public static final int KEY_A3 = 0535; /* upper right of keypad */
+	public static final int KEY_B2 = 0536; /* center of keypad */
+	public static final int KEY_C1 = 0537; /* lower left of keypad */
+	public static final int KEY_C3 = 0540; /* lower right of keypad */
+	public static final int KEY_DOWN = 0402; /* down-arrow key */
+	public static final int KEY_UP = 0403; /* up-arrow key */
+	public static final int KEY_LEFT = 0404; /* left-arrow key */
+	public static final int KEY_RIGHT = 0405; /* right-arrow key */
 	/* screen state */
 	public int termWinNext = 0;
 
@@ -37,7 +39,7 @@ public class StateManager
 	/* game thread */
 	public Handler handler = null;
 
-	StateManager()
+	public StateManager()
 	{
 		nativew = new NativeWrapper(this);
 		gameThread = new GameThread(this, nativew);

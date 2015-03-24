@@ -1,9 +1,11 @@
-package com.crawlmb;
+package com.crawlmb.keymap;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.preference.DialogPreference;
 import android.content.DialogInterface;
+
+import com.crawlmb.Preferences;
 
 public class KeyMapResetPreference extends DialogPreference implements DialogInterface.OnClickListener
 {

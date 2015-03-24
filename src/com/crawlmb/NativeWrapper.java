@@ -2,6 +2,8 @@ package com.crawlmb;
 
 import android.graphics.Color;
 
+import com.crawlmb.view.TermView;
+
 public class NativeWrapper
 {
 	// Load native library

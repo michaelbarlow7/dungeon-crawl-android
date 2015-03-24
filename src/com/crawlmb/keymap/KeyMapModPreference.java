@@ -1,4 +1,4 @@
-package com.crawlmb;
+package com.crawlmb.keymap;
 
 import android.content.Context;
 import android.util.AttributeSet;

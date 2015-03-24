@@ -15,7 +15,7 @@
  * also apply.
  */
 
-package com.crawlmb;
+package com.crawlmb.view;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -41,6 +41,14 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.view.ScaleGestureDetector;
+
+import com.crawlmb.CrawlDialog;
+import com.crawlmb.CrawlInputConnection;
+import com.crawlmb.PassThroughListener;
+import com.crawlmb.Preferences;
+import com.crawlmb.R;
+import com.crawlmb.StateManager;
+import com.crawlmb.activity.GameActivity;
 
 public class TermView extends View implements GestureDetector.OnGestureListener, ScaleGestureDetector.OnScaleGestureListener, PassThroughListener
 {

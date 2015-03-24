@@ -15,7 +15,7 @@
  * also apply.
  */
 
-package com.crawlmb;
+package com.crawlmb.activity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -32,6 +32,15 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
 import android.os.Handler;
 import android.os.Message;
+
+import com.crawlmb.CrawlDialog;
+import com.crawlmb.keyboard.CrawlKeyboard;
+import com.crawlmb.keyboard.DirectionalTouchView;
+import com.crawlmb.GameThread;
+import com.crawlmb.Preferences;
+import com.crawlmb.R;
+import com.crawlmb.StateManager;
+import com.crawlmb.view.TermView;
 
 public class GameActivity extends Activity // implements OnScoreSubmitObserver {
 {

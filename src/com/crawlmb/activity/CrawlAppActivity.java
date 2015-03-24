@@ -1,4 +1,4 @@
-package com.crawlmb;
+package com.crawlmb.activity;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -29,6 +29,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.crawlmb.Preferences;
+import com.crawlmb.R;
 
 public class CrawlAppActivity extends Activity
 {

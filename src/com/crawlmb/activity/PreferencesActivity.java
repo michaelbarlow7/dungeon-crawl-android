@@ -16,10 +16,8 @@
  * also apply.
  */
 
-package com.crawlmb;
+package com.crawlmb.activity;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -44,6 +42,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.preference.PreferenceCategory;
+
+import com.crawlmb.EditConfigFilePreference;
+import com.crawlmb.keymap.KeyMapPreference;
+import com.crawlmb.Preferences;
+import com.crawlmb.R;
 
 public class PreferencesActivity extends PreferenceActivity implements
 		OnSharedPreferenceChangeListener {

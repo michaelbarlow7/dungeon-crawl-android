@@ -3,6 +3,8 @@ package com.crawlmb;
 import android.view.View;
 import android.view.inputmethod.BaseInputConnection;
 
+import com.crawlmb.view.TermView;
+
 public class CrawlInputConnection extends BaseInputConnection
 {
 	TermView termView;

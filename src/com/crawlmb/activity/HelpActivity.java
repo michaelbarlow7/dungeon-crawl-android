@@ -15,7 +15,7 @@
  * also apply.
  */
 
-package com.crawlmb;
+package com.crawlmb.activity;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -23,6 +23,9 @@ import android.os.Bundle;
 import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+
+import com.crawlmb.Preferences;
+import com.crawlmb.R;
 
 public class HelpActivity extends Activity
 {

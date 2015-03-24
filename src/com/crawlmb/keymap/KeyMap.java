@@ -1,6 +1,6 @@
-package com.crawlmb;
+package com.crawlmb.keymap;
 
-import com.crawlmb.KeyMapper.KeyAction;
+import com.crawlmb.Preferences;
 
 import android.view.KeyEvent;
 
@@ -9,7 +9,7 @@ public class KeyMap
 
 	protected String pref_key = "";
 	protected char character;
-	protected KeyAction key_action;
+	protected KeyMapper.KeyAction key_action;
 
 	protected int key_code = 0;
 	protected boolean alt_mod = false;
@@ -19,11 +19,11 @@ public class KeyMap
 	{
 		this.pref_key = pref_key;
 		this.character = character;
-		this.key_action = KeyAction.CharacterKey;
+		this.key_action = KeyMapper.KeyAction.CharacterKey;
 		loadFromPref();
 	}
 
-	public KeyMap(String pref_key, KeyAction action)
+	public KeyMap(String pref_key, KeyMapper.KeyAction action)
 	{
 		this.pref_key = pref_key;
 		this.key_action = action;
@@ -79,7 +79,7 @@ public class KeyMap
 		return key_code != 0;
 	}
 
-	public KeyAction getKeyAction()
+	public KeyMapper.KeyAction getKeyAction()
 	{
 		return key_action;
 	}

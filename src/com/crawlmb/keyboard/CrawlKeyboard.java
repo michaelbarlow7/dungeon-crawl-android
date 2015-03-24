@@ -1,6 +1,8 @@
-package com.crawlmb;
+package com.crawlmb.keyboard;
 
-import com.crawlmb.CrawlKeyboardView.OnKeyboardActionListener;
+import com.crawlmb.R;
+import com.crawlmb.StateManager;
+import com.crawlmb.activity.GameActivity;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,15 +10,15 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.inputmethodservice.Keyboard;
 
-public class CrawlKeyboard implements OnKeyboardActionListener
+public class CrawlKeyboard implements CrawlKeyboardView.OnKeyboardActionListener
 {
-	CrawlKeyboardView virtualKeyboardView;
+	public CrawlKeyboardView virtualKeyboardView;
 	Keyboard virtualKeyboardQwerty;
 	Keyboard virtualKeyboardSymbols;
 	Keyboard virtualKeyboardSymbolsShift;
 	StateManager state = null;
 
-	CrawlKeyboard(Context ctx)
+	public CrawlKeyboard(Context ctx)
 	{
 		state = ((GameActivity)ctx).getStateManager();
 

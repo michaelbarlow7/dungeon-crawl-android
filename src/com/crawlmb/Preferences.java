@@ -7,33 +7,35 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.app.AlertDialog;
 
+import com.crawlmb.keymap.KeyMapper;
+
 final public class Preferences
 {
 
 	public static final int rows = 24;
 	public static final int cols = 80;
 
-	static final String NAME = "crawl";
+	public static final String NAME = "crawl";
 
-	static final String KEY_VIBRATE = "crawl.vibrate";
-	static final String KEY_FULLSCREEN = "crawl.fullscreen";
-	static final String KEY_ORIENTATION = "crawl.orientation";
-	static final String KEY_SKIPSPLASH = "crawl.skipsplash";
+	public static final String KEY_VIBRATE = "crawl.vibrate";
+	public static final String KEY_FULLSCREEN = "crawl.fullscreen";
+	public static final String KEY_ORIENTATION = "crawl.orientation";
+	public static final String KEY_SKIPSPLASH = "crawl.skipsplash";
 
-	static final String KEY_ENABLETOUCH = "crawl.enabletouch";
-	static final String KEY_PORTRAITKB = "crawl.portraitkb";
-	static final String KEY_LANDSCAPEKB = "crawl.landscapekb";
-	static final String KEY_PORTRAITFONTSIZE = "crawl.portraitfontsize";
-	static final String KEY_LANDSCAPEFONTSIZE = "crawl.landscapefontsize";
+	public static final String KEY_ENABLETOUCH = "crawl.enabletouch";
+	public static final String KEY_PORTRAITKB = "crawl.portraitkb";
+	public static final String KEY_LANDSCAPEKB = "crawl.landscapekb";
+	public static final String KEY_PORTRAITFONTSIZE = "crawl.portraitfontsize";
+	public static final String KEY_LANDSCAPEFONTSIZE = "crawl.landscapefontsize";
 
-	static final String KEY_GAMEPLUGIN = "crawl.gameplugin";
-	static final String KEY_GAMEPROFILE = "crawl.gameprofile";
-	static final String KEY_AUTOSTARTBORG = "crawl.autostartborg";
+	public static final String KEY_GAMEPLUGIN = "crawl.gameplugin";
+	public static final String KEY_GAMEPROFILE = "crawl.gameprofile";
+	public static final String KEY_AUTOSTARTBORG = "crawl.autostartborg";
 
-	static final String KEY_PROFILES = "crawl.profiles";
-	static final String KEY_ACTIVEPROFILE = "crawl.activeprofile";
+	public static final String KEY_PROFILES = "crawl.profiles";
+	public static final String KEY_ACTIVEPROFILE = "crawl.activeprofile";
 
-	static final String KEY_INSTALLEDVERSION = "crawl.installedversion";
+	public static final String KEY_INSTALLEDVERSION = "crawl.installedversion";
 	private static final String KEY_HAPTICFEEDBACKENABLED = "crawl.hapticfeedbackenabled";
 
 	private static SharedPreferences sharedPreferences;

@@ -18,7 +18,7 @@
  * This is basically a copy of the source for KeyboardView. We needed to make our own
  * to ensure that we can have a transparent keyboard
  */
-package com.crawlmb;
+package com.crawlmb.keyboard;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -47,6 +47,8 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+
+import com.crawlmb.R;
 
 import java.util.Arrays;
 import java.util.HashMap;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.crawlmb.CrawlKeyboardView
+<com.crawlmb.keyboard.CrawlKeyboardView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:crawl="http://schemas.android.com/apk/res/com.crawlmb"
         android:id="@+id/keyboard"

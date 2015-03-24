@@ -1,4 +1,4 @@
-package com.crawlmb;
+package com.crawlmb.keymap;
 
 import android.content.SharedPreferences;
 import android.content.Context;
@@ -8,6 +8,8 @@ import android.content.DialogInterface;
 import android.app.AlertDialog;
 import android.view.KeyEvent;
 import android.os.Parcelable;
+
+import com.crawlmb.Preferences;
 
 public class KeyMapPreference extends DialogPreference implements DialogInterface.OnClickListener
 {

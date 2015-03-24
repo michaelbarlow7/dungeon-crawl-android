@@ -4,7 +4,9 @@ import java.util.LinkedList;
 import java.util.Queue;
 import android.view.KeyEvent;
 import android.util.Log;
-import com.crawlmb.KeyMapper.KeyAction;
+
+import com.crawlmb.keymap.KeyMap;
+import com.crawlmb.keymap.KeyMapper.KeyAction;
 
 public class KeyBuffer
 {

@@ -1,4 +1,4 @@
-package com.crawlmb;
+package com.crawlmb.keyboard;
 
 import android.content.Context;
 import android.view.GestureDetector;
@@ -6,6 +6,11 @@ import android.view.HapticFeedbackConstants;
 import android.view.ScaleGestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.crawlmb.PassThroughListener;
+import com.crawlmb.Preferences;
+import com.crawlmb.StateManager;
+import com.crawlmb.activity.GameActivity;
 
 public class DirectionalTouchView extends View implements  GestureDetector.OnGestureListener, ScaleGestureDetector.OnScaleGestureListener
 {

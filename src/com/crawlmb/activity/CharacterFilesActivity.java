@@ -1,4 +1,4 @@
-package com.crawlmb;
+package com.crawlmb.activity;
 
 import java.io.File;
 
@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.crawlmb.CharFileViewer;
 
 public class CharacterFilesActivity extends ListActivity
 {

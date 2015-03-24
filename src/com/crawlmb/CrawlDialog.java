@@ -4,6 +4,8 @@ import android.os.Message;
 import android.content.DialogInterface;
 import android.app.AlertDialog;
 
+import com.crawlmb.activity.GameActivity;
+
 public class CrawlDialog
 {
 	private GameActivity activity;
@@ -19,7 +21,7 @@ public class CrawlDialog
 		}
 	};
 
-	CrawlDialog(GameActivity a, StateManager s)
+	public CrawlDialog(GameActivity a, StateManager s)
 	{
 		activity = a;
 		state = s;
