@@ -317,7 +317,7 @@ public class CrawlAppActivity extends Activity
 	{
 		// Number of files that need creating. Hard-coded I know, but
 		// counting them dynamically took a surprising amount of time
-		private static final int TOTAL_FILES = 632;
+		private static final int TOTAL_FILES = 656;
 
 		private int installedFiles = 0;
 		@Override
