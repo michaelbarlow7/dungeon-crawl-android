@@ -33,9 +33,9 @@ import android.widget.Toast;
 import com.crawlmb.Preferences;
 import com.crawlmb.R;
 
-public class CrawlAppActivity extends Activity
+public class SplashActivity extends Activity
 {
-	public static final String TAG = CrawlAppActivity.class.getName();
+	public static final String TAG = SplashActivity.class.getName();
 	private static final int INSTALL_DIALOG_ID = 0;
 	private static final int WARNING_DIALOG_ID = 1;
 	private ProgressDialog installDialog;
@@ -310,7 +310,7 @@ public class CrawlAppActivity extends Activity
 		@Override
 		public void run()
 		{
-			Intent intent = new Intent(CrawlAppActivity.this, GameActivity.class);
+			Intent intent = new Intent(SplashActivity.this, GameActivity.class);
 			startActivity(intent);
 			finish();
 		}
