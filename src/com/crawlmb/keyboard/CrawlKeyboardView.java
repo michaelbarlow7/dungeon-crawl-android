@@ -21,6 +21,7 @@
 package com.crawlmb.keyboard;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -48,6 +49,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.crawlmb.Preferences;
 import com.crawlmb.R;
 
 import java.util.Arrays;
@@ -136,6 +138,7 @@ public class CrawlKeyboardView extends View implements View.OnClickListener {
 //    private static final int[] LONG_PRESSABLE_STATE_SET = { R.attr.state_long_pressable };   
     
     private Keyboard mKeyboard;
+    private CrawlKeyboardWrapper.KeyboardType keyboardType;
     private int mCurrentKeyIndex = NOT_A_KEY;
     private int mLabelTextSize;
     private int mKeyTextSize;
@@ -469,6 +472,11 @@ public class CrawlKeyboardView extends View implements View.OnClickListener {
         mAbortKey = true; // Until the next ACTION_DOWN
     }
 
+    public void setKeyboard(Keyboard keyboard, CrawlKeyboardWrapper.KeyboardType keyboardType){
+        this.keyboardType = keyboardType;
+        setKeyboard(keyboard);
+    }
+
     /**
      * Returns the current keyboard being displayed by this view.
      * @return the currently attached keyboard
@@ -667,6 +675,8 @@ public class CrawlKeyboardView extends View implements View.OnClickListener {
         }
         canvas.drawColor(0x00000000, PorterDuff.Mode.CLEAR);
         final int keyCount = keys.length;
+
+        SharedPreferences sharedPreferences = Preferences.getKeyboardPreferences(getContext(), 0, keyboardType);
         for (int i = 0; i < keyCount; i++) {
             final Key key = keys[i];
             if (drawSingleKey && invalidKey != key) {
@@ -675,9 +685,19 @@ public class CrawlKeyboardView extends View implements View.OnClickListener {
             int[] drawableState = key.getCurrentDrawableState();
             keyBackground.setState(drawableState);
 
-            // Switch the character to uppercase if shift is pressed
-            String label = key.label == null? null : adjustCase(key.label).toString();
-            
+
+            String label = null;
+            if (sharedPreferences != null){
+                label = sharedPreferences.getString(Preferences.KEYBOARD_LABEL_PREFIX + i, null);
+            }
+            if (label == null){
+                label = key.label == null ? null : key.label.toString();
+            }
+            if (label != null){
+                // Switch the character to uppercase if shift is pressed
+                label = adjustCase(label).toString();
+            }
+
             final Rect bounds = keyBackground.getBounds();
             if (key.width != bounds.right || 
                     key.height != bounds.bottom) {
@@ -790,7 +810,14 @@ public class CrawlKeyboardView extends View implements View.OnClickListener {
                 mKeyboardActionListener.onText(key.text);
                 mKeyboardActionListener.onRelease(NOT_A_KEY);
             } else {
-                int code = key.codes[0];
+                SharedPreferences keyPrefs = Preferences.getKeyboardPreferences(getContext(), 0, keyboardType);
+                int code;
+                String preferenceKey = Preferences.KEYBOARD_CODE_PREFIX + index;
+                if (keyPrefs.contains(preferenceKey)){
+                    code = keyPrefs.getInt(preferenceKey, Integer.MAX_VALUE);
+                }else{
+                    code = key.codes[0];
+                }
                 //TextEntryState.keyPressedAt(key, x, y);
                 int[] codes = new int[MAX_NEARBY_KEYS];
                 Arrays.fill(codes, NOT_A_KEY);

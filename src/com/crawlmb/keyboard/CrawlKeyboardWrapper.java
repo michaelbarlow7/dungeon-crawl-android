@@ -13,9 +13,16 @@ import android.inputmethodservice.Keyboard;
 public class CrawlKeyboardWrapper implements CrawlKeyboardView.OnKeyboardActionListener
 {
 	public CrawlKeyboardView virtualKeyboardView;
-	Keyboard virtualKeyboardQwerty;
-	Keyboard virtualKeyboardSymbols;
-	Keyboard virtualKeyboardSymbolsShift;
+	public Keyboard virtualKeyboardQwerty;
+	public Keyboard virtualKeyboardSymbols;
+	public Keyboard virtualKeyboardSymbolsShift;
+
+    public static enum KeyboardType {
+        QWERTY,
+        SYMBOLS,
+        SYMBOLS_SHIFT
+    }
+
 	StateManager state = null;
 
 	public CrawlKeyboardWrapper(Context ctx)
@@ -31,7 +38,7 @@ public class CrawlKeyboardWrapper implements CrawlKeyboardView.OnKeyboardActionL
 		LayoutParams layoutParams = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 		layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 		virtualKeyboardView.setLayoutParams(layoutParams);
-		virtualKeyboardView.setKeyboard(virtualKeyboardQwerty);
+		virtualKeyboardView.setKeyboard(virtualKeyboardQwerty, KeyboardType.QWERTY);
 		virtualKeyboardView.setOnKeyboardActionListener(this);
 	}
 
@@ -62,11 +69,11 @@ public class CrawlKeyboardWrapper implements CrawlKeyboardView.OnKeyboardActionL
 			Keyboard current = virtualKeyboardView.getKeyboard();
 			if(current == virtualKeyboardSymbolsShift)
 			{
-				virtualKeyboardView.setKeyboard(virtualKeyboardQwerty);
+				virtualKeyboardView.setKeyboard(virtualKeyboardQwerty, KeyboardType.QWERTY);
 			}
 			else
 			{
-				virtualKeyboardView.setKeyboard(virtualKeyboardSymbolsShift);
+				virtualKeyboardView.setKeyboard(virtualKeyboardSymbolsShift, KeyboardType.SYMBOLS_SHIFT);
 			}
 		}
 		else if(primaryCode == Keyboard.KEYCODE_MODE_CHANGE)
@@ -74,16 +81,12 @@ public class CrawlKeyboardWrapper implements CrawlKeyboardView.OnKeyboardActionL
 			Keyboard current = virtualKeyboardView.getKeyboard();
 			if(current == virtualKeyboardSymbols)
 			{
-				current = virtualKeyboardQwerty;
+                virtualKeyboardView.setKeyboard(virtualKeyboardQwerty, KeyboardType.QWERTY);
 			}
 			else
 			{
-				current = virtualKeyboardSymbols;
-			}
-			virtualKeyboardView.setKeyboard(current);
-			if(current == virtualKeyboardSymbols)
-			{
-				current.setShifted(false);
+                virtualKeyboardView.setKeyboard(virtualKeyboardSymbols, KeyboardType.SYMBOLS);
+                virtualKeyboardView.setShifted(false);
 			}
 		}
        	else

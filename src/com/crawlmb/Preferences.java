@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.app.AlertDialog;
 
+import com.crawlmb.keyboard.CrawlKeyboardWrapper;
 import com.crawlmb.keymap.KeyMapper;
 
 final public class Preferences
@@ -28,14 +29,12 @@ final public class Preferences
 	public static final String KEY_PORTRAITFONTSIZE = "crawl.portraitfontsize";
 	public static final String KEY_LANDSCAPEFONTSIZE = "crawl.landscapefontsize";
 
-	public static final String KEY_GAMEPLUGIN = "crawl.gameplugin";
-	public static final String KEY_GAMEPROFILE = "crawl.gameprofile";
-	public static final String KEY_AUTOSTARTBORG = "crawl.autostartborg";
-
 	public static final String KEY_PROFILES = "crawl.profiles";
 	public static final String KEY_ACTIVEPROFILE = "crawl.activeprofile";
 
-	public static final String KEY_INSTALLEDVERSION = "crawl.installedversion";
+    public static final String KEYBOARD_LABEL_PREFIX = "label_";
+    public static final String KEYBOARD_CODE_PREFIX = "code_";
+
 	private static final String KEY_HAPTICFEEDBACKENABLED = "crawl.hapticfeedbackenabled";
 
 	private static SharedPreferences sharedPreferences;
@@ -185,4 +184,14 @@ final public class Preferences
 	{
 		return sharedPreferences.getBoolean(Preferences.KEY_HAPTICFEEDBACKENABLED, true);
 	}
+
+    public static SharedPreferences getKeyboardPreferences(Context context, int id, CrawlKeyboardWrapper.KeyboardType keyboardType){
+        if (keyboardType == null){
+            return null;
+        }
+        String preferenceName = keyboardType.name() + '_' + id;
+        SharedPreferences sharedPreferences = context.getSharedPreferences(preferenceName, 0);
+
+        return sharedPreferences;
+    }
 }
