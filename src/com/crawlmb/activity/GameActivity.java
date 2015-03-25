@@ -34,7 +34,7 @@ import android.os.Handler;
 import android.os.Message;
 
 import com.crawlmb.CrawlDialog;
-import com.crawlmb.keyboard.CrawlKeyboard;
+import com.crawlmb.keyboard.CrawlKeyboardWrapper;
 import com.crawlmb.keyboard.DirectionalTouchView;
 import com.crawlmb.GameThread;
 import com.crawlmb.Preferences;
@@ -201,7 +201,7 @@ public class GameActivity extends Activity // implements OnScoreSubmitObserver {
 
 			if (keyboardType.equals(keyboards[1])) // Crawl Keyboard
 			{
-				CrawlKeyboard virtualKeyboard = new CrawlKeyboard(this);
+				CrawlKeyboardWrapper virtualKeyboard = new CrawlKeyboardWrapper(this);
 				virtualKeyboard.virtualKeyboardView
 						.setHapticFeedbackEnabled(hapticFeedbackEnabled);
 				screenLayout.addView(virtualKeyboard.virtualKeyboardView);

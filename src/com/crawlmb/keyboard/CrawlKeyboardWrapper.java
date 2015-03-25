@@ -10,7 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.inputmethodservice.Keyboard;
 
-public class CrawlKeyboard implements CrawlKeyboardView.OnKeyboardActionListener
+public class CrawlKeyboardWrapper implements CrawlKeyboardView.OnKeyboardActionListener
 {
 	public CrawlKeyboardView virtualKeyboardView;
 	Keyboard virtualKeyboardQwerty;
@@ -18,7 +18,7 @@ public class CrawlKeyboard implements CrawlKeyboardView.OnKeyboardActionListener
 	Keyboard virtualKeyboardSymbolsShift;
 	StateManager state = null;
 
-	public CrawlKeyboard(Context ctx)
+	public CrawlKeyboardWrapper(Context ctx)
 	{
 		state = ((GameActivity)ctx).getStateManager();
 
