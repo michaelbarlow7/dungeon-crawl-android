@@ -51,6 +51,7 @@ import android.widget.TextView;
 
 import com.crawlmb.Preferences;
 import com.crawlmb.R;
+import com.crawlmb.keyboard.CrawlKeyboardWrapper.SpecialKey;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -687,24 +688,32 @@ public class CrawlKeyboardView extends View implements View.OnClickListener {
 
 
             String label = null;
+            Drawable specialDrawable = null;
             if (sharedPreferences != null){
-                label = sharedPreferences.getString(Preferences.KEYBOARD_LABEL_PREFIX + i, null);
+                String codePreferenceKey = Preferences.KEYBOARD_CODE_PREFIX + i;
+                if (sharedPreferences.contains(codePreferenceKey)){
+                    label = sharedPreferences.getString(Preferences.KEYBOARD_LABEL_PREFIX + i, null);
+                    if (label == null){
+                        // We have a code set, but not a label. Check if we have an image.
+                        int code = sharedPreferences.getInt(Preferences.KEYBOARD_CODE_PREFIX + i, Integer.MAX_VALUE);
+                        SpecialKey specialKey = SpecialKey.getCodeToKeyMap().get(code);
+                        if (specialKey != null){
+                            specialDrawable = getResources().getDrawable(specialKey.getResourceId());
+                        }
+                    }
+                }
             }
-            if (label == null){
-                label = key.label == null ? null : key.label.toString();
-            }
-            if (label != null){
-                // Switch the character to uppercase if shift is pressed
-                label = adjustCase(label).toString();
+            if (specialDrawable == null){
+                if (label == null){
+                    label = key.label == null ? null : key.label.toString();
+                }
+                if (label != null){
+                    // Switch the character to uppercase if shift is pressed
+                    label = adjustCase(label).toString();
+                }
             }
 
-            final Rect bounds = keyBackground.getBounds();
-            if (key.width != bounds.right || 
-                    key.height != bounds.bottom) {
-                keyBackground.setBounds(0, 0, key.width, key.height);
-            }
-            canvas.translate(key.x + kbdPaddingLeft, key.y + kbdPaddingTop);
-            keyBackground.draw(canvas);
+            setKeyBounds(canvas, keyBackground, kbdPaddingLeft, kbdPaddingTop, key);
             
             if (label != null) {
                 // For characters, use large font. For labels like "Done", use small font.
@@ -727,17 +736,10 @@ public class CrawlKeyboardView extends View implements View.OnClickListener {
                     paint);
                 // Turn off drop shadow
                 paint.setShadowLayer(0, 0, 0, 0);
+            } else if (specialDrawable != null) {
+                setKeyDrawable(canvas, padding, key, specialDrawable);
             } else if (key.icon != null) {
-                final int drawableX = (key.width - padding.left - padding.right 
-                                - key.icon.getIntrinsicWidth()) / 2 + padding.left;
-                final int drawableY = (key.height - padding.top - padding.bottom 
-                        - key.icon.getIntrinsicHeight()) / 2 + padding.top;
-                canvas.translate(drawableX, drawableY);
-                key.icon.setBounds(0, 0, 
-                        key.icon.getIntrinsicWidth(), key.icon.getIntrinsicHeight());
-                key.icon.setAlpha(KEY_ALPHA_LEVEL);
-                key.icon.draw(canvas);
-                canvas.translate(-drawableX, -drawableY);
+                setKeyDrawable(canvas, padding, key, key.icon);
             }
             canvas.translate(-key.x - kbdPaddingLeft, -key.y - kbdPaddingTop);
         }
@@ -750,6 +752,29 @@ public class CrawlKeyboardView extends View implements View.OnClickListener {
         
         mDrawPending = false;
         mDirtyRect.setEmpty();
+    }
+
+    private void setKeyBounds(Canvas canvas, Drawable keyBackground, int kbdPaddingLeft, int kbdPaddingTop, Key key) {
+        final Rect bounds = keyBackground.getBounds();
+        if (key.width != bounds.right ||
+                key.height != bounds.bottom) {
+            keyBackground.setBounds(0, 0, key.width, key.height);
+        }
+        canvas.translate(key.x + kbdPaddingLeft, key.y + kbdPaddingTop);
+        keyBackground.draw(canvas);
+    }
+
+    private void setKeyDrawable(Canvas canvas, Rect padding, Key key, Drawable icon) {
+        final int drawableX = (key.width - padding.left - padding.right
+                        - icon.getIntrinsicWidth()) / 2 + padding.left;
+        final int drawableY = (key.height - padding.top - padding.bottom
+                - icon.getIntrinsicHeight()) / 2 + padding.top;
+        canvas.translate(drawableX, drawableY);
+        icon.setBounds(0, 0,
+                icon.getIntrinsicWidth(), icon.getIntrinsicHeight());
+        icon.setAlpha(KEY_ALPHA_LEVEL);
+        icon.draw(canvas);
+        canvas.translate(-drawableX, -drawableY);
     }
 
     private int getKeyIndices(int x, int y, int[] allKeys) {

@@ -39,6 +39,13 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" />
         <Button
+            android:id="@+id/specialButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Special characters"
+            />
+        <Button
             android:id="@+id/negativeButton"
             android:text="@android:string/cancel"
             android:layout_width="0dp"

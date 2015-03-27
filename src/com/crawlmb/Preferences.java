@@ -237,15 +237,15 @@ final public class Preferences
         setCurrentKeyboardLayout(1);
     }
 
-    public static void addKeybindingToLayout(Context context, KeyboardType keyboardType, int originalCode, int newCode, String label){
+    public static void addKeybindingToLayout(Context context, KeyboardType keyboardType, int keyIndex, int newCode, String label){
         String sharedPreferenceName = keyboardType.name() + "_1"; // Change this if we're using multiple layouts
         SharedPreferences sharedPreferences = context.getSharedPreferences(sharedPreferenceName, 0);
 
-        String codePreferenceName = KEYBOARD_CODE_PREFIX + originalCode;
+        String codePreferenceName = KEYBOARD_CODE_PREFIX + keyIndex;
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt(codePreferenceName, newCode);
 
-        String labelPreferenceName = KEYBOARD_LABEL_PREFIX + originalCode;
+        String labelPreferenceName = KEYBOARD_LABEL_PREFIX + keyIndex;
         editor.putString(labelPreferenceName, label);
 
         editor.apply();

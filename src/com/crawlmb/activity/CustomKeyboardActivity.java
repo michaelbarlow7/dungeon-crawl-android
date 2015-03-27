@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 import com.crawlmb.Preferences;
 import com.crawlmb.R;
 import com.crawlmb.keyboard.CrawlKeyboardWrapper;
+import com.crawlmb.keyboard.CrawlKeyboardWrapper.SpecialKey;
 import com.crawlmb.keyboard.KeyboardLayoutSpinnerAdapter;
 import com.crawlmb.keylistener.KeyListener;
 
@@ -207,11 +209,36 @@ public class CustomKeyboardActivity extends Activity implements KeyListener, Ada
                 characterBindingDialog.dismiss();
             }
         });
-        //TODO: Neutral button for special characters
+        Button specialButton = (Button) characterBindingDialog.findViewById(R.id.specialButton);
+        specialButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                characterBindingDialog.dismiss();
+                showGetSpecialCharacterDialog();
+            }
+        });
         //TODO: Have a "revert to default" button
 
 
         return characterBindingDialog;
+    }
+
+    private void showGetSpecialCharacterDialog()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setAdapter(new ArrayAdapter<SpecialKey>(getBaseContext(), R.layout.simple_list_item_black, SpecialKey.values()), new DialogInterface.OnClickListener()
+        {
+            public void onClick(DialogInterface dialog, int which)
+            {
+                int code = SpecialKey.values()[which].getCode();
+                Preferences.addKeybindingToLayout(CustomKeyboardActivity.this, virtualKeyboard.getCurrentKeyboardType(), changingKeyIndex, code, null);
+                setViews();
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel, null);
+        char changingChar = (char) changingKey;
+        builder.setTitle("Changing character " + changingChar + " to...");
+        builder.show();
     }
 
     @Override

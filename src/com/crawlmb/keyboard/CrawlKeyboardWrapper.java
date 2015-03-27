@@ -4,6 +4,7 @@ import com.crawlmb.R;
 import com.crawlmb.keylistener.KeyListener;
 
 import android.content.Context;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
@@ -20,6 +21,43 @@ public class CrawlKeyboardWrapper implements CrawlKeyboardView.OnKeyboardActionL
         QWERTY,
         SYMBOLS,
         SYMBOLS_SHIFT
+    }
+    public static enum SpecialKey
+    {
+        ARROWDOWNKEY(R.drawable.sym_keyboard_down, 0402),
+        ARROWLEFTKEY(R.drawable.sym_keyboard_left, 0404),
+        ARROWRIGHTKEY(R.drawable.sym_keyboard_right, 0405),
+        ARROWUPKEY(R.drawable.sym_keyboard_up, 0403),
+        ENTERKEY(R.drawable.sym_keyboard_return, 13),
+        ESCKEY(R.drawable.sym_keyboard_esc, 0x1B),
+        TAB(R.drawable.sym_keyboard_tab, '\t'),
+        BACKSPACEKEY(R.drawable.sym_keyboard_delete, 0x9F);
+
+        private final int resourceId;
+        private final int code;
+        private static SparseArray<SpecialKey> codeToKeyMap;
+
+        SpecialKey(int resourceId, int code){
+            this.resourceId = resourceId;
+            this.code = code;
+            getCodeToKeyMap().put(code, this);
+        }
+
+        public static SparseArray<SpecialKey> getCodeToKeyMap(){
+            if (codeToKeyMap == null){
+                codeToKeyMap = new SparseArray<SpecialKey>();
+            }
+            return codeToKeyMap;
+        }
+
+        public int getResourceId(){
+            return resourceId;
+        }
+
+        public int getCode(){
+            return code;
+        }
+
     }
 
 	KeyListener keyListener = null;
