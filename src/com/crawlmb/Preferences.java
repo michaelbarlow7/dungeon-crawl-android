@@ -250,4 +250,19 @@ final public class Preferences
 
         editor.apply();
     }
+
+    public static void clearKeybindingInLayout(Context context, KeyboardType keyboardType, int keyIndex){
+        String sharedPreferenceName = keyboardType.name() + "_1"; // Change this if we're using multiple layouts
+        SharedPreferences sharedPreferences = context.getSharedPreferences(sharedPreferenceName, 0);
+
+        String codePreferenceName = KEYBOARD_CODE_PREFIX + keyIndex;
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove(codePreferenceName);
+
+        String labelPreferenceName = KEYBOARD_LABEL_PREFIX + keyIndex;
+        editor.remove(labelPreferenceName);
+
+        editor.apply();
+    }
 }

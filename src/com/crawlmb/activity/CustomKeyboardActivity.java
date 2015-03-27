@@ -10,6 +10,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -198,6 +199,16 @@ public class CustomKeyboardActivity extends Activity implements KeyListener, Ada
                 setViews();
                 Toast.makeText(v.getContext(), "Set character " + changingChar + " to " + label, Toast.LENGTH_SHORT).show();
 
+            }
+        });
+        Button revertButton = (Button) characterBindingDialog.findViewById(R.id.revertButton);
+        revertButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Preferences.clearKeybindingInLayout(CustomKeyboardActivity.this, virtualKeyboard.getCurrentKeyboardType(), changingKeyIndex);
+                characterBindingDialog.dismiss();
+                Toast.makeText(view.getContext(), "Reverted character", Toast.LENGTH_LONG).show();
+                setViews();
             }
         });
         Button negativeButton = (Button) characterBindingDialog.findViewById(R.id.negativeButton);
