@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <!--TODO: This requires an adapter -->
+        <Spinner
+            android:id="@+id/layoutSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <Button
+            android:id="@+id/newLayout"
+            android:text="@string/add_new_layout"
+            android:onClick="onNewLayoutClick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/deleteLayout"
+            android:text="@string/delete_layout"
+            android:onClick="onDeleteLayoutClick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</HorizontalScrollView>

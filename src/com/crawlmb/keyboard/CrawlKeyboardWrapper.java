@@ -1,8 +1,7 @@
 package com.crawlmb.keyboard;
 
 import com.crawlmb.R;
-import com.crawlmb.StateManager;
-import com.crawlmb.activity.GameActivity;
+import com.crawlmb.keylistener.KeyListener;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -23,16 +22,16 @@ public class CrawlKeyboardWrapper implements CrawlKeyboardView.OnKeyboardActionL
         SYMBOLS_SHIFT
     }
 
-	StateManager state = null;
+	KeyListener keyListener = null;
 
-	public CrawlKeyboardWrapper(Context ctx)
+	public CrawlKeyboardWrapper(Context context, KeyListener keyListener)
 	{
-		state = ((GameActivity)ctx).getStateManager();
+		this.keyListener = keyListener;
 
-		virtualKeyboardQwerty = new Keyboard(ctx, R.xml.keyboard_qwerty);
-		virtualKeyboardSymbols = new Keyboard(ctx, R.xml.keyboard_sym);
-		virtualKeyboardSymbolsShift = new Keyboard(ctx, R.xml.keyboard_symshift);
-		LayoutInflater inflater = LayoutInflater.from(ctx);
+		virtualKeyboardQwerty = new Keyboard(context, R.xml.keyboard_qwerty);
+		virtualKeyboardSymbols = new Keyboard(context, R.xml.keyboard_sym);
+		virtualKeyboardSymbolsShift = new Keyboard(context, R.xml.keyboard_symshift);
+		LayoutInflater inflater = LayoutInflater.from(context);
 		virtualKeyboardView = (CrawlKeyboardView)inflater.inflate(
 				R.layout.input, null);
 		LayoutParams layoutParams = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
@@ -52,8 +51,9 @@ public class CrawlKeyboardWrapper implements CrawlKeyboardView.OnKeyboardActionL
 			virtualKeyboardView.setShifted(/*capslock*/ !virtualKeyboardView.isShifted());
 		}
 	}
-	
-	public void onKey(int primaryCode, int[] keyCodes)
+
+    @Override
+	public void onKey(int keyIndex, int primaryCode, int[] keyCodes)
 	{
 		char c = 0;
 		if(primaryCode == Keyboard.KEYCODE_DELETE)
@@ -100,9 +100,25 @@ public class CrawlKeyboardWrapper implements CrawlKeyboardView.OnKeyboardActionL
 		}
 		if(c != 0)
 		{
-			state.addKey(c);
+			keyListener.addKey(c, keyIndex);
 		}
 	}
+
+    public KeyboardType getCurrentKeyboardType(){
+        Keyboard current = virtualKeyboardView.getKeyboard();
+        if ( current == virtualKeyboardQwerty){
+            return KeyboardType.QWERTY;
+        }
+        if ( current == virtualKeyboardSymbols){
+            return KeyboardType.SYMBOLS;
+        }
+        if ( current == virtualKeyboardSymbolsShift){
+            return KeyboardType.SYMBOLS_SHIFT;
+        }
+
+        // Shouldn't happen
+        return null;
+    }
 	
 	public void onPress(int primaryCode)
 	{

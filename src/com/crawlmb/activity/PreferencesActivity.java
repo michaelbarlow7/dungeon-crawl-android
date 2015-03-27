@@ -18,35 +18,35 @@
 
 package com.crawlmb.activity;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.preference.DialogPreference;
+import android.preference.Preference;
+import android.preference.PreferenceActivity;
+import android.preference.PreferenceCategory;
+import android.preference.PreferenceScreen;
+import android.util.Log;
+import android.view.WindowManager;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.crawlmb.EditConfigFilePreference;
+import com.crawlmb.Preferences;
+import com.crawlmb.R;
+import com.crawlmb.keymap.KeyMapPreference;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.preference.DialogPreference;
-import android.preference.PreferenceActivity;
-import android.preference.PreferenceScreen;
-import android.preference.Preference;
-import android.util.Log;
-import android.view.WindowManager;
-import android.widget.EditText;
-import android.widget.Toast;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.preference.PreferenceCategory;
-
-import com.crawlmb.EditConfigFilePreference;
-import com.crawlmb.keymap.KeyMapPreference;
-import com.crawlmb.Preferences;
-import com.crawlmb.R;
 
 public class PreferencesActivity extends PreferenceActivity implements
 		OnSharedPreferenceChangeListener {
@@ -168,6 +168,8 @@ public class PreferencesActivity extends PreferenceActivity implements
 
 		setCharacterFilesIntent();
 
+        setCustomizeKeyboardIntent();
+
 		addExportSavePreference();
 		addRestoreSavePreference();
 	}
@@ -258,6 +260,13 @@ public class PreferencesActivity extends PreferenceActivity implements
 		characterFilesPreference.setIntent(characterFilesIntent);
 	}
 
+    private void setCustomizeKeyboardIntent() {
+        Preference characterFilesPreference = findPreference("custom_keyboard");
+        Intent characterFilesIntent = new Intent(this,
+                CustomKeyboardActivity.class);
+        characterFilesPreference.setIntent(characterFilesIntent);
+    }
+
 	private void setConfigFilePreferences() {
 		PreferenceCategory configFilePreferences = (PreferenceCategory) findPreference("configFiles");
 		String[] configFiles = getResources().getStringArray(
@@ -343,4 +352,5 @@ public class PreferencesActivity extends PreferenceActivity implements
 			setSummaryPref(pref);
 		}
 	}
+
 }

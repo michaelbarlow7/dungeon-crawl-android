@@ -7,5 +7,6 @@ jni
 .gradle/
 build/
 *.iml
+*.swp
 .idea/
 local.properties

@@ -34,20 +34,20 @@ import android.os.Handler;
 import android.os.Message;
 
 import com.crawlmb.CrawlDialog;
+import com.crawlmb.keylistener.GameKeyListener;
 import com.crawlmb.keyboard.CrawlKeyboardWrapper;
 import com.crawlmb.keyboard.DirectionalTouchView;
 import com.crawlmb.GameThread;
 import com.crawlmb.Preferences;
 import com.crawlmb.R;
-import com.crawlmb.StateManager;
 import com.crawlmb.view.TermView;
 
-public class GameActivity extends Activity // implements OnScoreSubmitObserver {
+public class GameActivity extends Activity
 {
 
 	static final int PREFERENCES_FINISHED = 1;
 	
-	public static StateManager state = null;
+	public GameKeyListener gameKeyListener = null;
 	private CrawlDialog dialog = null;
 
 	private RelativeLayout screenLayout = null;
@@ -61,8 +61,8 @@ public class GameActivity extends Activity // implements OnScoreSubmitObserver {
 
 		// Log.d("Crawl", "onCreate");
 
-		if (state == null) {
-			state = new StateManager();
+		if (gameKeyListener == null) {
+			gameKeyListener = new GameKeyListener();
 		}
 	}
 
@@ -71,7 +71,7 @@ public class GameActivity extends Activity // implements OnScoreSubmitObserver {
 		super.onStart();
 
 		if (dialog == null)
-			dialog = new CrawlDialog(this, state);
+			dialog = new CrawlDialog(this, gameKeyListener);
 		final CrawlDialog crawlDialog = dialog;
 		handler = new Handler() {
 			@Override
@@ -150,12 +150,12 @@ public class GameActivity extends Activity // implements OnScoreSubmitObserver {
 	@Override
 	public void finish() {
 		// Log.d("Crawl","finish");
-		state.gameThread.send(GameThread.Request.StopGame);
+		gameKeyListener.gameThread.send(GameThread.Request.StopGame);
 		super.finish();
 	}
 
 	private void rebuildViews() {
-		synchronized (StateManager.progress_lock) {
+		synchronized (GameKeyListener.progress_lock) {
 			// Log.d("Crawl","rebuildViews");
 
 			int orient = Preferences.getOrientation();
@@ -175,7 +175,7 @@ public class GameActivity extends Activity // implements OnScoreSubmitObserver {
 				screenLayout.removeAllViews();
 			screenLayout = new RelativeLayout(this);
 
-			term = new TermView(this);
+			term = new TermView(this, gameKeyListener);
 			RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
 					LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 			layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
@@ -186,7 +186,7 @@ public class GameActivity extends Activity // implements OnScoreSubmitObserver {
 			boolean hapticFeedbackEnabled = Preferences
 					.getHapticFeedbackEnabled();
 			term.setHapticFeedbackEnabled(hapticFeedbackEnabled);
-			state.link(term, handler);
+			gameKeyListener.link(term, handler);
 
 			screenLayout.addView(term);
 
@@ -201,7 +201,7 @@ public class GameActivity extends Activity // implements OnScoreSubmitObserver {
 
 			if (keyboardType.equals(keyboards[1])) // Crawl Keyboard
 			{
-				CrawlKeyboardWrapper virtualKeyboard = new CrawlKeyboardWrapper(this);
+				CrawlKeyboardWrapper virtualKeyboard = new CrawlKeyboardWrapper(this, gameKeyListener);
 				virtualKeyboard.virtualKeyboardView
 						.setHapticFeedbackEnabled(hapticFeedbackEnabled);
 				screenLayout.addView(virtualKeyboard.virtualKeyboardView);
@@ -237,7 +237,7 @@ public class GameActivity extends Activity // implements OnScoreSubmitObserver {
 
 	private void addDirectionalKeyView(int virtualKeyboardId,
 			boolean hapticFeedbackEnabled) {
-		DirectionalTouchView view = new DirectionalTouchView(this);
+		DirectionalTouchView view = new DirectionalTouchView(this, gameKeyListener);
 		RelativeLayout.LayoutParams directionalLayoutParams = new RelativeLayout.LayoutParams(
 				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
 		directionalLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
@@ -296,7 +296,7 @@ public class GameActivity extends Activity // implements OnScoreSubmitObserver {
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (!state.onKeyDown(keyCode, event)) {
+		if (!gameKeyListener.onKeyDown(keyCode, event)) {
 			return super.onKeyDown(keyCode, event);
 		} else {
 			return true;
@@ -305,7 +305,7 @@ public class GameActivity extends Activity // implements OnScoreSubmitObserver {
 
 	@Override
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
-		if (!state.onKeyUp(keyCode, event)) {
+		if (!gameKeyListener.onKeyUp(keyCode, event)) {
 			return super.onKeyUp(keyCode, event);
 		} else {
 			return true;
@@ -322,10 +322,6 @@ public class GameActivity extends Activity // implements OnScoreSubmitObserver {
 
 	public Handler getHandler() {
 		return handler;
-	}
-
-	public StateManager getStateManager() {
-		return state;
 	}
 
 }

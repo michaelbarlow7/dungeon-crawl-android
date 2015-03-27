@@ -2,6 +2,7 @@ package com.crawlmb;
 
 import android.graphics.Color;
 
+import com.crawlmb.keylistener.GameKeyListener;
 import com.crawlmb.view.TermView;
 
 public class NativeWrapper
@@ -14,7 +15,7 @@ public class NativeWrapper
 	}
 
 	private TermView term = null;
-	private StateManager stateManager = null;
+	private GameKeyListener keyListener = null;
 
 	private String display_lock = "lock";
 	private static final String TAG = NativeWrapper.class.getCanonicalName();
@@ -46,22 +47,22 @@ public class NativeWrapper
 
 	public native String initGame(String initFileLocation);
 
-	public NativeWrapper(StateManager s)
+	public NativeWrapper(GameKeyListener s)
 	{
-		stateManager = s;
+		keyListener = s;
 	}
 
 	public int getch(final int v)
 	{
-		stateManager.gameThread.setFullyInitialized();
-		int key = stateManager.getKey(v);
+		keyListener.gameThread.setFullyInitialized();
+		int key = keyListener.getKey(v);
 		return key;
 	}
 
 	// this is called from native thread just before exiting
 	public void onGameExit()
 	{
-		stateManager.handler.sendEmptyMessage(CrawlDialog.Action.OnGameExit.ordinal());
+		keyListener.handler.sendEmptyMessage(CrawlDialog.Action.OnGameExit.ordinal());
 		// Log.d(TAG, "onGameExit()");
 	}
 
@@ -111,9 +112,9 @@ public class NativeWrapper
 		// Log.d(TAG, "fatal("+msg+")");
 		synchronized (display_lock)
 		{
-			stateManager.fatalMessage = msg;
-			stateManager.fatalError = true;
-			stateManager.handler.sendMessage(stateManager.handler.obtainMessage(
+			keyListener.fatalMessage = msg;
+			keyListener.fatalError = true;
+			keyListener.handler.sendMessage(keyListener.handler.obtainMessage(
 					CrawlDialog.Action.GameFatalAlert.ordinal(), 0, 0, msg));
 		}
 	}

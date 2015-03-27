@@ -7,7 +7,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.app.AlertDialog;
 
-import com.crawlmb.keyboard.CrawlKeyboardWrapper;
+import com.crawlmb.keyboard.CrawlKeyboardWrapper.KeyboardType;
 import com.crawlmb.keymap.KeyMapper;
 
 final public class Preferences
@@ -32,12 +32,14 @@ final public class Preferences
 	public static final String KEY_PROFILES = "crawl.profiles";
 	public static final String KEY_ACTIVEPROFILE = "crawl.activeprofile";
 
+    private static final String KEYBOARD_LAYOUT_COUNT = "layout_count";
+    public static final String KEYBOARD_LAYOUT_CURRENT = "layout_current";
     public static final String KEYBOARD_LABEL_PREFIX = "label_";
     public static final String KEYBOARD_CODE_PREFIX = "code_";
 
 	private static final String KEY_HAPTICFEEDBACKENABLED = "crawl.hapticfeedbackenabled";
 
-	private static SharedPreferences sharedPreferences;
+    private static SharedPreferences sharedPreferences;
 	private static int fontSize = 17;
 	private static Resources resources;
 
@@ -74,7 +76,7 @@ final public class Preferences
 	{
 		SharedPreferences.Editor ed = sharedPreferences.edit();
 		ed.putBoolean(Preferences.KEY_FULLSCREEN, value);
-		ed.commit();
+		ed.apply();
 	}
 	
 	public static boolean getSkipSplash()
@@ -118,7 +120,7 @@ final public class Preferences
 	{
 		SharedPreferences.Editor ed = sharedPreferences.edit();
 		ed.putString(Preferences.KEY_PORTRAITKB, value);
-		ed.commit();
+		ed.apply();
 	}
 
 	public static String getLandscapeKeyboard()
@@ -131,7 +133,7 @@ final public class Preferences
 	{
 		SharedPreferences.Editor ed = sharedPreferences.edit();
 		ed.putString(Preferences.KEY_LANDSCAPEKB, value);
-		ed.commit();
+		ed.apply();
 	}
 
 	public static int getPortraitFontSize()
@@ -143,7 +145,7 @@ final public class Preferences
 	{
 		SharedPreferences.Editor ed = sharedPreferences.edit();
 		ed.putInt(Preferences.KEY_PORTRAITFONTSIZE, value);
-		ed.commit();
+		ed.apply();
 	}
 
 	public static int getLandscapeFontSize()
@@ -155,7 +157,7 @@ final public class Preferences
 	{
 		SharedPreferences.Editor ed = sharedPreferences.edit();
 		ed.putInt(Preferences.KEY_LANDSCAPEFONTSIZE, value);
-		ed.commit();
+		ed.apply();
 	}
 
 	public static boolean getEnableTouch()
@@ -185,7 +187,31 @@ final public class Preferences
 		return sharedPreferences.getBoolean(Preferences.KEY_HAPTICFEEDBACKENABLED, true);
 	}
 
-    public static SharedPreferences getKeyboardPreferences(Context context, int id, CrawlKeyboardWrapper.KeyboardType keyboardType){
+    public static int getLayoutCount(){
+        return sharedPreferences.getInt(Preferences.KEYBOARD_LAYOUT_COUNT, 0);
+    }
+
+    public static void setCustomLayoutCount(int layoutCount){
+        sharedPreferences.edit().putInt(KEYBOARD_LAYOUT_COUNT, layoutCount).apply();
+    }
+
+    public static void setCurrentKeyboardLayout(int currentKeyboardLayout){
+        sharedPreferences.edit().putInt(KEYBOARD_LAYOUT_CURRENT, currentKeyboardLayout).apply();
+    }
+
+    public static int getCurrentKeyboardLayout(){
+        return sharedPreferences.getInt(KEYBOARD_LAYOUT_CURRENT, 0);
+    }
+
+    public static SharedPreferences getCurrentKeyboardPreferences(Context context, KeyboardType keyboardType){
+        int currentType = sharedPreferences.getInt(KEYBOARD_LAYOUT_CURRENT, 0);
+        if (currentType == 0){
+            return null;
+        }
+        return getKeyboardPreferences(context, currentType, keyboardType);
+    }
+
+    public static SharedPreferences getKeyboardPreferences(Context context, int id, KeyboardType keyboardType){
         if (keyboardType == null){
             return null;
         }
@@ -193,5 +219,35 @@ final public class Preferences
         SharedPreferences sharedPreferences = context.getSharedPreferences(preferenceName, 0);
 
         return sharedPreferences;
+    }
+
+    public static void deleteLayout(Context context, int layoutNumber){
+        // Delete entries in associated layout files
+        for (KeyboardType keyboardType : KeyboardType.values()){
+            String preferenceName = keyboardType.name() + '_' + layoutNumber;
+            SharedPreferences sharedPreferences = context.getSharedPreferences(preferenceName, 0);
+            sharedPreferences.edit().clear().apply();
+        }
+        setCurrentKeyboardLayout(0);
+        setCustomLayoutCount(0);
+    }
+
+    public static void addNewKeyboardLayout() {
+        setCustomLayoutCount(1);
+        setCurrentKeyboardLayout(1);
+    }
+
+    public static void addKeybindingToLayout(Context context, KeyboardType keyboardType, int originalCode, int newCode, String label){
+        String sharedPreferenceName = keyboardType.name() + "_1"; // Change this if we're using multiple layouts
+        SharedPreferences sharedPreferences = context.getSharedPreferences(sharedPreferenceName, 0);
+
+        String codePreferenceName = KEYBOARD_CODE_PREFIX + originalCode;
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(codePreferenceName, newCode);
+
+        String labelPreferenceName = KEYBOARD_LABEL_PREFIX + originalCode;
+        editor.putString(labelPreferenceName, label);
+
+        editor.apply();
     }
 }

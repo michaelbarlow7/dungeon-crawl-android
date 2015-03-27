@@ -5,6 +5,7 @@ import java.util.Queue;
 import android.view.KeyEvent;
 import android.util.Log;
 
+import com.crawlmb.keylistener.GameKeyListener;
 import com.crawlmb.keymap.KeyMap;
 import com.crawlmb.keymap.KeyMapper.KeyAction;
 
@@ -18,7 +19,7 @@ public class KeyBuffer
 	private int quit_key_seq = 0;
 	private boolean signal_game_exit = false;
 	private NativeWrapper nativew = null;
-	private StateManager state = null;
+	private GameKeyListener state = null;
 
 	private boolean ctrl_mod = false;
 	private boolean shift_mod = false;
@@ -32,7 +33,7 @@ public class KeyBuffer
 	private boolean alt_key_pressed = false;
 	private boolean eat_shift = false;
 
-	public KeyBuffer(StateManager state)
+	public KeyBuffer(GameKeyListener state)
 	{
 		this.state = state;
 		nativew = state.nativew;

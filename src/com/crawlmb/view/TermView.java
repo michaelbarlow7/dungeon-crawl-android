@@ -44,11 +44,12 @@ import android.view.ScaleGestureDetector;
 
 import com.crawlmb.CrawlDialog;
 import com.crawlmb.CrawlInputConnection;
+import com.crawlmb.keylistener.GameKeyListener;
 import com.crawlmb.PassThroughListener;
 import com.crawlmb.Preferences;
 import com.crawlmb.R;
-import com.crawlmb.StateManager;
 import com.crawlmb.activity.GameActivity;
+import com.crawlmb.keylistener.KeyListener;
 
 public class TermView extends View implements GestureDetector.OnGestureListener, ScaleGestureDetector.OnScaleGestureListener, PassThroughListener
 {
@@ -73,7 +74,7 @@ public class TermView extends View implements GestureDetector.OnGestureListener,
 	private int font_text_size = 0;
 
 	private Handler handler = null;
-	private StateManager state = null;
+	private KeyListener keyListener = null;
 
 	private GestureDetector gestureDetector;
 	private ScaleGestureDetector scaleGestureDetector;
@@ -82,20 +83,20 @@ public class TermView extends View implements GestureDetector.OnGestureListener,
 	
 	private boolean lockPositioning;
 
-	public TermView(Context context)
+	public TermView(Context context, KeyListener keyListener)
 	{
 		super(context);
 		initTermView(context);
 		handler = ((GameActivity) context).getHandler();
-		state = ((GameActivity) context).getStateManager();
+		this.keyListener = keyListener;
 	}
 
-	public TermView(Context context, AttributeSet attrs)
+	public TermView(Context context, AttributeSet attrs, GameKeyListener keyListener)
 	{
 		super(context, attrs);
 		initTermView(context);
 		handler = ((GameActivity) context).getHandler();
-		state = ((GameActivity) context).getStateManager();
+		this.keyListener = keyListener;
 	}
 	
 	@Override
@@ -164,7 +165,7 @@ public class TermView extends View implements GestureDetector.OnGestureListener,
 	
 	public void addKey(int c)
 	{
-		state.addKey(c);
+		keyListener.addKey(c, 0);
 	}
 	
 	@Override
@@ -399,37 +400,37 @@ public class TermView extends View implements GestureDetector.OnGestureListener,
 		switch (key)
 		{
 		case 1:
-			key = StateManager.KEY_C1;
+			key = GameKeyListener.KEY_C1;
 			break;
 		case 2:
-			key = StateManager.KEY_DOWN;
+			key = GameKeyListener.KEY_DOWN;
 			break;
 		case 3:
-			key = StateManager.KEY_C3;
+			key = GameKeyListener.KEY_C3;
 			break;
 		case 4:
-			key = StateManager.KEY_LEFT;
+			key = GameKeyListener.KEY_LEFT;
 			break;
 	  case 5: 
-      key = StateManager.KEY_B2; 
+      key = GameKeyListener.KEY_B2;
       break; 
 		case 6:
-			key = StateManager.KEY_RIGHT;
+			key = GameKeyListener.KEY_RIGHT;
 			break;
 		case 7:
-			key = StateManager.KEY_A1;
+			key = GameKeyListener.KEY_A1;
 			break;
 		case 8:
-			key = StateManager.KEY_UP;
+			key = GameKeyListener.KEY_UP;
 			break;
 		case 9:
-			key = StateManager.KEY_A3;
+			key = GameKeyListener.KEY_A3;
 			break;
 		default:
 			break;
 		}
 
-		state.addDirectionKey(key);
+		keyListener.addDirectionKey(key);
 
 		return true;
 	}

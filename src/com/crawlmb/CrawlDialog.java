@@ -5,11 +5,12 @@ import android.content.DialogInterface;
 import android.app.AlertDialog;
 
 import com.crawlmb.activity.GameActivity;
+import com.crawlmb.keylistener.GameKeyListener;
 
 public class CrawlDialog
 {
 	private GameActivity activity;
-	private StateManager state;
+	private GameKeyListener state;
 
 	public enum Action
 	{
@@ -21,7 +22,7 @@ public class CrawlDialog
 		}
 	};
 
-	public CrawlDialog(GameActivity a, StateManager s)
+	public CrawlDialog(GameActivity a, GameKeyListener s)
 	{
 		activity = a;
 		state = s;

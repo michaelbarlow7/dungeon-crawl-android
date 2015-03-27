@@ -96,15 +96,15 @@ public class CrawlKeyboardView extends View implements View.OnClickListener {
 
         /**
          * Send a key press to the listener.
+         * @param keyIndex this is the index of the key in the keyboard (customization)
          * @param primaryCode this is the key that was pressed
          * @param keyCodes the codes for all the possible alternative keys
          * with the primary code being the first. If the primary key code is
          * a single character such as an alphabet or number or symbol, the alternatives
          * will include other characters that may be on the same key or adjacent keys.
          * These codes are useful to correct for accidental presses of a key adjacent to
-         * the intended key.
          */
-        void onKey(int primaryCode, int[] keyCodes);
+        void onKey(int keyIndex, int primaryCode, int[] keyCodes);
 
         /**
          * Sends a sequence of characters to the listener.
@@ -676,7 +676,7 @@ public class CrawlKeyboardView extends View implements View.OnClickListener {
         canvas.drawColor(0x00000000, PorterDuff.Mode.CLEAR);
         final int keyCount = keys.length;
 
-        SharedPreferences sharedPreferences = Preferences.getKeyboardPreferences(getContext(), 0, keyboardType);
+        SharedPreferences sharedPreferences = Preferences.getCurrentKeyboardPreferences(getContext(), keyboardType);
         for (int i = 0; i < keyCount; i++) {
             final Key key = keys[i];
             if (drawSingleKey && invalidKey != key) {
@@ -810,10 +810,10 @@ public class CrawlKeyboardView extends View implements View.OnClickListener {
                 mKeyboardActionListener.onText(key.text);
                 mKeyboardActionListener.onRelease(NOT_A_KEY);
             } else {
-                SharedPreferences keyPrefs = Preferences.getKeyboardPreferences(getContext(), 0, keyboardType);
+                SharedPreferences keyPrefs = Preferences.getCurrentKeyboardPreferences(getContext(), keyboardType);
                 int code;
                 String preferenceKey = Preferences.KEYBOARD_CODE_PREFIX + index;
-                if (keyPrefs.contains(preferenceKey)){
+                if (keyPrefs != null && keyPrefs.contains(preferenceKey)){
                     code = keyPrefs.getInt(preferenceKey, Integer.MAX_VALUE);
                 }else{
                     code = key.codes[0];
@@ -825,13 +825,13 @@ public class CrawlKeyboardView extends View implements View.OnClickListener {
                 // Multi-tap
                 if (mInMultiTap) {
                     if (mTapCount != -1) {
-                        mKeyboardActionListener.onKey(Keyboard.KEYCODE_DELETE, KEY_DELETE);
+                        mKeyboardActionListener.onKey(-1, Keyboard.KEYCODE_DELETE, KEY_DELETE);
                     } else {
                         mTapCount = 0;
                     }
                     code = key.codes[mTapCount];
                 }
-                mKeyboardActionListener.onKey(code, codes);
+                mKeyboardActionListener.onKey(index, code, codes);
                 mKeyboardActionListener.onRelease(code);
             }
             mLastSentIndex = index;
@@ -1044,8 +1044,8 @@ public class CrawlKeyboardView extends View implements View.OnClickListener {
 //                        com.android.internal.R.id.closeButton);
 //                if (closeButton != null) closeButton.setOnClickListener(this);
                 mMiniKeyboard.setOnKeyboardActionListener(new OnKeyboardActionListener() {
-                    public void onKey(int primaryCode, int[] keyCodes) {
-                        mKeyboardActionListener.onKey(primaryCode, keyCodes);
+                    public void onKey(int keyIndex, int primaryCode, int[] keyCodes) {
+                        mKeyboardActionListener.onKey(keyIndex, primaryCode, keyCodes);
                         dismissPopupKeyboard();
                     }
                     

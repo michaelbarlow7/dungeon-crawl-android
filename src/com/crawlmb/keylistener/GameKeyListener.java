@@ -1,12 +1,15 @@
-package com.crawlmb;
+package com.crawlmb.keylistener;
 
 import android.os.Handler;
 
 import android.view.KeyEvent;
 
+import com.crawlmb.GameThread;
+import com.crawlmb.KeyBuffer;
+import com.crawlmb.NativeWrapper;
 import com.crawlmb.view.TermView;
 
-public class StateManager
+public class GameKeyListener implements KeyListener
 {
 	public static final int KEY_A1 = 0534; /* upper left of keypad */
 	public static final int KEY_A3 = 0535; /* upper right of keypad */
@@ -39,7 +42,7 @@ public class StateManager
 	/* game thread */
 	public Handler handler = null;
 
-	public StateManager()
+	public GameKeyListener()
 	{
 		nativew = new NativeWrapper(this);
 		gameThread = new GameThread(this, nativew);
@@ -108,10 +111,11 @@ public class StateManager
 		this.keyBuffer = new KeyBuffer(this);
 	}
 
-	public void addKey(int k)
+    @Override
+	public void addKey(int key, int keyIndex)
 	{
 		if (this.keyBuffer != null)
-			this.keyBuffer.add(k);
+			this.keyBuffer.add(key);
 	}
 
 	public int getKey(int v)
@@ -126,6 +130,7 @@ public class StateManager
 		}
 	}
 
+    @Override
 	public void addDirectionKey(int k)
 	{
 		if (this.keyBuffer != null)

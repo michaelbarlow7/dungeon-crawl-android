@@ -7,25 +7,25 @@ import android.view.ScaleGestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.crawlmb.keylistener.GameKeyListener;
 import com.crawlmb.PassThroughListener;
 import com.crawlmb.Preferences;
-import com.crawlmb.StateManager;
-import com.crawlmb.activity.GameActivity;
+import com.crawlmb.keylistener.KeyListener;
 
 public class DirectionalTouchView extends View implements  GestureDetector.OnGestureListener, ScaleGestureDetector.OnScaleGestureListener
 {
 
 	private GestureDetector gestureDetector;
 	private ScaleGestureDetector scaleGestureDetector;
-	private StateManager state = null;
+	private KeyListener keyListener = null;
 	private PassThroughListener passThroughListener;
 	
-	public DirectionalTouchView(Context context) 
+	public DirectionalTouchView(Context context, KeyListener keyListener)
 	{
 		super(context);
 		gestureDetector = new GestureDetector(context, this);
 		scaleGestureDetector = new ScaleGestureDetector(context, this);
-		state = ((GameActivity) context).getStateManager();
+		this.keyListener = keyListener;
 	}
 	
 	public void setPassThroughListener(PassThroughListener onGestureListener)
@@ -85,37 +85,37 @@ public class DirectionalTouchView extends View implements  GestureDetector.OnGes
 		switch (key)
 		{
 		case 1:
-			key = StateManager.KEY_C1;
+			key = GameKeyListener.KEY_C1;
 			break;
 		case 2:
-			key = StateManager.KEY_DOWN;
+			key = GameKeyListener.KEY_DOWN;
 			break;
 		case 3:
-			key = StateManager.KEY_C3;
+			key = GameKeyListener.KEY_C3;
 			break;
 		case 4:
-			key = StateManager.KEY_LEFT;
+			key = GameKeyListener.KEY_LEFT;
 			break;
 		case 5: 
-		   key = StateManager.KEY_B2; 
+		   key = GameKeyListener.KEY_B2;
 		   break; 
 		case 6:
-			key = StateManager.KEY_RIGHT;
+			key = GameKeyListener.KEY_RIGHT;
 			break;
 		case 7:
-			key = StateManager.KEY_A1;
+			key = GameKeyListener.KEY_A1;
 			break;
 		case 8:
-			key = StateManager.KEY_UP;
+			key = GameKeyListener.KEY_UP;
 			break;
 		case 9:
-			key = StateManager.KEY_A3;
+			key = GameKeyListener.KEY_A3;
 			break;
 		default:
 			break;
 		}
 
-		state.addDirectionKey(key);
+		keyListener.addDirectionKey(key);
 
 		return true;
 	}

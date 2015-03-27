@@ -1,7 +1,9 @@
 package com.crawlmb;
 
 import android.util.Log;
-	
+
+import com.crawlmb.keylistener.GameKeyListener;
+
 public class GameThread implements Runnable {
 
 	public enum Request{
@@ -22,9 +24,9 @@ public class GameThread implements Runnable {
 	private boolean game_restart = false;
 	private boolean plugin_change = false;
 	private NativeWrapper nativew = null;
-	private StateManager state = null;
+	private GameKeyListener state = null;
 	
-	public GameThread(StateManager s, NativeWrapper nw) {
+	public GameThread(GameKeyListener s, NativeWrapper nw) {
 		nativew = nw;
 		state = s;
 	}

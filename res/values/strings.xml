@@ -134,5 +134,14 @@
         <item>standard_colours</item-->
     </string-array>
     <string name="config_file_prefererence_title">Edit %s.txt</string>
+    <string name="add_new_layout">Add New Layout</string>
+    <string name="delete_layout">Delete layout</string>
+    <string name="delete_layout_message">Are you sure you want to delete the custom layout?</string>
+    <string name="default_layout">DEFAULT</string>
+    <string name="custom_layout">CUSTOM</string>
+    <string name="layout_prefix">"Layout "</string>
+    <string name="please_select_a_character">Please select a character</string>
+    <string name="dialog_change_character_message">Choose a character to change the key to</string>
+
 
 </resources>
