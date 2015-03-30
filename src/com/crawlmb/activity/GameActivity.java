@@ -47,7 +47,7 @@ public class GameActivity extends Activity
 
 	static final int PREFERENCES_FINISHED = 1;
 	
-	public GameKeyListener gameKeyListener = null;
+	public static GameKeyListener gameKeyListener = null;
 	private CrawlDialog dialog = null;
 
 	private RelativeLayout screenLayout = null;

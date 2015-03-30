@@ -10,3 +10,5 @@ build/
 *.swp
 .idea/
 local.properties
+*.swp
+*.swo
