@@ -196,30 +196,34 @@ public class SplashActivity extends Activity
 
 	@Override
 	public Dialog onCreateDialog(int id)
-	{
-	  switch (id)
     {
-    case INSTALL_DIALOG_ID:
-      installDialog = new ProgressDialog(this);
-      installDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-      installDialog.setTitle(updating ? R.string.updating_dialog_title : R.string.install_dialog_title);
-      installDialog.setIndeterminate(true);
-      installDialog.setCancelable(false);
-      return installDialog;
-    case WARNING_DIALOG_ID:
-      AlertDialog.Builder builder = new AlertDialog.Builder(this);
-      builder.setIcon(android.R.drawable.ic_dialog_alert);
-      builder.setTitle(R.string.warning_dialog_title);
-      builder.setMessage(getString(R.string.warning_dialog_message, getVersionName()));
-      builder.setPositiveButton(R.string.warning_dialog_positive_button, new DialogInterface.OnClickListener()
-      {
-        
-        @Override
-        public void onClick(DialogInterface dialog, int which)
+        switch (id)
         {
-          new InstallProgramTask().execute();
-        }
-      });
+            case INSTALL_DIALOG_ID:
+                installDialog = new ProgressDialog(this);
+                installDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                if (updating){
+                    installDialog.setTitle(getString(R.string.updating_dialog_title, getVersionName()));
+                }else{
+                    installDialog.setTitle(getString(R.string.install_dialog_title, getVersionName()));
+                }
+                installDialog.setIndeterminate(true);
+                installDialog.setCancelable(false);
+                return installDialog;
+            case WARNING_DIALOG_ID:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setIcon(android.R.drawable.ic_dialog_alert);
+                builder.setTitle(R.string.warning_dialog_title);
+                builder.setMessage(getString(R.string.warning_dialog_message, getVersionName()));
+                builder.setPositiveButton(R.string.warning_dialog_positive_button, new DialogInterface.OnClickListener()
+                {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        new InstallProgramTask().execute();
+                    }
+                });
       builder.setNeutralButton(R.string.warning_dialog_neutral_button, new DialogInterface.OnClickListener()
       {
         
@@ -320,7 +324,7 @@ public class SplashActivity extends Activity
 	{
 		// Number of files that need creating. Hard-coded I know, but
 		// counting them dynamically took a surprising amount of time
-		private static final int TOTAL_FILES = 656;
+		private static final int TOTAL_FILES = 636;
 
 		private int installedFiles = 0;
 		@Override
