@@ -4,7 +4,7 @@ This is an unofficial port of Dungeon Crawl:Stone Soup for Android. The aim is t
 
 This is the unofficial console version. The official tiles version for Android can be downloaded <a href="https://crawl.develz.org/wordpress/downloads">here</a>.
 
-The latest release is 0.15.2. You can download it from <a href="https://play.google.com/store/apps/details?id=com.crawlmb">Google Play</a>.
+The latest release is 0.16.1. You can download it from <a href="https://play.google.com/store/apps/details?id=com.crawlmb">Google Play</a>.
 
 The project uses a clone of the main Crawl project as a submodule. This is hosted at <a href="http://gitorious.org/~barbs/crawl/android-crawl-console">Gitorious</a>.
 
