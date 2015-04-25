@@ -73,12 +73,7 @@ public class GameActivity extends Activity
 		if (dialog == null)
 			dialog = new CrawlDialog(this, gameKeyListener);
 		final CrawlDialog crawlDialog = dialog;
-		handler = new Handler() {
-			@Override
-			public void handleMessage(Message msg) {
-				crawlDialog.HandleMessage(msg);
-			}
-		};
+		handler = new GameHandler(crawlDialog);
 
 		rebuildViews();
 	}
@@ -324,4 +319,16 @@ public class GameActivity extends Activity
 		return handler;
 	}
 
+	private static class GameHandler extends Handler {
+		private final CrawlDialog crawlDialog;
+
+		public GameHandler(CrawlDialog crawlDialog) {
+			this.crawlDialog = crawlDialog;
+		}
+
+		@Override
+        public void handleMessage(Message msg) {
+            crawlDialog.HandleMessage(msg);
+        }
+	}
 }

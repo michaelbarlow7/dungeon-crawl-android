@@ -51,6 +51,8 @@ import com.crawlmb.R;
 import com.crawlmb.activity.GameActivity;
 import com.crawlmb.keylistener.KeyListener;
 
+import java.util.Hashtable;
+
 public class TermView extends View implements GestureDetector.OnGestureListener, ScaleGestureDetector.OnScaleGestureListener, PassThroughListener
 {
 
@@ -252,14 +254,32 @@ public class TermView extends View implements GestureDetector.OnGestureListener,
 	{
 		if (!isHighRes())
 		{
-			tfTiny = Typeface.createFromAsset(getResources().getAssets(), "6x12.ttf");
+			tfTiny = getTypeface("6x12.ttf");
 			fore.setTypeface(tfTiny);
 		}
 		else
 		{
-			tfStd = Typeface.createFromAsset(getResources().getAssets(), "VeraMoBd.ttf");
-			// tfStd = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD);
+			tfStd = getTypeface("VeraMoBd.ttf");
 			fore.setTypeface(tfStd);
+		}
+	}
+
+	private static final Hashtable<String, Typeface> cache = new Hashtable<String, Typeface>();
+
+	public Typeface getTypeface(String assetPath) {
+		synchronized (cache) {
+			if (!cache.containsKey(assetPath)) {
+				try {
+					Typeface t = Typeface.createFromAsset(getContext().getAssets(),
+							assetPath);
+					cache.put(assetPath, t);
+				} catch (Exception e) {
+					Log.e("Crawl", "Could not get typeface '" + assetPath
+							+ "' because " + e.getMessage());
+					return null;
+				}
+			}
+			return cache.get(assetPath);
 		}
 	}
 
