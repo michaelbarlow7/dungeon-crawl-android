@@ -6,7 +6,7 @@ This is the unofficial console version. The official tiles version for Android c
 
 The latest release is 0.16.1a. You can download it from <a href="https://play.google.com/store/apps/details?id=com.crawlmb">Google Play</a>.
 
-The project uses a clone of the main Crawl project as a submodule. This is hosted at <a href="http://gitorious.org/~barbs/crawl/android-crawl-console">Gitorious</a>.
+The project uses a clone of the main Crawl project as a submodule. This is hosted at <a href="https://github.com/michaelbarlow7/crawl">Gitorious</a>.
 
 <a href="http://s152.photobucket.com/albums/s197/marzzbar/?action=view&amp;current=Screenshot-220712-174829-1.png" target="_blank"><img src="http://i152.photobucket.com/albums/s197/marzzbar/Screenshot-220712-174829-1.png" border="0" alt="Photobucket"/>
 
