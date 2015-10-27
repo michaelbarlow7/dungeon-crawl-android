@@ -276,7 +276,7 @@ public class SplashActivity extends Activity {
     private class InstallProgramTask extends AsyncTask<Void, Integer, Void> {
         // Number of files that need creating. Hard-coded I know, but
         // counting them dynamically took a surprising amount of time
-        private static final int TOTAL_FILES = 636;
+        private static final int TOTAL_FILES = 656;
 
         private int installedFiles = 0;
 
