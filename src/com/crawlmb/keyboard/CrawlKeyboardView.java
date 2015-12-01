@@ -25,6 +25,7 @@ import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
@@ -37,6 +38,7 @@ import android.inputmethodservice.Keyboard.Key;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -629,6 +631,73 @@ public class CrawlKeyboardView extends View implements View.OnClickListener {
     @Override
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+
+        Paint paint = new Paint();
+        paint.setColor(Color.RED);
+        paint.setStyle(Paint.Style.FILL);
+        paint.setStrokeWidth(3f);
+
+        List<Key> keys = getKeyboard().getKeys();
+        final int xAdjust1 = 30;
+        final int yAdjust1 = 30;
+        final int xAdjust2 = 10;
+
+        for(Key key: keys) {
+            if(key.codes[0] == 104) {
+                float triangle[] = {
+                        key.x + xAdjust1, key.y + yAdjust1,
+                        key.x + xAdjust1, key.y + (key.height - yAdjust1),
+                        key.x + xAdjust2, key.y + (key.height / 2)};
+                canvas.drawVertices(
+                        Canvas.VertexMode.TRIANGLES,
+                        triangle.length, triangle, 0,
+                        null, 0,
+                        null, 0,
+                        null, 0, 0,
+                        paint);
+            }
+            else if(key.codes[0] == 108) {
+                float triangle[] = {
+                        key.x + key.width - xAdjust1, key.y + yAdjust1,
+                        key.x + key.width - xAdjust1, key.y + (key.height - yAdjust1),
+                        key.x + key.width - xAdjust2, key.y + (key.height / 2)};
+                canvas.drawVertices(
+                        Canvas.VertexMode.TRIANGLES,
+                        triangle.length, triangle, 0,
+                        null, 0,
+                        null, 0,
+                        null, 0, 0,
+                        paint);
+            }
+            else if(key.codes[0] == 107) {
+                float triangle[] = {
+                        key.x + xAdjust1, key.y + yAdjust1,
+                        key.x + key.width - xAdjust1, key.y + yAdjust1,
+                        key.x + (key.width / 2), key.y + xAdjust2};
+                canvas.drawVertices(
+                        Canvas.VertexMode.TRIANGLES,
+                        triangle.length, triangle, 0,
+                        null, 0,
+                        null, 0,
+                        null, 0, 0,
+                        paint);
+            }
+            else if(key.codes[0] == 106) {
+                float triangle[] = {
+                        key.x + xAdjust1, key.y + key.height - yAdjust1,
+                        key.x + key.width - xAdjust1, key.y + key.height - yAdjust1,
+                        key.x + (key.width / 2), key.y + key.height - xAdjust2};
+                canvas.drawVertices(
+                        Canvas.VertexMode.TRIANGLES,
+                        triangle.length, triangle, 0,
+                        null, 0,
+                        null, 0,
+                        null, 0, 0,
+                        paint);
+            }
+        }
+
+
         if (mDrawPending || mBuffer == null || mKeyboardChanged) {
             onBufferDraw();
         }
