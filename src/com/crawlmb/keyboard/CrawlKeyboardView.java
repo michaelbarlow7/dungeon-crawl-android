@@ -638,10 +638,6 @@ public class CrawlKeyboardView extends View implements View.OnClickListener {
         paint.setStrokeWidth(3f);
 
         List<Key> keys = getKeyboard().getKeys();
-        final int xAdjust1 = 30;
-        final int yAdjust1 = 30;
-        final int xAdjust2 = 10;
-
         for(Key key: keys) {
             //H key
             if(key.codes[0] == 104) {
