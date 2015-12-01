@@ -25,6 +25,7 @@ import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
@@ -37,6 +38,7 @@ import android.inputmethodservice.Keyboard.Key;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -629,6 +631,137 @@ public class CrawlKeyboardView extends View implements View.OnClickListener {
     @Override
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+
+        Paint paint = new Paint();
+        paint.setColor(Color.RED);
+        paint.setStyle(Paint.Style.FILL);
+        paint.setStrokeWidth(3f);
+
+        List<Key> keys = getKeyboard().getKeys();
+        for(Key key: keys) {
+            //H key
+            if(key.codes[0] == 104) {
+                float triangle[] = {
+                        key.x + (key.width / 10), key.y + (key.height / 2),
+                        key.x + (key.width / 4), key.y + (key.height / 2) - (key.height / 6),
+                        key.x + (key.width / 4), key.y + (key.height / 2) + (key.height / 6)
+                };
+                canvas.drawVertices(
+                        Canvas.VertexMode.TRIANGLES,
+                        triangle.length, triangle, 0,
+                        null, 0,
+                        null, 0,
+                        null, 0, 0,
+                        paint);
+            }
+            //L key
+            else if(key.codes[0] == 108) {
+                float triangle[] = {
+                        key.x + key.width - (key.width / 10), key.y + (key.height / 2),
+                        key.x + key.width - (key.width / 4), key.y + (key.height / 2) - (key.height / 6),
+                        key.x + key.width - (key.width / 4), key.y + (key.height / 2) + (key.height / 6)
+                        };
+                canvas.drawVertices(
+                        Canvas.VertexMode.TRIANGLES,
+                        triangle.length, triangle, 0,
+                        null, 0,
+                        null, 0,
+                        null, 0, 0,
+                        paint);
+            }
+            //K key
+            else if(key.codes[0] == 107) {
+                float triangle[] = {
+                        key.x + (key.width / 2), key.y + (key.height / 10),
+                        key.x + (key.width / 2) - (key.width / 5), key.y + (key.height / 5),
+                        key.x + (key.width / 2) + (key.width / 5), key.y + (key.height / 5)
+                };
+                canvas.drawVertices(
+                        Canvas.VertexMode.TRIANGLES,
+                        triangle.length, triangle, 0,
+                        null, 0,
+                        null, 0,
+                        null, 0, 0,
+                        paint);
+            }
+            //J key
+            else if(key.codes[0] == 106) {
+                float triangle[] = {
+                        key.x + (key.width / 2), key.y + key.height - (key.height / 10),
+                        key.x + (key.width / 2) - (key.width / 5), key.y + key.height - (key.height / 5),
+                        key.x + (key.width / 2) + (key.width / 5), key.y + key.height - (key.height / 5)
+                        };
+                canvas.drawVertices(
+                        Canvas.VertexMode.TRIANGLES,
+                        triangle.length, triangle, 0,
+                        null, 0,
+                        null, 0,
+                        null, 0, 0,
+                        paint);
+            }
+            //Y key
+            else if(key.codes[0] == 121) {
+                float tri[] = {
+                        key.x + (key.width / 10), key.y + (key.height / 11),
+                        key.x + (key.width / 3), key.y + (key.height / 11),
+                        key.x + (key.width / 10), key.y + (key.height / 3)
+                };
+                canvas.drawVertices(
+                        Canvas.VertexMode.TRIANGLES,
+                        tri.length, tri, 0,
+                        null, 0,
+                        null, 0,
+                        null, 0, 0,
+                        paint);
+            }
+            //U Key
+            else if(key.codes[0] == 117) {
+                float tri[] = {
+                        key.x + (key.width) - (key.width / 10), key.y + (key.height / 11),
+                        key.x + (key.width) - (key.width / 3), key.y + (key.height / 11),
+                        key.x + (key.width) - (key.width / 10), key.y + (key.height / 3)
+                };
+                canvas.drawVertices(
+                        Canvas.VertexMode.TRIANGLES,
+                        tri.length, tri, 0,
+                        null, 0,
+                        null, 0,
+                        null, 0, 0,
+                        paint);
+            }
+            //B key
+            else if(key.codes[0] == 98) {
+                float tri[] = {
+                        key.x + (key.width / 10), key.y + key.height - (key.height / 11),
+                        key.x + (key.width / 3), key.y + key.height - (key.height / 11),
+                        key.x + (key.width / 10), key.y + key.height - (key.height / 3)
+                };
+                canvas.drawVertices(
+                        Canvas.VertexMode.TRIANGLES,
+                        tri.length, tri, 0,
+                        null, 0,
+                        null, 0,
+                        null, 0, 0,
+                        paint);
+            }
+            //N Key
+            else if(key.codes[0] == 110) {
+                float tri[] = {
+                        key.x + key.width - (key.width / 10), key.y + key.height - (key.height / 11),
+                        key.x + key.width - (key.width / 3), key.y + key.height - (key.height / 11),
+                        key.x + key.width - (key.width / 10), key.y + key.height - (key.height / 3)
+                };
+                canvas.drawVertices(
+                        Canvas.VertexMode.TRIANGLES,
+                        tri.length, tri, 0,
+                        null, 0,
+                        null, 0,
+                        null, 0, 0,
+                        paint);
+            }
+        }
+
+
         if (mDrawPending || mBuffer == null || mKeyboardChanged) {
             onBufferDraw();
         }
