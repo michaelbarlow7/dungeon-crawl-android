@@ -25,6 +25,7 @@ import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
@@ -74,8 +75,9 @@ import java.util.Map;
 public class CrawlKeyboardView extends View implements View.OnClickListener {
 
     private static final int KEY_ALPHA_LEVEL = 120;
+    private Paint trianglePaint;
 
-	/**
+    /**
      * Listener for virtual keyboard events.
      */
     public interface OnKeyboardActionListener {
@@ -366,6 +368,12 @@ public class CrawlKeyboardView extends View implements View.OnClickListener {
         mPaint.setTextAlign(Align.CENTER);
         mPaint.setAlpha(255);
 
+        trianglePaint = new Paint();
+        trianglePaint.setColor(Color.RED);
+        trianglePaint.setStyle(Paint.Style.FILL);
+        trianglePaint.setStrokeWidth(3f);
+
+
         mPadding = new Rect(0, 0, 0, 0);
         mMiniKeyboardCache = new HashMap<Key,View>();
         mKeyBackground.getPadding(mPadding);
@@ -629,10 +637,117 @@ public class CrawlKeyboardView extends View implements View.OnClickListener {
     @Override
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+
+        SharedPreferences currentKeyboardPreferences = Preferences.getCurrentKeyboardPreferences(getContext(), keyboardType);
+        Key key;
+        for(int i = 0; i < mKeys.length;  i++){
+            key = mKeys[i];
+            int code = key.codes[0];
+            if (currentKeyboardPreferences != null){
+                String codePreferenceKey = Preferences.KEYBOARD_CODE_PREFIX + i;
+                if (currentKeyboardPreferences.contains(codePreferenceKey)){
+                    code = currentKeyboardPreferences.getInt(codePreferenceKey, code);
+                }
+            }
+            //H key
+            switch (code) {
+                case 104: {
+                    float triangle[] = {
+                            key.x + (key.width / 10), key.y + (key.height / 2),
+                            key.x + (key.width / 4), key.y + (key.height / 2) - (key.height / 6),
+                            key.x + (key.width / 4), key.y + (key.height / 2) + (key.height / 6)
+                    };
+                    drawTriangle(canvas, trianglePaint, triangle);
+                    break;
+                }
+                //L key
+                case 108: {
+                    float triangle[] = {
+                            key.x + key.width - (key.width / 10), key.y + (key.height / 2),
+                            key.x + key.width - (key.width / 4), key.y + (key.height / 2) - (key.height / 6),
+                            key.x + key.width - (key.width / 4), key.y + (key.height / 2) + (key.height / 6)
+                    };
+                    drawTriangle(canvas, trianglePaint, triangle);
+                    break;
+                }
+                //K key
+                case 107: {
+                    float triangle[] = {
+                            key.x + (key.width / 2), key.y + (key.height / 10),
+                            key.x + (key.width / 2) - (key.width / 5), key.y + (key.height / 5),
+                            key.x + (key.width / 2) + (key.width / 5), key.y + (key.height / 5)
+                    };
+                    drawTriangle(canvas, trianglePaint, triangle);
+                    break;
+                }
+                //J key
+                case 106: {
+                    float triangle[] = {
+                            key.x + (key.width / 2), key.y + key.height - (key.height / 10),
+                            key.x + (key.width / 2) - (key.width / 5), key.y + key.height - (key.height / 5),
+                            key.x + (key.width / 2) + (key.width / 5), key.y + key.height - (key.height / 5)
+                    };
+                    drawTriangle(canvas, trianglePaint, triangle);
+                    break;
+                }
+                //Y key
+                case 121: {
+                    float triangle[] = {
+                            key.x + (key.width / 10), key.y + (key.height / 11),
+                            key.x + (key.width / 3), key.y + (key.height / 11),
+                            key.x + (key.width / 10), key.y + (key.height / 3)
+                    };
+                    drawTriangle(canvas, trianglePaint, triangle);
+                    break;
+                }
+                //U Key
+                case 117: {
+                    float triangle[] = {
+                            key.x + (key.width) - (key.width / 10), key.y + (key.height / 11),
+                            key.x + (key.width) - (key.width / 3), key.y + (key.height / 11),
+                            key.x + (key.width) - (key.width / 10), key.y + (key.height / 3)
+                    };
+                    drawTriangle(canvas, trianglePaint, triangle);
+                    break;
+                }
+                //B key
+                case 98: {
+                    float triangle[] = {
+                            key.x + (key.width / 10), key.y + key.height - (key.height / 11),
+                            key.x + (key.width / 3), key.y + key.height - (key.height / 11),
+                            key.x + (key.width / 10), key.y + key.height - (key.height / 3)
+                    };
+                    drawTriangle(canvas, trianglePaint, triangle);
+                    break;
+                }
+                //N Key
+                case 110: {
+                    float triangle[] = {
+                            key.x + key.width - (key.width / 10), key.y + key.height - (key.height / 11),
+                            key.x + key.width - (key.width / 3), key.y + key.height - (key.height / 11),
+                            key.x + key.width - (key.width / 10), key.y + key.height - (key.height / 3)
+                    };
+                    drawTriangle(canvas, trianglePaint, triangle);
+                    break;
+                }
+            }
+        }
+
+
         if (mDrawPending || mBuffer == null || mKeyboardChanged) {
             onBufferDraw();
         }
         canvas.drawBitmap(mBuffer, 0, 0, null);
+    }
+
+    private void drawTriangle(Canvas canvas, Paint paint, float[] triangle) {
+        canvas.drawVertices(
+                Canvas.VertexMode.TRIANGLES,
+                triangle.length, triangle, 0,
+                null, 0,
+                null, 0,
+                null, 0, 0,
+                paint);
     }
 
     private void onBufferDraw() {
@@ -677,7 +792,7 @@ public class CrawlKeyboardView extends View implements View.OnClickListener {
         canvas.drawColor(0x00000000, PorterDuff.Mode.CLEAR);
         final int keyCount = keys.length;
 
-        SharedPreferences sharedPreferences = Preferences.getCurrentKeyboardPreferences(getContext(), keyboardType);
+        SharedPreferences currentKeyboardPreferences = Preferences.getCurrentKeyboardPreferences(getContext(), keyboardType);
         for (int i = 0; i < keyCount; i++) {
             final Key key = keys[i];
             if (drawSingleKey && invalidKey != key) {
@@ -689,13 +804,13 @@ public class CrawlKeyboardView extends View implements View.OnClickListener {
 
             String label = null;
             Drawable specialDrawable = null;
-            if (sharedPreferences != null){
+            if (currentKeyboardPreferences != null){
                 String codePreferenceKey = Preferences.KEYBOARD_CODE_PREFIX + i;
-                if (sharedPreferences.contains(codePreferenceKey)){
-                    label = sharedPreferences.getString(Preferences.KEYBOARD_LABEL_PREFIX + i, null);
+                if (currentKeyboardPreferences.contains(codePreferenceKey)){
+                    label = currentKeyboardPreferences.getString(Preferences.KEYBOARD_LABEL_PREFIX + i, null);
                     if (label == null){
                         // We have a code set, but not a label. Check if we have an image.
-                        int code = sharedPreferences.getInt(Preferences.KEYBOARD_CODE_PREFIX + i, Integer.MAX_VALUE);
+                        int code = currentKeyboardPreferences.getInt(Preferences.KEYBOARD_CODE_PREFIX + i, Integer.MAX_VALUE);
                         SpecialKey specialKey = SpecialKey.getCodeToKeyMap().get(code);
                         if (specialKey != null){
                             specialDrawable = getResources().getDrawable(specialKey.getResourceId());
