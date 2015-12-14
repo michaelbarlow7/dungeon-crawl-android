@@ -241,6 +241,11 @@
 	   android:defaultValue="true" 
 	   android:title="@string/preferences_enabletouch_title"
 	   android:summary="@string/preferences_enabletouch_summary" />
+	<CheckBoxPreference
+	   android:key="crawl.keyboardarrowsenabled"
+	   android:defaultValue="true"
+	   android:title="@string/preferences_keyboard_arrows_title"
+	   android:summary="@string/preferences_keyboard_arrows_summary"/>
 	<CheckBoxPreference 
        android:key="crawl.hapticfeedbackenabled"
        android:defaultValue="true" 

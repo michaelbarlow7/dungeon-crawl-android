@@ -57,6 +57,8 @@
     <string name="preferences_alwaysrun_summary">Always run when using touch directional commands</string>
     <string name="preferences_haptic_feedback_title">Enable haptic feedback</string>
     <string name="preferences_haptic_feedback_summary">Vibrate on key-press</string>
+    <string name="preferences_keyboard_arrows_title">Show guide arrows on keyboard</string>
+    <string name="preferences_keyboard_arrows_summary">Show red directional arrows on keyboard</string>
 
     <string name="display_category">Display</string>
     <string name="control_category">Control</string>

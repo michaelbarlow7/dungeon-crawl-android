@@ -638,97 +638,99 @@ public class CrawlKeyboardView extends View implements View.OnClickListener {
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        SharedPreferences currentKeyboardPreferences = Preferences.getCurrentKeyboardPreferences(getContext(), keyboardType);
-        Key key;
-        for(int i = 0; i < mKeys.length;  i++){
-            key = mKeys[i];
-            int code = key.codes[0];
-            if (currentKeyboardPreferences != null){
-                String codePreferenceKey = Preferences.KEYBOARD_CODE_PREFIX + i;
-                if (currentKeyboardPreferences.contains(codePreferenceKey)){
-                    code = currentKeyboardPreferences.getInt(codePreferenceKey, code);
+        if (Preferences.getKeyboardArrowsEnabled()) {
+            SharedPreferences currentKeyboardPreferences = Preferences.getCurrentKeyboardPreferences(getContext(), keyboardType);
+            Key key;
+            for (int i = 0; i < mKeys.length; i++) {
+                key = mKeys[i];
+                int code = key.codes[0];
+                if (currentKeyboardPreferences != null) {
+                    String codePreferenceKey = Preferences.KEYBOARD_CODE_PREFIX + i;
+                    if (currentKeyboardPreferences.contains(codePreferenceKey)) {
+                        code = currentKeyboardPreferences.getInt(codePreferenceKey, code);
+                    }
                 }
-            }
-            //H key
-            switch (code) {
-                case 104: {
-                    float triangle[] = {
-                            key.x + (key.width / 10), key.y + (key.height / 2),
-                            key.x + (key.width / 4), key.y + (key.height / 2) - (key.height / 6),
-                            key.x + (key.width / 4), key.y + (key.height / 2) + (key.height / 6)
-                    };
-                    drawTriangle(canvas, trianglePaint, triangle);
-                    break;
-                }
-                //L key
-                case 108: {
-                    float triangle[] = {
-                            key.x + key.width - (key.width / 10), key.y + (key.height / 2),
-                            key.x + key.width - (key.width / 4), key.y + (key.height / 2) - (key.height / 6),
-                            key.x + key.width - (key.width / 4), key.y + (key.height / 2) + (key.height / 6)
-                    };
-                    drawTriangle(canvas, trianglePaint, triangle);
-                    break;
-                }
-                //K key
-                case 107: {
-                    float triangle[] = {
-                            key.x + (key.width / 2), key.y + (key.height / 10),
-                            key.x + (key.width / 2) - (key.width / 5), key.y + (key.height / 5),
-                            key.x + (key.width / 2) + (key.width / 5), key.y + (key.height / 5)
-                    };
-                    drawTriangle(canvas, trianglePaint, triangle);
-                    break;
-                }
-                //J key
-                case 106: {
-                    float triangle[] = {
-                            key.x + (key.width / 2), key.y + key.height - (key.height / 10),
-                            key.x + (key.width / 2) - (key.width / 5), key.y + key.height - (key.height / 5),
-                            key.x + (key.width / 2) + (key.width / 5), key.y + key.height - (key.height / 5)
-                    };
-                    drawTriangle(canvas, trianglePaint, triangle);
-                    break;
-                }
-                //Y key
-                case 121: {
-                    float triangle[] = {
-                            key.x + (key.width / 10), key.y + (key.height / 11),
-                            key.x + (key.width / 3), key.y + (key.height / 11),
-                            key.x + (key.width / 10), key.y + (key.height / 3)
-                    };
-                    drawTriangle(canvas, trianglePaint, triangle);
-                    break;
-                }
-                //U Key
-                case 117: {
-                    float triangle[] = {
-                            key.x + (key.width) - (key.width / 10), key.y + (key.height / 11),
-                            key.x + (key.width) - (key.width / 3), key.y + (key.height / 11),
-                            key.x + (key.width) - (key.width / 10), key.y + (key.height / 3)
-                    };
-                    drawTriangle(canvas, trianglePaint, triangle);
-                    break;
-                }
-                //B key
-                case 98: {
-                    float triangle[] = {
-                            key.x + (key.width / 10), key.y + key.height - (key.height / 11),
-                            key.x + (key.width / 3), key.y + key.height - (key.height / 11),
-                            key.x + (key.width / 10), key.y + key.height - (key.height / 3)
-                    };
-                    drawTriangle(canvas, trianglePaint, triangle);
-                    break;
-                }
-                //N Key
-                case 110: {
-                    float triangle[] = {
-                            key.x + key.width - (key.width / 10), key.y + key.height - (key.height / 11),
-                            key.x + key.width - (key.width / 3), key.y + key.height - (key.height / 11),
-                            key.x + key.width - (key.width / 10), key.y + key.height - (key.height / 3)
-                    };
-                    drawTriangle(canvas, trianglePaint, triangle);
-                    break;
+                //H key
+                switch (code) {
+                    case 104: {
+                        float triangle[] = {
+                                key.x + (key.width / 10), key.y + (key.height / 2),
+                                key.x + (key.width / 4), key.y + (key.height / 2) - (key.height / 6),
+                                key.x + (key.width / 4), key.y + (key.height / 2) + (key.height / 6)
+                        };
+                        drawTriangle(canvas, trianglePaint, triangle);
+                        break;
+                    }
+                    //L key
+                    case 108: {
+                        float triangle[] = {
+                                key.x + key.width - (key.width / 10), key.y + (key.height / 2),
+                                key.x + key.width - (key.width / 4), key.y + (key.height / 2) - (key.height / 6),
+                                key.x + key.width - (key.width / 4), key.y + (key.height / 2) + (key.height / 6)
+                        };
+                        drawTriangle(canvas, trianglePaint, triangle);
+                        break;
+                    }
+                    //K key
+                    case 107: {
+                        float triangle[] = {
+                                key.x + (key.width / 2), key.y + (key.height / 10),
+                                key.x + (key.width / 2) - (key.width / 5), key.y + (key.height / 5),
+                                key.x + (key.width / 2) + (key.width / 5), key.y + (key.height / 5)
+                        };
+                        drawTriangle(canvas, trianglePaint, triangle);
+                        break;
+                    }
+                    //J key
+                    case 106: {
+                        float triangle[] = {
+                                key.x + (key.width / 2), key.y + key.height - (key.height / 10),
+                                key.x + (key.width / 2) - (key.width / 5), key.y + key.height - (key.height / 5),
+                                key.x + (key.width / 2) + (key.width / 5), key.y + key.height - (key.height / 5)
+                        };
+                        drawTriangle(canvas, trianglePaint, triangle);
+                        break;
+                    }
+                    //Y key
+                    case 121: {
+                        float triangle[] = {
+                                key.x + (key.width / 10), key.y + (key.height / 11),
+                                key.x + (key.width / 3), key.y + (key.height / 11),
+                                key.x + (key.width / 10), key.y + (key.height / 3)
+                        };
+                        drawTriangle(canvas, trianglePaint, triangle);
+                        break;
+                    }
+                    //U Key
+                    case 117: {
+                        float triangle[] = {
+                                key.x + (key.width) - (key.width / 10), key.y + (key.height / 11),
+                                key.x + (key.width) - (key.width / 3), key.y + (key.height / 11),
+                                key.x + (key.width) - (key.width / 10), key.y + (key.height / 3)
+                        };
+                        drawTriangle(canvas, trianglePaint, triangle);
+                        break;
+                    }
+                    //B key
+                    case 98: {
+                        float triangle[] = {
+                                key.x + (key.width / 10), key.y + key.height - (key.height / 11),
+                                key.x + (key.width / 3), key.y + key.height - (key.height / 11),
+                                key.x + (key.width / 10), key.y + key.height - (key.height / 3)
+                        };
+                        drawTriangle(canvas, trianglePaint, triangle);
+                        break;
+                    }
+                    //N Key
+                    case 110: {
+                        float triangle[] = {
+                                key.x + key.width - (key.width / 10), key.y + key.height - (key.height / 11),
+                                key.x + key.width - (key.width / 3), key.y + key.height - (key.height / 11),
+                                key.x + key.width - (key.width / 10), key.y + key.height - (key.height / 3)
+                        };
+                        drawTriangle(canvas, trianglePaint, triangle);
+                        break;
+                    }
                 }
             }
         }

@@ -38,6 +38,7 @@ final public class Preferences
     public static final String KEYBOARD_CODE_PREFIX = "code_";
 
 	private static final String KEY_HAPTICFEEDBACKENABLED = "crawl.hapticfeedbackenabled";
+	private static final String KEY_KEYBOARDARROWSENABLED = "crawl.keyboardarrowsenabled";
 
     private static SharedPreferences sharedPreferences;
 	private static int fontSize = 17;
@@ -203,6 +204,10 @@ final public class Preferences
         return sharedPreferences.getInt(KEYBOARD_LAYOUT_CURRENT, 0);
     }
 
+	public static boolean getKeyboardArrowsEnabled(){
+		return sharedPreferences.getBoolean(KEY_KEYBOARDARROWSENABLED, true);
+	}
+
     public static SharedPreferences getCurrentKeyboardPreferences(Context context, KeyboardType keyboardType){
         int currentType = sharedPreferences.getInt(KEYBOARD_LAYOUT_CURRENT, 0);
         if (currentType == 0){
@@ -265,4 +270,5 @@ final public class Preferences
 
         editor.apply();
     }
+
 }
