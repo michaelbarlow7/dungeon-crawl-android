@@ -20,6 +20,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.AssetManager;
 import android.net.Uri;
@@ -60,16 +61,16 @@ public class SplashActivity extends Activity {
         File versionFile = new File(getFilesDir() + "/version.txt");
         if (versionFile.exists()) {
             String installedVersion = readFile(versionFile);
-            int latestVersion = 14;
+            int latestVersion = 17;
             // Uncomment this if the latest version requires the user to re-install files
             // (i.e. the version of Crawl itself was updated).
             // Otherwise, we will only re-install files if the version installed is less than latestVersion
-//		try {
-//			PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-//			latestVersion = pInfo.versionCode;
-//		} catch (NameNotFoundException e) {
-//			e.printStackTrace();
-//		}
+		try {
+            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            latestVersion = pInfo.versionCode;
+        } catch (NameNotFoundException e) {
+            e.printStackTrace();
+        }
 
             if (installedVersion != null && installedVersion.trim().length() > 0 && Integer.parseInt(installedVersion) >= latestVersion) {
                 // already installed, just start the game
@@ -276,7 +277,7 @@ public class SplashActivity extends Activity {
     private class InstallProgramTask extends AsyncTask<Void, Integer, Void> {
         // Number of files that need creating. Hard-coded I know, but
         // counting them dynamically took a surprising amount of time
-        private static final int TOTAL_FILES = 656;
+        private static final int TOTAL_FILES = 637;
 
         private int installedFiles = 0;
 
@@ -307,7 +308,6 @@ public class SplashActivity extends Activity {
             mkdir("/morgue");
             publishProgress(++installedFiles);
 
-            copyFile("README.txt");
             delete(new File(getFilesDir() + "/dat"));
             copyFileOrDir("dat");
             // Only copy the settings folder if it doesn't already exist
