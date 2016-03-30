@@ -244,10 +244,6 @@ public class GameActivity extends Activity
 		screenLayout.addView(view);
 	}
 
-	public void openContextMenu() {
-		super.openContextMenu(term);
-	}
-
 	public void toggleKeyboard() {
 		int currentKeyboard;
 		if (Preferences.isScreenPortraitOrientation()) {
@@ -291,20 +287,12 @@ public class GameActivity extends Activity
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (!gameKeyListener.onKeyDown(keyCode, event)) {
-			return super.onKeyDown(keyCode, event);
-		} else {
-			return true;
-		}
+		return gameKeyListener.onKeyDown(keyCode, event) || super.onKeyDown(keyCode, event);
 	}
 
 	@Override
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
-		if (!gameKeyListener.onKeyUp(keyCode, event)) {
-			return super.onKeyUp(keyCode, event);
-		} else {
-			return true;
-		}
+		return gameKeyListener.onKeyUp(keyCode, event) || super.onKeyUp(keyCode, event);
 	}
 
 	public void setScreen() {

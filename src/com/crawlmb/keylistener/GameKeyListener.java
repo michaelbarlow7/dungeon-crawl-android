@@ -28,7 +28,7 @@ public class GameKeyListener implements KeyListener
 	public String fatalMessage = "";
 
 	/* progress dialog state */
-	public static String progress_lock = "lock";
+	public static final String progress_lock = "lock";
 
 	/* keybuffer */
 	private KeyBuffer keyBuffer = null;
@@ -143,12 +143,8 @@ public class GameKeyListener implements KeyListener
 			this.keyBuffer.signalGameExit();
 	}
 
-	public boolean getSignalGameExit()
-	{
-		if (this.keyBuffer != null)
-			return this.keyBuffer.getSignalGameExit();
-		else
-			return false;
+	public boolean getSignalGameExit() {
+		return this.keyBuffer != null && this.keyBuffer.getSignalGameExit();
 	}
 
 	public void signalSave()
@@ -157,19 +153,11 @@ public class GameKeyListener implements KeyListener
 			this.keyBuffer.signalSave();
 	}
 
-	public boolean onKeyDown(int keyCode, KeyEvent event)
-	{
-		if (this.keyBuffer != null)
-			return this.keyBuffer.onKeyDown(keyCode, event);
-		else
-			return false;
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		return this.keyBuffer != null && this.keyBuffer.onKeyDown(keyCode, event);
 	}
 
-	public boolean onKeyUp(int keyCode, KeyEvent event)
-	{
-		if (this.keyBuffer != null)
-			return this.keyBuffer.onKeyUp(keyCode, event);
-		else
-			return false;
+	public boolean onKeyUp(int keyCode, KeyEvent event) {
+		return this.keyBuffer != null && this.keyBuffer.onKeyUp(keyCode, event);
 	}
 }
