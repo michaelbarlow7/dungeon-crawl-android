@@ -17,7 +17,7 @@ public class NativeWrapper
 	private TermView term = null;
 	private GameKeyListener keyListener = null;
 
-	private String display_lock = "lock";
+	private final String display_lock = "lock";
 	private static final String TAG = NativeWrapper.class.getCanonicalName();
 
 	public void gameStart()

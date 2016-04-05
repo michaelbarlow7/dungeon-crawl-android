@@ -60,7 +60,10 @@ public class TermView extends View implements GestureDetector.OnGestureListener,
   private static final String SCALE_FACTOR_PREFERENCE = "scaleFactor";
 	private static final String SCROLL_X_PREFERENCE = "scrollX";
 	private static final String SCROLL_Y_PREFERENCE = "scrollY";
-  Typeface tfStd;
+	private static final String TAG = "TermView";
+	public static final int MAX_FONT_SIZE = 48;
+	public static final int MIN_FONT_SIZE = 6;
+	Typeface tfStd;
 	Typeface tfTiny;
 	Bitmap bitmap;
 	Canvas canvas;
@@ -191,12 +194,12 @@ public class TermView extends View implements GestureDetector.OnGestureListener,
 		}
 		else
 		{
-			font_text_size = 6;
+			font_text_size = MIN_FONT_SIZE;
 			do
 			{
 				font_text_size += 1;
 				setFontSize(font_text_size, false);
-			} while (char_height * Preferences.rows <= maxHeight);
+			} while (char_height * Preferences.rows <= maxHeight && font_text_size < MAX_FONT_SIZE);
 
 			font_text_size -= 1;
 			setFontSize(font_text_size);
@@ -217,12 +220,12 @@ public class TermView extends View implements GestureDetector.OnGestureListener,
 		}
 		else
 		{
-			font_text_size = 6;
+			font_text_size = MIN_FONT_SIZE;
 			do
 			{
 				font_text_size += 1;
 				setFontSize(font_text_size, false);
-			} while (char_width * Preferences.cols <= maxWidth);
+			} while (char_width * Preferences.cols <= maxWidth && font_text_size < MAX_FONT_SIZE);
 
 			font_text_size -= 1;
 			setFontSize(font_text_size);
@@ -303,10 +306,10 @@ public class TermView extends View implements GestureDetector.OnGestureListener,
 
 		setFontFace();
 
-		if (size < 6)
-			size = 6;
-		else if (size > 48)
-			size = 48;
+		if (size < MIN_FONT_SIZE)
+			size = MIN_FONT_SIZE;
+		else if (size > MAX_FONT_SIZE)
+			size = MAX_FONT_SIZE;
 
 		font_text_size = size;
 
