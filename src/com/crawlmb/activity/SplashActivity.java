@@ -277,7 +277,7 @@ public class SplashActivity extends Activity {
     private class InstallProgramTask extends AsyncTask<Void, Integer, Void> {
         // Number of files that need creating. Hard-coded I know, but
         // counting them dynamically took a surprising amount of time
-        private static final int TOTAL_FILES = 660;
+        private static final int TOTAL_FILES = 671;
 
         private int installedFiles = 0;
 
@@ -304,6 +304,8 @@ public class SplashActivity extends Activity {
             mkdir("/saves/sprint");
             publishProgress(++installedFiles);
             mkdir("/saves/zotdef");
+            publishProgress(++installedFiles);
+            mkdir("/saves/bones");
             publishProgress(++installedFiles);
             mkdir("/morgue");
             publishProgress(++installedFiles);
