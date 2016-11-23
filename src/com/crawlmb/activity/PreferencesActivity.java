@@ -170,8 +170,37 @@ public class PreferencesActivity extends PreferenceActivity implements
 
         setCustomizeKeyboardIntent();
 
+		addExportMorguePreference();
+		addRestoreMorguePreference();
+
 		addExportSavePreference();
 		addRestoreSavePreference();
+	}
+
+	private void addExportMorguePreference() {
+		DialogPreference backupDialogPreference = new DialogPreference(this,
+				null) {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				switch (which) {
+					case DialogInterface.BUTTON_POSITIVE:
+						// Get stuff in edittext, back it up to that directory
+						EditText directoryBox = (EditText) getDialog()
+								.findViewById(R.id.directoryBox);
+						String destination = directoryBox.getText().toString();
+						backupDirectory(destination, "/morgue");
+						break;
+				}
+			}
+		};
+		backupDialogPreference.setDialogLayoutResource(R.layout.backup_morgue_dialog);
+		backupDialogPreference.setDialogTitle(R.string.backup_morgue_directory);
+		backupDialogPreference.setTitle(R.string.backup_morgue_directory);
+		backupDialogPreference.setPositiveButtonText(R.string.backup);
+		backupDialogPreference.setNegativeButtonText(android.R.string.cancel);
+
+		PreferenceCategory saveFilesCategory = (PreferenceCategory) findPreference("morgue");
+		saveFilesCategory.addPreference(backupDialogPreference);
 	}
 
 	private void addExportSavePreference() {
@@ -185,12 +214,12 @@ public class PreferencesActivity extends PreferenceActivity implements
 					EditText directoryBox = (EditText) getDialog()
 							.findViewById(R.id.directoryBox);
 					String destination = directoryBox.getText().toString();
-					backupSaveDirectory(destination);
+					backupDirectory(destination, "/saves");
 					break;
 				}
 			}
 		};
-		backupDialogPreference.setDialogLayoutResource(R.layout.backup_dialog);
+		backupDialogPreference.setDialogLayoutResource(R.layout.backup_saves_dialog);
 		backupDialogPreference.setDialogTitle(R.string.backup_save_directory);
 		backupDialogPreference.setTitle(R.string.backup_save_directory);
 		backupDialogPreference.setPositiveButtonText(R.string.backup);
@@ -212,12 +241,12 @@ public class PreferencesActivity extends PreferenceActivity implements
 					EditText directoryBox = (EditText) getDialog()
 							.findViewById(R.id.directoryBox);
 					String source = directoryBox.getText().toString();
-					restoreSaveDirectory(source);
+					restoreDirectory(source, "/saves");
 					break;
 				}
 			}
 		};
-		backupDialogPreference.setDialogLayoutResource(R.layout.restore_dialog);
+		backupDialogPreference.setDialogLayoutResource(R.layout.restore_saves_dialog);
 		backupDialogPreference.setDialogTitle(R.string.restore_save_directory);
 		backupDialogPreference.setTitle(R.string.restore_save_directory);
 		backupDialogPreference.setPositiveButtonText(R.string.restore);
@@ -228,16 +257,43 @@ public class PreferencesActivity extends PreferenceActivity implements
 
 	}
 
-	private void backupSaveDirectory(String destination) {
-		showDialog(DIALOG_COPY_FILES_PROGRESS);
-		new CopySaveDirectoryTask(false).execute(getFilesDir() + "/saves",
-				destination + "/saves");
+	private void addRestoreMorguePreference() {
+		DialogPreference backupDialogPreference = new DialogPreference(this,
+				null) {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				switch (which) {
+					case DialogInterface.BUTTON_POSITIVE:
+						// Get stuff in edittext, restore it from that directory
+						EditText directoryBox = (EditText) getDialog()
+								.findViewById(R.id.directoryBox);
+						String source = directoryBox.getText().toString();
+						restoreDirectory(source, "/morgue");
+						break;
+				}
+			}
+		};
+		backupDialogPreference.setDialogLayoutResource(R.layout.restore_morgue_dialog);
+		backupDialogPreference.setDialogTitle(R.string.restore_morgue_directory);
+		backupDialogPreference.setTitle(R.string.restore_morgue_directory);
+		backupDialogPreference.setPositiveButtonText(R.string.restore);
+		backupDialogPreference.setNegativeButtonText(android.R.string.cancel);
+
+		PreferenceCategory saveFilesCategory = (PreferenceCategory) findPreference("morgue");
+		saveFilesCategory.addPreference(backupDialogPreference);
+
 	}
 
-	private void restoreSaveDirectory(String source) {
+	private void backupDirectory(String destination, String relativeDir){
 		showDialog(DIALOG_COPY_FILES_PROGRESS);
-		new CopySaveDirectoryTask(true).execute(source + "/saves",
-				getFilesDir() + "/saves");
+		new CopySaveDirectoryTask(false).execute(getFilesDir() + relativeDir,
+				destination + relativeDir);
+	}
+
+	private void restoreDirectory(String source, String relativeDir) {
+		showDialog(DIALOG_COPY_FILES_PROGRESS);
+		new CopySaveDirectoryTask(true).execute(source + relativeDir,
+				getFilesDir() + relativeDir);
 	}
 
 	@Override
