@@ -61,7 +61,7 @@ public class SplashActivity extends Activity {
         File versionFile = new File(getFilesDir() + "/version.txt");
         if (versionFile.exists()) {
             String installedVersion = readFile(versionFile);
-            int latestVersion = 19;
+            int latestVersion = 22;
             // Uncomment the folowing try/catch block if the latest version requires the user to re-install files
             // (i.e. the version of Crawl itself was updated).
             // Otherwise, we will only re-install files if the version installed is less than latestVersion
@@ -277,7 +277,7 @@ public class SplashActivity extends Activity {
     private class InstallProgramTask extends AsyncTask<Void, Integer, Void> {
         // Number of files that need creating. Hard-coded I know, but
         // counting them dynamically took a surprising amount of time
-        private static final int TOTAL_FILES = 663;
+        private static final int TOTAL_FILES = 660;
 
         private int installedFiles = 0;
 
