@@ -17,12 +17,12 @@ public class CrawlKeyboardWrapper implements CrawlKeyboardView.OnKeyboardActionL
 	public Keyboard virtualKeyboardSymbols;
 	public Keyboard virtualKeyboardSymbolsShift;
 
-    public static enum KeyboardType {
+    public enum KeyboardType {
         QWERTY,
         SYMBOLS,
         SYMBOLS_SHIFT
     }
-    public static enum SpecialKey
+    public enum SpecialKey
     {
         ARROWDOWNKEY(R.drawable.sym_keyboard_down, 0402),
         ARROWLEFTKEY(R.drawable.sym_keyboard_left, 0404),

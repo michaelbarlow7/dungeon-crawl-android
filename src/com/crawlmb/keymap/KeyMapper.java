@@ -58,6 +58,7 @@ public class KeyMapper
 	String KEY_SCOLONKEY = "crawl.scolonkey";
 	String KEY_SQUOTEKEY = "crawl.squotekey";
 	String KEY_TILDEKEY = "crawl.tildekey";
+	String KEY_BACKTICKKEY = "crawl.backtickkey";
 	String KEY_UNDERKEY = "crawl.underkey";
 
 	String KEY_AKEY = "crawl.akey";
@@ -252,6 +253,7 @@ public class KeyMapper
 			initKeyMap(KEY_SCOLONKEY, ';');
 			initKeyMap(KEY_SQUOTEKEY, '\'');
 			initKeyMap(KEY_TILDEKEY, '~');
+			initKeyMap(KEY_BACKTICKKEY, '`');
 			initKeyMap(KEY_UNDERKEY, '_');
 
 			initKeyMap(KEY_AKEY, 'a');
@@ -356,6 +358,7 @@ public class KeyMapper
 			assignKeyMap(KEY_SCOLONKEY, ';');
 			assignKeyMap(KEY_SQUOTEKEY, '\'');
 			assignKeyMap(KEY_TILDEKEY, '~');
+			assignKeyMap(KEY_BACKTICKKEY, '`');
 			assignKeyMap(KEY_UNDERKEY, '_');
 
 			assignKeyMap(KEY_AKEY, 'a');

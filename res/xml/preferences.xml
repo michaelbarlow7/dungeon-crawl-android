@@ -204,6 +204,8 @@
 		<com.crawlmb.keymap.KeyMapPreference
             android:key="crawl.tildekey" android:title="Tilde ~"/>
 		<com.crawlmb.keymap.KeyMapPreference
+			android:key="crawl.backtickkey" android:title="Backtick `"/>
+		<com.crawlmb.keymap.KeyMapPreference
             android:key="crawl.underkey" android:title="Underscore _"/>
 	  </PreferenceScreen>
 	  <ListPreference
