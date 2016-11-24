@@ -48,6 +48,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.PopupWindow;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.crawlmb.Preferences;
@@ -72,10 +73,11 @@ import java.util.Map;
  * @attr ref android.R.styleable#KeyboardView_verticalCorrection
  * @attr ref android.R.styleable#KeyboardView_popupLayout
  */
-public class CrawlKeyboardView extends View implements View.OnClickListener {
+public class CrawlKeyboardView extends View implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
-    private static final int KEY_ALPHA_LEVEL = 120;
+    private int keyAlphaLevel;
     private Paint trianglePaint;
+
 
     /**
      * Listener for virtual keyboard events.
@@ -295,6 +297,8 @@ public class CrawlKeyboardView extends View implements View.OnClickListener {
 
         int previewLayout = 0;
         int keyTextSize = 0;
+
+        keyAlphaLevel = Preferences.getKeyboardTransparency();
 
         int n = a.getIndexCount();
         
@@ -772,7 +776,7 @@ public class CrawlKeyboardView extends View implements View.OnClickListener {
         
         final Paint paint = mPaint;
         final Drawable keyBackground = mKeyBackground;
-        mKeyBackground.setAlpha(KEY_ALPHA_LEVEL);
+        mKeyBackground.setAlpha(keyAlphaLevel);
         final Rect clipRegion = mClipRegion;
         final Rect padding = mPadding;
         final int kbdPaddingLeft = getPaddingLeft();
@@ -843,7 +847,7 @@ public class CrawlKeyboardView extends View implements View.OnClickListener {
                 }
                 // Draw a drop shadow for the text
                 paint.setShadowLayer(mShadowRadius, 0, 0, mShadowColor);
-                paint.setAlpha(KEY_ALPHA_LEVEL);
+                paint.setAlpha(keyAlphaLevel);
                 // Draw the text
                 canvas.drawText(label,
                     (key.width - padding.left - padding.right) / 2
@@ -889,7 +893,7 @@ public class CrawlKeyboardView extends View implements View.OnClickListener {
         canvas.translate(drawableX, drawableY);
         icon.setBounds(0, 0,
                 icon.getIntrinsicWidth(), icon.getIntrinsicHeight());
-        icon.setAlpha(KEY_ALPHA_LEVEL);
+        icon.setAlpha(keyAlphaLevel);
         icon.draw(canvas);
         canvas.translate(-drawableX, -drawableY);
     }
@@ -1629,5 +1633,31 @@ public class CrawlKeyboardView extends View implements View.OnClickListener {
         public float getYVelocity() {
             return mYVelocity;
         }
+    }
+
+    private void setKeyAlphaLevel(int keyAlphaLevel) {
+        if (keyAlphaLevel > 255 || keyAlphaLevel == this.keyAlphaLevel){
+            return;
+        }
+        this.keyAlphaLevel = keyAlphaLevel;
+        invalidateAllKeys();
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        if (!fromUser){
+            return;
+        }
+        setKeyAlphaLevel(progress);
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+        // Not needed
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        // Not needed
     }
 }

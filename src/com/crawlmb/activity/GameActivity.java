@@ -21,17 +21,22 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
 import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
 import android.os.Handler;
 import android.os.Message;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 
 import com.crawlmb.CrawlDialog;
 import com.crawlmb.keylistener.GameKeyListener;
@@ -89,24 +94,31 @@ public class GameActivity extends Activity
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		super.onPrepareOptionsMenu(menu);
-		MenuItem menuItem = menu.findItem(R.id.menu_lock_terminal_position);
+		MenuItem lockTerminalPositionItem = menu.findItem(R.id.menu_lock_terminal_position);
 		if (term.getLockPositioning()) {
-			menuItem.setTitle(R.string.menu_unlock_terminal_position);
+			lockTerminalPositionItem.setTitle(R.string.menu_unlock_terminal_position);
 		} else {
-			menuItem.setTitle(R.string.menu_lock_terminal_position);
+			lockTerminalPositionItem.setTitle(R.string.menu_lock_terminal_position);
 		}
+
+		MenuItem changeTransparencyItem = menu.findItem(R.id.menu_change_transparency);
+
+		View transparencySliderView = findViewById(R.id.transparencySliderView);
+
+		changeTransparencyItem.setVisible(transparencySliderView != null);
 
 		return true;
 	}
 
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
-		// TODO: Add help and quit menu options
 		Intent intent;
 		switch (item.getNumericShortcut()) {
-		case '1':// Help
-			intent = new Intent(this, HelpActivity.class);
-			startActivity(intent);
+		case '1':// Change keyboard transparency
+			View transparencySliderView = findViewById(R.id.transparencySliderView);
+			if (transparencySliderView != null){
+				transparencySliderView.setVisibility(View.VISIBLE);
+			}
 			break;
 		case '2':// Preferences
 			intent = new Intent(this, PreferencesActivity.class);
@@ -194,6 +206,8 @@ public class GameActivity extends Activity
 			String[] keyboards = getResources().getStringArray(
 					R.array.virtualKeyboardValues);
 
+
+
 			if (keyboardType.equals(keyboards[1])) // Crawl Keyboard
 			{
 				CrawlKeyboardWrapper virtualKeyboard = new CrawlKeyboardWrapper(this, gameKeyListener);
@@ -201,14 +215,27 @@ public class GameActivity extends Activity
 						.setHapticFeedbackEnabled(hapticFeedbackEnabled);
 				screenLayout.addView(virtualKeyboard.virtualKeyboardView);
 
+
 				// Add directional-key view
 				addDirectionalKeyView(
 						virtualKeyboard.virtualKeyboardView.getId(),
 						hapticFeedbackEnabled);
 
+				// Add seekbar here (probably invisible by default)
+				View transparencySliderView = getLayoutInflater().inflate(R.layout.transparency_seekbar, screenLayout);
+				SeekBar transparencySeekbar = (SeekBar) transparencySliderView.findViewById(R.id.transparency_seekbar);
+				transparencySeekbar.setProgress(Preferences.getKeyboardTransparency());
+				transparencySeekbar.setOnSeekBarChangeListener(virtualKeyboard.virtualKeyboardView);
+
+				// Invalidate options (won't work pre honeycomb but no big deal)
+				if (VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB) {
+					invalidateOptionsMenu();
+				}
+
 				getWindow()
 						.setSoftInputMode(
 								WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
 			} else if (keyboardType.equals(keyboards[2])) // System Keyboard
 			{
 				InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -222,6 +249,7 @@ public class GameActivity extends Activity
 						.setSoftInputMode(
 								WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 			}
+
 
 			setContentView(screenLayout);
 			dialog.restoreDialog();
@@ -287,6 +315,16 @@ public class GameActivity extends Activity
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK){
+			View transparencySliderView = findViewById(R.id.transparencySliderView);
+			if (transparencySliderView != null && transparencySliderView.getVisibility() == View.VISIBLE){
+				SeekBar transparencySeekbar = (SeekBar) transparencySliderView.findViewById(R.id.transparency_seekbar);
+				int transparency = transparencySeekbar.getProgress();
+				Preferences.setKeyboardTransparency(transparency);
+				transparencySliderView.setVisibility(View.GONE);
+				return true;
+			}
+		}
 		return gameKeyListener.onKeyDown(keyCode, event) || super.onKeyDown(keyCode, event);
 	}
 
@@ -319,4 +357,5 @@ public class GameActivity extends Activity
             crawlDialog.HandleMessage(msg);
         }
 	}
+
 }

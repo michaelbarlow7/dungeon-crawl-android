@@ -13,7 +13,8 @@ dependencies {
 }
 
 android {
-    compileSdkVersion 10
+    // minSdk is specified in AndroidManifest.xml
+    compileSdkVersion 11
     buildToolsVersion "21.1.2"
 
     sourceSets {

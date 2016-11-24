@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-   <item android:id="@+id/menu_help" android:title="@string/menu_help" android:numericShortcut="1" android:icon="@drawable/menu_help"/>
-   <item android:id="@+id/menu_preferences" android:title="@string/menu_preferences" android:numericShortcut="2" android:icon="@drawable/menu_preferences"/>   
+   <item android:id="@+id/menu_change_transparency" android:title="@string/menu_change_keyboard_transparency" android:numericShortcut="1" android:icon="@android:drawable/ic_menu_sort_by_size"/>
+   <item android:id="@+id/menu_preferences" android:title="@string/menu_preferences" android:numericShortcut="2" android:icon="@drawable/menu_preferences"/>
    <item android:id="@+id/menu_reset_terminal_position" android:title="@string/menu_reset_terminal_position" android:numericShortcut="3" android:icon="@android:drawable/ic_menu_revert"/>
    <item android:id="@+id/menu_lock_terminal_position" android:title="@string/menu_lock_terminal_position" android:numericShortcut="4" android:icon="@android:drawable/ic_lock_lock"/>
    <item android:id="@+id/menu_quit" android:title="@string/menu_quit" android:numericShortcut="5" android:icon="@drawable/menu_quit"/>

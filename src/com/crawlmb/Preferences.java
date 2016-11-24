@@ -28,6 +28,7 @@ final public class Preferences
 	public static final String KEY_LANDSCAPEKB = "crawl.landscapekb";
 	public static final String KEY_PORTRAITFONTSIZE = "crawl.portraitfontsize";
 	public static final String KEY_LANDSCAPEFONTSIZE = "crawl.landscapefontsize";
+	public static final String KEY_KEYBOARDTRANSPARENCY = "crawl.keyboardtransparency";
 
 	public static final String KEY_PROFILES = "crawl.profiles";
 	public static final String KEY_ACTIVEPROFILE = "crawl.activeprofile";
@@ -104,6 +105,14 @@ final public class Preferences
 	public static int setDefaultFontSize(int value)
 	{
 		return fontSize = value;
+	}
+
+	public static int getKeyboardTransparency(){
+		return sharedPreferences.getInt(Preferences.KEY_KEYBOARDTRANSPARENCY, 140);
+	}
+
+	public static void setKeyboardTransparency(int transparency) {
+		sharedPreferences.edit().putInt(Preferences.KEY_KEYBOARDTRANSPARENCY, transparency).apply();
 	}
 
 	public static boolean getVibrate()

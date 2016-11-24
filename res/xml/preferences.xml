@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+	<PreferenceCategory android:title="@string/menu_help">
+		<Preference
+			android:title="@string/menu_help"
+			android:summary="How do I work this?"
+			android:key="help"/>
+	</PreferenceCategory>
   <PreferenceCategory android:title="@string/display_category">
 	<CheckBoxPreference 
 	   android:key="crawl.fullscreen"

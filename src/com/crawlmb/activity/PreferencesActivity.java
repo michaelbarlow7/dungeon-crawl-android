@@ -158,11 +158,12 @@ public class PreferencesActivity extends PreferenceActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         getPreferenceManager().setSharedPreferencesName(Preferences.NAME);
 
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.preferences);
+
+        setHelpIntent();
 
         setConfigFilePreferences();
 
@@ -307,6 +308,12 @@ public class PreferencesActivity extends PreferenceActivity implements
                 break;
         }
         return null;
+    }
+
+    private void setHelpIntent() {
+        Preference helpPreference = findPreference("help");
+        Intent helpIntent = new Intent(this, HelpActivity.class);
+        helpPreference.setIntent(helpIntent);
     }
 
     private void setCharacterFilesIntent() {

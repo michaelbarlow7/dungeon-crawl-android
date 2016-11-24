@@ -112,9 +112,9 @@ public class SplashActivity extends Activity {
 
     private String readFile(File file) {
 
-        FileInputStream fis = null;
-        BufferedInputStream bis = null;
-        DataInputStream dis = null;
+        FileInputStream fis;
+        BufferedInputStream bis;
+        DataInputStream dis;
         StringBuffer sb = new StringBuffer();
 
         try {
