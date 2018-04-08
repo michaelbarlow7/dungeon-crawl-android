@@ -18,8 +18,6 @@
     <string name="warning_dialog_positive_button">Install</string>
     <string name="warning_dialog_neutral_button">Download old version</string>
     <string name="warning_dialog_negative_button">Cancel</string>
-    <string name="launching_game_line_1">Launching game. If this is the first time running Dungeon Crawl,</string>
-    <string name="launching_game_line_2">this might take a while. Please wait...</string>
     <string name="copy_text">Copy text</string>
     <string name="text_copied">Text copied to clipboard</string>
     <string name="morgue">Morgue</string>

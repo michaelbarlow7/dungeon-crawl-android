@@ -23,23 +23,18 @@ public class NativeWrapper
 	public void gameStart()
 	{
 		initGame(term.getContext().getFilesDir().getPath());
-
 	}
 
 	private void showLoadingMessage()
 	{
 		synchronized (display_lock)
 		{
-			String launchingGame1 = term.getResources().getString(R.string.launching_game_line_1);
-			String launchingGame2 = term.getResources().getString(R.string.launching_game_line_2);
-
-			for (int i = 0; i < launchingGame1.length(); i++)
-			{
-				term.drawPoint(0, i, launchingGame1.charAt(i), Color.WHITE, Color.BLACK, false);
-			}
-			for (int i = 0; i < launchingGame2.length(); i++)
-			{
-				term.drawPoint(1, i, launchingGame2.charAt(i), Color.WHITE, Color.BLACK, false);
+            String[] loadingMessageArray = term.getResources().getStringArray(R.array.loading_message_array);
+            for (int i = 0; i < loadingMessageArray.length; i++){
+            	String loadingMessageLine = loadingMessageArray[i];
+				for (int j = 0; j < loadingMessageLine.length(); j++){
+					term.drawPoint(i, j, loadingMessageLine.charAt(j), Color.WHITE, Color.BLACK, false);
+				}
 			}
 			term.invalidate();
 		}

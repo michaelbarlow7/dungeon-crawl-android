@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- This is the message that shows on the terminal when the game loads -->
+    <!-- It's important that none of these lines are more than 80 characters long -->
+    <!-- and there can't be more than 24 lines -->
+    <string-array name="loading_message_array">
+        <item>Launching game. If this is the first time running Dungeon Crawl,</item>
+        <item>this might take a while. Please wait...</item>
+        <item> </item>
+        <item>You can access help and options by pressing the menu button if you have it.</item>
+        <item>Otherwise, you can long-press on the screen to access the menu.</item>
+        <item> </item>
+        <item>The screen is divided into a three by three grid for touch input. Tapping in</item>
+        <item>any of these grid areas sends the corresponding directional key to the program.</item>
+        <item> </item>
+        <item>Feel free to send any suggestions to michaelbarlow7@gmail.com.</item>
+        <item> </item>
+        <item>Happy crawling!</item>
+    </string-array>
+</resources>
