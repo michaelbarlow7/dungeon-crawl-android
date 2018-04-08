@@ -44,6 +44,8 @@
     <string name="preferences_skipsplash_summary">Automatically skip the splash screen on startup</string>
     <string name="preferences_orientation_title">Orientation</string>
     <string name="preferences_orientation_summary">Select screen orientation</string>
+    <string name="preferences_fontface_title">Font</string>
+    <string name="preferences_fontface_summary">Hi-res devices only</string>
     <string name="preferences_gameplugin_title">Selected variant</string>
     <string name="preferences_gameplugin_summary">Note that these Game settings stick to the active profile</string>
     <string name="preferences_enablevkey_title">Enable virtual keyboard</string>
@@ -99,6 +101,14 @@
       <item>0</item>
       <item>1</item>
       <item>2</item>
+    </string-array>
+    <string-array name="fontsDescriptions">
+        <item>VeraMoBd</item>
+        <item>8514oemreg</item>
+    </string-array>
+    <string-array name="fonts">
+        <item>VeraMoBd.ttf</item>
+        <item>8514oemreg.ttf</item>
     </string-array>
     <string-array name="virtualKeyboardValues">
         <item>0</item>

@@ -262,7 +262,9 @@ public class TermView extends View implements GestureDetector.OnGestureListener,
 		}
 		else
 		{
-			tfStd = getTypeface("VeraMoBd.ttf");
+			String fontFace = Preferences.getFontFace();
+
+			tfStd = getTypeface(fontFace);
 			fore.setTypeface(tfStd);
 		}
 	}

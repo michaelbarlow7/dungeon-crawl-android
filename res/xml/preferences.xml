@@ -25,6 +25,13 @@
 	   android:defaultValue="false" 
 	   android:title="@string/preferences_skipsplash_title"
 	   android:summary="@string/preferences_skipsplash_summary" />
+	  <ListPreference
+		  android:key="crawl.fontface"
+		  android:defaultValue="VeraMoBd.ttf"
+		  android:title="@string/preferences_fontface_title"
+		  android:summary="@string/preferences_fontface_summary"
+		  android:entries="@array/fontsDescriptions"
+		  android:entryValues="@array/fonts" />
   </PreferenceCategory>
   <PreferenceCategory android:title="@string/control_category">
 	<PreferenceScreen

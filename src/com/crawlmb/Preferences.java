@@ -23,6 +23,7 @@ final public class Preferences
 	public static final String KEY_ORIENTATION = "crawl.orientation";
 	public static final String KEY_SKIPSPLASH = "crawl.skipsplash";
 
+	public static final String KEY_FONTFACE = "crawl.fontface";
 	public static final String KEY_ENABLETOUCH = "crawl.enabletouch";
 	public static final String KEY_PORTRAITKB = "crawl.portraitkb";
 	public static final String KEY_LANDSCAPEKB = "crawl.landscapekb";
@@ -124,6 +125,14 @@ final public class Preferences
 	{
 		return sharedPreferences.getString(Preferences.KEY_PORTRAITKB,
 				resources.getString(R.string.portraitkb_default));
+	}
+
+	public static String getFontFace(){
+		return sharedPreferences.getString(Preferences.KEY_FONTFACE, "VeraMoBd.ttf");
+	}
+
+	public static void setFontFace(String fontface){
+		sharedPreferences.edit().putString(Preferences.KEY_FONTFACE, fontface).apply();
 	}
 
 	public static void setPortraitKeyboard(String value)
