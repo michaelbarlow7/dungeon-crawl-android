@@ -8,7 +8,8 @@
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <!-- Compile SDK specified in build.gradle -->
-    <uses-sdk android:minSdkVersion="9" />
+    <uses-sdk android:minSdkVersion="9"
+        android:targetSdkVersion="26" />
 
     <application
         android:icon="@drawable/stone_soup_icon_512x512"
