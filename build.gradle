@@ -11,7 +11,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.4'
+        classpath 'com.android.tools.build:gradle:3.3.0'
     }
 }
 apply plugin: 'com.android.application'
@@ -23,7 +23,6 @@ dependencies {
 android {
     // minSdk is specified in AndroidManifest.xml
     compileSdkVersion 26
-    buildToolsVersion '27.0.3'
 
     sourceSets {
         main {
@@ -54,5 +53,9 @@ android {
         release {
             v2SigningEnabled false
         }
+    }
+    defaultConfig {
+        minSdkVersion 9
+        targetSdkVersion 26
     }
 }
