@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--@android:style/Theme.NoTitleBar.Fullscreen"-->
+    <style name="Theme.Crawl" parent="@android:style/Theme.NoTitleBar.Fullscreen">
+        <item name="android:windowBackground">@android:color/black</item>
+        <!--<item name="colorPrimary">@color/primary</item>-->
+        <!--<item name="colorPrimaryDark">@color/primary_dark</item>-->
+        <!--<item name="colorAccent">@color/accent</item>-->
+        <!--<item name="android:windowBackground">@drawable/system_background</item>-->
+
+        <!--<item name="actionModeBackground">@color/terrastride_accent</item>-->
+        <!--<item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>-->
+        <!--<item name="android:actionModeCloseDrawable">@drawable/ic_actionmode_cancel</item>-->
+        <!--<item name="windowActionModeOverlay">true</item>-->
+
+        <!--<item name="android:buttonStyle">@style/Theme.Hunter.Button</item>-->
+        <!--<item name="android:imageButtonStyle">@style/Theme.Hunter.ImageButton</item>-->
+        <!--<item name="android:colorEdgeEffect" tools:targetApi="lollipop">@color/accent_mono</item>-->
+
+        <!--<item name="colorButtonNormal">@color/primary</item>-->
+        <!--<item name="colorControlActivated">@color/accent</item>-->
+        <!--<item name="colorControlHighlight">@color/accent</item>-->
+
+        <!--<item name="android:toolbarStyle" tools:targetApi="lollipop">@style/ToolbarStyle</item>-->
+        <!--<item name="toolbarStyle">@style/ToolbarStyle</item>-->
+    </style>
+</resources>

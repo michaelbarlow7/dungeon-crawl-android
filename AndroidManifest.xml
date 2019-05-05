@@ -12,10 +12,10 @@
     <application
         android:icon="@drawable/stone_soup_icon_512x512"
         android:name=".CrawlApplication"
+        android:theme="@style/Theme.Crawl"
         android:label="@string/app_name" >
         <activity
             android:name=".activity.SplashActivity"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name" >
             <intent-filter>
@@ -27,14 +27,14 @@
             android:name=".activity.GameActivity"
             android:label="@string/app_name" 
             android:configChanges="keyboardHidden" 
-            android:launchMode="singleTask" 
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+            android:launchMode="singleTask"
+            >
         </activity>
         <activity
             android:name=".activity.HelpActivity"
             android:label="@string/app_name" 
             android:windowSoftInputMode="stateHidden"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+            >
         </activity>
         <activity
             android:name=".activity.CharacterFilesActivity"
