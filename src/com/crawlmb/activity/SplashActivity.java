@@ -65,12 +65,12 @@ public class SplashActivity extends Activity {
             // Uncomment the folowing try/catch block if the latest version requires the user to re-install files
             // (i.e. the version of Crawl itself was updated).
             // Otherwise, we will only re-install files if the version installed is less than latestVersion
-//		try {
-//            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-//            latestVersion = pInfo.versionCode;
-//        } catch (NameNotFoundException e) {
-//            e.printStackTrace();
-//        }
+		try {
+            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            latestVersion = pInfo.versionCode;
+        } catch (NameNotFoundException e) {
+            e.printStackTrace();
+        }
             // End comment/uncomment block
 
             if (installedVersion != null && installedVersion.trim().length() > 0 && Integer.parseInt(installedVersion) >= latestVersion) {
@@ -278,7 +278,7 @@ public class SplashActivity extends Activity {
     private class InstallProgramTask extends AsyncTask<Void, Integer, Void> {
         // Number of files that need creating. Hard-coded I know, but
         // counting them dynamically took a surprising amount of time
-        private static final int TOTAL_FILES = 693;
+        private static final int TOTAL_FILES = 771;
 
         private int installedFiles = 0;
 
