@@ -22,7 +22,7 @@ dependencies {
 
 android {
     // minSdk is specified in AndroidManifest.xml
-    compileSdkVersion 26
+    compileSdkVersion 28
 
     sourceSets {
         main {
@@ -56,6 +56,6 @@ android {
     }
     defaultConfig {
         minSdkVersion 9
-        targetSdkVersion 26
+        targetSdkVersion 28
     }
 }
