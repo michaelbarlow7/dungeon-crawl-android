@@ -770,8 +770,10 @@ public class CrawlKeyboardView extends View implements View.OnClickListener, See
             mKeyboardChanged = false;
         }
         final Canvas canvas = mCanvas;
-        canvas.clipRect(mDirtyRect, Op.REPLACE);
-        
+        // This was using Op.REPLACE, but it got deprecated as of target sdk 28
+        // Op.INTERSECT seems to work?
+        canvas.clipRect(mDirtyRect, Op.INTERSECT);
+
         if (mKeyboard == null) return;
         
         final Paint paint = mPaint;
