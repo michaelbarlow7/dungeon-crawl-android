@@ -769,13 +769,10 @@ public class CrawlKeyboardView extends View implements View.OnClickListener, See
             invalidateAllKeys();
             mKeyboardChanged = false;
         }
-        final Canvas canvas = mCanvas;
-        // This was using Op.REPLACE, but it got deprecated as of target sdk 28
-        // Op.INTERSECT seems to work?
-        canvas.clipRect(mDirtyRect, Op.INTERSECT);
-
         if (mKeyboard == null) return;
-        
+        mCanvas.save();
+        final Canvas canvas = mCanvas;
+        canvas.clipRect(mDirtyRect);
         final Paint paint = mPaint;
         final Drawable keyBackground = mKeyBackground;
         mKeyBackground.setAlpha(keyAlphaLevel);
@@ -785,17 +782,16 @@ public class CrawlKeyboardView extends View implements View.OnClickListener, See
         final int kbdPaddingTop = getPaddingTop();
         final Key[] keys = mKeys;
         final Key invalidKey = mInvalidatedKey;
-
         paint.setColor(mKeyTextColor);
         boolean drawSingleKey = false;
         if (invalidKey != null && canvas.getClipBounds(clipRegion)) {
-          // Is clipRegion completely contained within the invalidated key?
-          if (invalidKey.x + kbdPaddingLeft - 1 <= clipRegion.left &&
-                  invalidKey.y + kbdPaddingTop - 1 <= clipRegion.top &&
-                  invalidKey.x + invalidKey.width + kbdPaddingLeft + 1 >= clipRegion.right &&
-                  invalidKey.y + invalidKey.height + kbdPaddingTop + 1 >= clipRegion.bottom) {
-              drawSingleKey = true;
-          }
+            // Is clipRegion completely contained within the invalidated key?
+            if (invalidKey.x + kbdPaddingLeft - 1 <= clipRegion.left &&
+                    invalidKey.y + kbdPaddingTop - 1 <= clipRegion.top &&
+                    invalidKey.x + invalidKey.width + kbdPaddingLeft + 1 >= clipRegion.right &&
+                    invalidKey.y + invalidKey.height + kbdPaddingTop + 1 >= clipRegion.bottom) {
+                drawSingleKey = true;
+            }
         }
         canvas.drawColor(0x00000000, PorterDuff.Mode.CLEAR);
         final int keyCount = keys.length;
@@ -808,7 +804,6 @@ public class CrawlKeyboardView extends View implements View.OnClickListener, See
             }
             int[] drawableState = key.getCurrentDrawableState();
             keyBackground.setState(drawableState);
-
 
             String label = null;
             Drawable specialDrawable = null;
@@ -835,9 +830,14 @@ public class CrawlKeyboardView extends View implements View.OnClickListener, See
                     label = adjustCase(label).toString();
                 }
             }
-
-            setKeyBounds(canvas, keyBackground, kbdPaddingLeft, kbdPaddingTop, key);
-            
+            // Switch the character to uppercase if shift is pressed
+            final Rect bounds = keyBackground.getBounds();
+            if (key.width != bounds.right ||
+                    key.height != bounds.bottom) {
+                keyBackground.setBounds(0, 0, key.width, key.height);
+            }
+            canvas.translate(key.x + kbdPaddingLeft, key.y + kbdPaddingTop);
+            keyBackground.draw(canvas);
             if (label != null) {
                 // For characters, use large font. For labels like "Done", use small font.
                 if (label.length() > 1 && key.codes.length < 2) {
@@ -852,11 +852,11 @@ public class CrawlKeyboardView extends View implements View.OnClickListener, See
                 paint.setAlpha(keyAlphaLevel);
                 // Draw the text
                 canvas.drawText(label,
-                    (key.width - padding.left - padding.right) / 2
-                            + padding.left,
-                    (key.height - padding.top - padding.bottom) / 2
-                            + (paint.getTextSize() - paint.descent()) / 2 + padding.top,
-                    paint);
+                        (key.width - padding.left - padding.right) / 2
+                                + padding.left,
+                        (key.height - padding.top - padding.bottom) / 2
+                                + (paint.getTextSize() - paint.descent()) / 2 + padding.top,
+                        paint);
                 // Turn off drop shadow
                 paint.setShadowLayer(0, 0, 0, 0);
             } else if (specialDrawable != null) {
@@ -872,10 +872,11 @@ public class CrawlKeyboardView extends View implements View.OnClickListener, See
             paint.setColor((int) (mBackgroundDimAmount * 0xFF) << 24);
             canvas.drawRect(0, 0, getWidth(), getHeight(), paint);
         }
-        
+        mCanvas.restore();
         mDrawPending = false;
         mDirtyRect.setEmpty();
     }
+
 
     private void setKeyBounds(Canvas canvas, Drawable keyBackground, int kbdPaddingLeft, int kbdPaddingTop, Key key) {
         final Rect bounds = keyBackground.getBounds();

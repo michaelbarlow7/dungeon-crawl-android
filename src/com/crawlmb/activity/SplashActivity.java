@@ -61,18 +61,17 @@ public class SplashActivity extends Activity {
         File versionFile = new File(getFilesDir() + "/version.txt");
         if (versionFile.exists()) {
             String installedVersion = readFile(versionFile);
-            int latestVersion = 26;
+            int latestVersion = 29;
             // Uncomment the folowing try/catch block if the latest version requires the user to re-install files
             // (i.e. the version of Crawl itself was updated).
             // Otherwise, we will only re-install files if the version installed is less than latestVersion
-		try {
-            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-            latestVersion = pInfo.versionCode;
-        } catch (NameNotFoundException e) {
-            e.printStackTrace();
-        }
+//		try {
+//            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+//            latestVersion = pInfo.versionCode;
+//        } catch (NameNotFoundException e) {
+//            e.printStackTrace();
+//        }
             // End comment/uncomment block
-
             if (installedVersion != null && installedVersion.trim().length() > 0 && Integer.parseInt(installedVersion) >= latestVersion) {
                 // already installed, just start the game
                 startGameActivity();
