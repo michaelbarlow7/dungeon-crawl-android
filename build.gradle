@@ -11,7 +11,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.3'
+        classpath 'com.android.tools.build:gradle:7.4.2'
     }
 }
 apply plugin: 'com.android.application'
@@ -22,7 +22,7 @@ dependencies {
 
 android {
     // minSdk is specified in AndroidManifest.xml
-    compileSdkVersion 28
+    compileSdkVersion 33
 
     sourceSets {
         main {
@@ -56,6 +56,6 @@ android {
     }
     defaultConfig {
         minSdkVersion 9
-        targetSdkVersion 28
+        targetSdkVersion 33
     }
 }
