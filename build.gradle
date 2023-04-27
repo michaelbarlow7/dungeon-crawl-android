@@ -57,5 +57,22 @@ android {
     defaultConfig {
         minSdkVersion 9
         targetSdkVersion 33
+        externalNativeBuild {
+            ndkBuild {
+                cppFlags ''
+                arguments "-j4"
+            }
+        }
     }
+    buildTypes {
+        debug {
+            debuggable true
+        }
+    }
+    externalNativeBuild {
+        ndkBuild {
+            path file('jni/Android.mk')
+        }
+    }
+
 }

@@ -10,7 +10,6 @@ public class NativeWrapper
 	// Load native library
 	static
 	{
-        System.loadLibrary("crystax");
 		System.loadLibrary("crawl");
 	}
 
