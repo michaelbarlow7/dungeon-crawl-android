@@ -68,6 +68,11 @@ android {
         debug {
             debuggable true
         }
+        release {
+            ndk {
+                debugSymbolLevel 'SYMBOL_TABLE'
+            }
+        }
     }
     externalNativeBuild {
         ndkBuild {

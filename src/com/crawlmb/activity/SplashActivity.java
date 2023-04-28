@@ -62,9 +62,9 @@ public class SplashActivity extends Activity {
         if (versionFile.exists()) {
             String installedVersion = readFile(versionFile);
 
-            // If installedVersion is < latestVersion, files will be copied across
-            int latestVersion = 36;
-            if (installedVersion != null && installedVersion.trim().length() > 0 && Integer.parseInt(installedVersion) >= latestVersion) {
+            // If installedVersion is < minimumInstallVersion, files will be copied across
+            int minimumInstallVersion = 36;
+            if (installedVersion != null && installedVersion.trim().length() > 0 && Integer.parseInt(installedVersion) >= minimumInstallVersion) {
                 // already installed, just start the game
                 startGameActivity();
                 return;
