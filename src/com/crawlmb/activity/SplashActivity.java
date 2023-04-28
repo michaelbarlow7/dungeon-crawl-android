@@ -63,7 +63,7 @@ public class SplashActivity extends Activity {
             String installedVersion = readFile(versionFile);
 
             // If installedVersion is < latestVersion, files will be copied across
-            int latestVersion = 34;
+            int latestVersion = 36;
             if (installedVersion != null && installedVersion.trim().length() > 0 && Integer.parseInt(installedVersion) >= latestVersion) {
                 // already installed, just start the game
                 startGameActivity();
@@ -269,7 +269,7 @@ public class SplashActivity extends Activity {
     private class InstallProgramTask extends AsyncTask<Void, Integer, Void> {
         // Number of files that need creating. Hard-coded I know, but
         // counting them dynamically took a surprising amount of time
-        private static final int TOTAL_FILES = 776;
+        private static final int TOTAL_FILES = 800;
 
         private int installedFiles = 0;
 

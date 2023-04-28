@@ -39,7 +39,7 @@ public class NativeWrapper
 		}
 	}
 
-	public native String initGame(String initFileLocation);
+	public native void initGame(String initFileLocation);
 
 	public NativeWrapper(GameKeyListener s)
 	{
