@@ -6,6 +6,7 @@ jni
 .settings
 .gradle/
 build/
+release/
 *.iml
 *.swp
 .idea/

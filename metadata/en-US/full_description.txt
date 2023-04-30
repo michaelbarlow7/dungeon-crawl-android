@@ -1,0 +1,6 @@
+An unofficial port of the classic roguelike Dungeon Crawl: Stone Soup for Android. This is the ASCII version. 
+Can you retrieve the Orb of Zot? Probably not!
+
+------------------------------------------------
+
+Looking for the tiles version? The official tiles version (not made by me) can be downloaded from here: http://crawl.develz.org/download.htm
