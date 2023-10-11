@@ -4,7 +4,7 @@ This is an unofficial port of Dungeon Crawl:Stone Soup for Android. The aim is t
 
 This is the unofficial console version. The official tiles version for Android can be downloaded <a href="https://crawl.develz.org/wordpress/downloads">here</a>.
 
-The latest release can be downloaded from <a href="https://play.google.com/store/apps/details?id=com.crawlmb">Google Play</a>. You can also download the latest and previous releases via the <a href="https://github.com/michaelbarlow7/dungeon-crawl-android/releases">Releases</a> part of this Github.
+The latest release can be downloaded from <a href="https://play.google.com/store/apps/details?id=com.crawlmb">Google Play</a> or <a href="https://f-droid.org/packages/com.crawlmb/">F-Droid</a>. You can also download the latest and previous releases via the <a href="https://github.com/michaelbarlow7/dungeon-crawl-android/releases">Releases</a> part of this Github.
 
 The project uses a clone of the main Crawl project as a submodule. This is hosted <a href="https://github.com/michaelbarlow7/crawl">Here</a>.
 
